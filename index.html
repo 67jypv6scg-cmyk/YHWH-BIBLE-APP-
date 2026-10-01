@@ -974,7 +974,8 @@ function menu() {
   openSheet('Menu');
   sheetBody.innerHTML = '<div class="actions" style="flex-direction:column;align-items:stretch">' +
     '<button class="primary" id="mImp">Import chapters</button><button class="quiet" id="mNotes">My notes</button><button class="quiet" id="mPlan">Reading plans</button><button class="quiet" id="mStudy">Hebrew study</button><button class="quiet" id="mCmp">Compare versions</button><button class="quiet" id="mVer">My versions</button><button class="quiet" id="mBak">Back up and restore</button><button class="quiet" id="mFull">' + (isFull() ? 'Leave full screen' : 'Full screen') + '</button><button class="quiet" id="mSet">Settings</button></div>' +
-    '<p class="status" style="margin-top:1.2rem">' + esc(storageNote()) + ' ' + Object.keys(chapters).length + ' chapters imported.</p>';
+    '<p class="status" style="margin-top:1.2rem">' + esc(storageNote()) + ' ' + Object.keys(chapters).length + ' chapters imported.</p>' +
+    '<p class="status" style="margin-top:.3rem">App version 9 · 1 Oct · Hebrew pronunciation in Compare</p>';
   document.getElementById('mImp').onclick = function () { openImport(pos.b, nextMissing(pos.b)); };
   document.getElementById('mSet').onclick = openSettings;
   document.getElementById('mBak').onclick = openBackup;
