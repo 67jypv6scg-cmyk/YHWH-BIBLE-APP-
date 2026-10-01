@@ -139,6 +139,9 @@ mark { background: var(--hit); color: inherit; border-radius: 3px; padding: 0 .0
   border: 1px solid var(--rule); border-radius: 8px; padding: .55rem .7rem;
 }
 textarea { min-height: 12rem; resize: vertical; line-height: 1.5; }
+.row3 { display: grid; grid-template-columns: minmax(0, 1fr) 4.6rem 4.6rem; gap: .6rem; }
+.detect { margin: -.4rem 0 1rem; font-size: .9rem; color: var(--accent); min-height: 1.3em; }
+.detect.warn { color: var(--name); }
 .row2 { display: grid; grid-template-columns: minmax(0, 1fr) 6.5rem; gap: .6rem; }
 .seg { display: flex; flex-wrap: wrap; gap: .4rem; }
 .seg button { background: none; border: 1px solid var(--rule); border-radius: 999px; padding: .3rem .85rem; color: var(--ink); }
@@ -327,7 +330,7 @@ function refLabel(b, c, vs) {
 // ======================================================================
 var store = { mode: 'local', col: null, settingsRef: null };
 var chapters = {};          // key -> {book, ch, verses:[{v,t}], heads:[{v,t}]}
-var S = { autohide: true, theme: 'dark', size: 19, name: 'heb', jesus: 'heb', god: true, christ: true, lord: 'keep', shade: true, last: null };
+var S = { autohide: true, theme: 'dark', size: 19, name: 'heb', jesus: 'heb', god: true, christ: true, spirit: false, brackets: false, lord: 'keep', shade: true, last: null };
 
 // Offline copy: big items (chapters, notes, plan) are kept in IndexedDB, which has room for the whole Bible.
 var BIG = { 'nb-chapters': 1, 'nb-vnotes': 1, 'nb-pnotes': 1, 'nb-plan': 1, 'nb-study': 1, 'nb-notes': 1 };
@@ -626,11 +629,12 @@ function restore(t) {
   if (S.jesus !== 'keep') rules.push([/\bJesus\b/g, JESUSF[S.jesus]]);
   if (S.christ) rules.push([/\bChrist\b/g, 'Messiah']);
   if (S.god) rules.push([/\bGod\b/g, 'Elohim']);
+  if (S.spirit) rules.push([/\bHoly Spirit\b/g, 'Ruach ha-Qodesh']);
   if (S.lord !== 'keep') rules.push([/\bLord\b/g, S.lord]);
   // Protect replaced text from later rules using placeholders
   var bag = [];
   rules.forEach(function (r) {
-    t = t.replace(r[0], function () { bag.push(r[1]); return '\uE000' + (bag.length - 1) + '\uE001'; });
+    t = t.replace(r[0], function (m) { bag.push(S.brackets ? m + ' [' + r[1] + ']' : r[1]); return '\uE000' + (bag.length - 1) + '\uE001'; });
   });
   return t.replace(/\uE000(\d+)\uE001/g, function (m, i) { return bag[+i]; });
 }
@@ -903,7 +907,9 @@ function openPicker(bookSel) {
       for (var i = g[1]; i < g[2]; i++) h += '<button class="book' + (loadedIn(i) ? ' has' : '') + (i === pos.b ? ' cur' : '') + '" data-b="' + i + '">' + esc(BOOKS[i][0]) + '</button>';
       h += '</div>';
     });
+    if (Object.keys(chapters).length) h = '<button class="goto" id="curBook">Chapters of <b>' + esc(BOOKS[pos.b][0]) + '</b> ›</button>' + h;
     sheetBody.innerHTML = h;
+    var cb = document.getElementById('curBook'); if (cb) cb.onclick = function () { chaps(pos.b); };
     sheetBody.querySelectorAll('.book').forEach(function (el) { el.onclick = function () { chaps(+el.dataset.b); }; });
   }
   function chaps(b) {
@@ -918,7 +924,7 @@ function openPicker(bookSel) {
   }
   if (typeof bookSel === 'number') chaps(bookSel); else books();
 }
-document.getElementById('refBtn').onclick = function () { openPicker(Object.keys(chapters).length ? pos.b : undefined); };
+document.getElementById('refBtn').onclick = function () { openPicker(); };
 
 function menu() {
   openSheet('Menu');
@@ -976,17 +982,100 @@ function bookOptions(sel) {
 function openImport(b, c) {
   openSheet('Import chapters');
   sheetBody.innerHTML =
-    '<p class="hint" style="margin-top:0">Copy a few chapters from your ESV app, with their headings such as “Genesis 4”, and paste them here.</p>' +
-    '<div class="row2"><label class="field"><span>Book</span><select id="iBook">' + bookOptions(b) + '</select></label>' +
-    '<label class="field"><span>First chapter</span><input id="iCh" type="number" inputmode="numeric" min="1" value="' + (c || 1) + '"></label></div>' +
+    '<p class="hint" style="margin-top:0">Copy as many chapters as you like from your ESV app, with their headings such as “Genesis 4”, and paste them below. The book and chapters are picked up automatically.</p>' +
+    '<div class="row3"><label class="field"><span>Book</span><select id="iBook">' + bookOptions(b) + '</select></label>' +
+    '<label class="field"><span>Chapter</span><input id="iCh" type="number" inputmode="numeric" min="1" value="' + (c || 1) + '"></label>' +
+    '<label class="field"><span>to</span><input id="iTo" type="number" inputmode="numeric" min="1" placeholder="…"></label></div>' +
+    '<details class="card" id="iOpts" style="padding:.2rem .9rem"><summary style="cursor:pointer;padding:.6rem 0;font-weight:500">Names and page style <span class="hint" id="iSum" style="font-weight:400"></span></summary>' +
+      '<div style="padding:.2rem 0 .8rem">' +
+      '<p class="hint" style="margin-top:0">The Name, where the ESV prints LORD or GOD</p>' + segBtns('oName', [['heb', '<span class="heb">יהוה</span>'], ['Yahweh', 'Yahweh'], ['Yehovah', 'Yehovah']], S.name) +
+      '<p class="hint">The Messiah’s name, where the ESV prints Jesus</p>' + segBtns('oJesus', [['heb', '<span class="heb">יהושע</span>'], ['Yehoshua', 'Yehoshua'], ['Yeshua', 'Yeshua'], ['keep', 'Jesus']], S.jesus) +
+      '<p class="hint">Lord, in ordinary type</p>' + segBtns('oLord', [['keep', 'Lord'], ['Adonai', 'Adonai'], ['Master', 'Master']], S.lord) +
+      '<label class="check"><input type="checkbox" id="oGod"' + (S.god ? ' checked' : '') + '> <span>God → Elohim</span></label>' +
+      '<label class="check"><input type="checkbox" id="oChrist"' + (S.christ ? ' checked' : '') + '> <span>Christ → Messiah</span></label>' +
+      '<label class="check"><input type="checkbox" id="oSpirit"' + (S.spirit ? ' checked' : '') + '> <span>Holy Spirit → Ruach ha-Qodesh</span></label>' +
+      '<label class="check"><input type="checkbox" id="oBrackets"' + (S.brackets ? ' checked' : '') + '> <span>Keep the original ESV word and add the name in brackets, e.g. the LORD [<span class="heb">יהוה</span>]</span></label>' +
+      '<p class="hint" style="margin-top:.8rem">Page</p>' + segBtns('oTheme', [['dark', 'White on black'], ['light', 'Black on white']], S.theme) +
+      '<p class="hint" style="margin-top:.8rem">Footnote numbers and cross-reference letters are always removed.</p>' +
+      '</div></details>' +
     '<label class="field"><span>ESV text</span><textarea id="iText" placeholder="Genesis 1&#10;&#10;The Creation of the World&#10;1 In the beginning, God created the heavens and the earth…"></textarea></label>' +
+    '<p class="detect" id="iDetect" aria-live="polite"></p>' +
     '<div class="actions"><button class="primary" id="iCheck">Check</button><button class="quiet" id="iClear">Clear</button></div>' +
     '<div id="iPrev"></div>' +
     '<div class="grp" style="margin-top:1.6rem">Progress</div><div id="iProg"></div>';
   var bookSel = document.getElementById('iBook'), chIn = document.getElementById('iCh'), txt = document.getElementById('iText');
+  function optSummary() {
+    var parts = [S.brackets ? 'LORD [' + NAMEF[S.name] + ']' : NAMEF[S.name], S.jesus === 'keep' ? 'Jesus' : JESUSF[S.jesus]];
+    if (S.god) parts.push('Elohim'); if (S.christ) parts.push('Messiah'); if (S.spirit) parts.push('Ruach ha-Qodesh');
+    if (S.lord !== 'keep') parts.push(S.lord);
+    parts.push(S.theme === 'light' ? 'black on white' : 'white on black');
+    document.getElementById('iSum').textContent = '· ' + parts.join(' · ');
+  }
+  function optChanged() { saveSettings(); optSummary(); document.getElementById('iPrev').innerHTML = ''; }
+  [['oName', 'name'], ['oJesus', 'jesus'], ['oLord', 'lord'], ['oTheme', 'theme']].forEach(function (p) {
+    document.getElementById(p[0]).querySelectorAll('button').forEach(function (b) {
+      b.onclick = function () {
+        S[p[1]] = b.dataset.val;
+        document.getElementById(p[0]).querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); });
+        if (p[1] === 'theme') { applyLook(); refreshView(); }
+        optChanged();
+      };
+    });
+  });
+  [['oGod', 'god'], ['oChrist', 'christ'], ['oSpirit', 'spirit'], ['oBrackets', 'brackets']].forEach(function (p) {
+    document.getElementById(p[0]).onchange = function () { S[p[1]] = this.checked; optChanged(); };
+  });
+  optSummary();
   var draft = lsGet('nb-draft', '');
   if (draft) txt.value = draft;
-  txt.addEventListener('input', function () { lsSet('nb-draft', txt.value); document.getElementById('iPrev').innerHTML = ''; });
+  var toIn = document.getElementById('iTo'), det = document.getElementById('iDetect'), toTouched = false, detT = null;
+  toIn.addEventListener('input', function () { toTouched = true; document.getElementById('iPrev').innerHTML = ''; });
+  chIn.addEventListener('input', function () { document.getElementById('iPrev').innerHTML = ''; });
+  // Read the pasted text as it arrives and fill in the book and chapter range
+  function detectNow() {
+    var raw = txt.value;
+    if (!raw.trim()) { det.textContent = ''; det.className = 'detect'; if (!toTouched) toIn.value = ''; return; }
+    var hasHead = raw.split('\n').some(function (l) { return HEAD_RE.test(l.trim()); });
+    var parsed;
+    try { parsed = parseImport(raw, +bookSel.value, Math.max(1, +chIn.value || 1)); } catch (e) { parsed = []; }
+    if (!parsed.length) { det.className = 'detect warn'; det.textContent = 'No verse numbers found yet.'; return; }
+    // A paste that starts part-way through a chapter, with no heading: find the saved chapter it continues
+    var cont = null;
+    var firstLine = (raw.split('\n').map(function (l) { return l.trim(); }).filter(Boolean)[0]) || '';
+    var startsMid = !HEAD_RE.test(firstLine) && parsed[0].verses[0].v > 1;
+    if (startsMid) {
+      var sv = parsed[0].verses[0].v, cur = Math.max(1, +chIn.value || 1), bi = +bookSel.value;
+      [cur, cur - 1].some(function (c) {
+        var d = c >= 1 && chapters[key(bi, c)];
+        if (d && d.verses.length && d.verses[d.verses.length - 1].v >= sv - 1) { cont = { c: c, from: sv, had: d.verses[d.verses.length - 1].v }; return true; }
+        return false;
+      });
+      if (cont && cont.c !== cur) {
+        chIn.value = cont.c;
+        try { parsed = parseImport(raw, bi, cont.c); } catch (e) { parsed = []; }
+        if (!parsed.length) return;
+      }
+    }
+    var bk = parsed[0].book, chs = parsed.filter(function (c) { return c.book === bk; }).map(function (c) { return c.ch; });
+    var lo = Math.min.apply(null, chs), hi = Math.max.apply(null, chs);
+    if (hasHead) { bookSel.value = bk; chIn.value = lo; prog(); }
+    if (!toTouched) toIn.value = hi;
+    var verses = parsed.reduce(function (a, c) { return a + c.verses.length; }, 0);
+    det.className = 'detect';
+    det.textContent = 'Found ' + parsed.length + (parsed.length === 1 ? ' chapter' : ' chapters') + ': ' + BOOKS[bk][0] + ' ' + lo + (hi > lo ? '–' + hi : '') + ' (' + verses + ' verses)';
+    if (cont) {
+      var lastV = parsed[0].verses[parsed[0].verses.length - 1].v;
+      det.textContent = 'Continues ' + BOOKS[bk][0] + ' ' + cont.c + ' from verse ' + cont.from + ' (you have verses 1–' + cont.had + ' saved), adding verses ' + cont.from + '–' + lastV + (parsed.length > 1 ? ', then ' + BOOKS[bk][0] + ' ' + parsed[1].ch + (hi > parsed[1].ch ? '–' + hi : '') : '') + '.';
+    } else if (startsMid) {
+      det.className = 'detect warn';
+      det.textContent += '. This starts at verse ' + parsed[0].verses[0].v + '; check the Chapter box is the chapter you were part-way through.';
+    }
+  }
+  txt.addEventListener('input', function () {
+    lsSet('nb-draft', txt.value); document.getElementById('iPrev').innerHTML = '';
+    toTouched = false; clearTimeout(detT); detT = setTimeout(detectNow, 350);
+  });
+  if (txt.value.trim()) setTimeout(detectNow, 50);
   function prog() {
     var bi = +bookSel.value, n = loadedIn(bi);
     var h = '<p class="status" style="margin:0 0 .6rem">' + esc(BOOKS[bi][0]) + ': ' + n + ' of ' + BOOKS[bi][1] + ' chapters</p><div class="chaps">';
@@ -1005,7 +1094,7 @@ function openImport(b, c) {
       })();
     };
   }
-  bookSel.onchange = function () { chIn.value = nextMissing(+bookSel.value); document.getElementById('iPrev').innerHTML = ''; prog(); };
+  bookSel.onchange = function () { chIn.value = nextMissing(+bookSel.value); toIn.value = ''; toTouched = false; document.getElementById('iPrev').innerHTML = ''; prog(); if (txt.value.trim()) detectNow(); };
   prog();
   document.getElementById('iClear').onclick = function () { txt.value = ''; lsSet('nb-draft', ''); document.getElementById('iPrev').innerHTML = ''; txt.focus(); };
   document.getElementById('iCheck').onclick = function () {
@@ -1025,6 +1114,8 @@ function openImport(b, c) {
   }
   function checkNow(pv) {
     var parsed = parseImport(txt.value, +bookSel.value, Math.max(1, +chIn.value || 1));
+    var lim = parseInt(toIn.value, 10);
+    if (isFinite(lim) && lim >= 1) parsed = parsed.filter(function (c) { return c.ch <= lim; });
     if (!parsed.length) {
       var startTxt = txt.value.trim().slice(0, 160);
       pv.innerHTML = '<p class="hint" style="margin-top:1rem">' + (startTxt ? 'No verse numbers were found in this text, so nothing could be added. It starts like this:</p><p class="hint" style="border-left:3px solid var(--name);padding-left:.7rem;white-space:pre-wrap">' + esc(startTxt) + '</p><p class="hint">Copy these first lines into your chat with Claude so the import can be adjusted to this format.' : 'Paste some chapters first.') + '</p>';
@@ -1066,7 +1157,7 @@ function openImport(b, c) {
         toast(BOOKS[first.book][0] + ' ' + first.ch + (last.ch !== first.ch ? '–' + last.ch : '') + ': ' + total + ' verses added');
         txt.value = ''; lsSet('nb-draft', '');
         pv.innerHTML = '';
-        bookSel.value = first.book; chIn.value = Math.min(last.ch + 1, BOOKS[first.book][1]);
+        bookSel.value = first.book; chIn.value = Math.min(last.ch + 1, BOOKS[first.book][1]); toIn.value = ''; toTouched = false; det.textContent = '';
         prog();
         if (!qEl.value.trim()) showChapter(has(pos.b, pos.c) && !good.some(function (g) { return g.book === pos.b && g.ch === pos.c; }) ? pos.b : first.book, has(pos.b, pos.c) && !good.some(function (g) { return g.book === pos.b && g.ch === pos.c; }) ? pos.c : first.ch);
       } catch (e) {
@@ -1096,6 +1187,8 @@ function openSettings() {
       '<p class="hint">Lord, in ordinary type</p>' + segBtns('sLord', [['keep', 'Lord'], ['Adonai', 'Adonai'], ['Master', 'Master']], S.lord) +
       '<label class="check"><input type="checkbox" id="sGod"' + (S.god ? ' checked' : '') + '> <span>God → Elohim</span></label>' +
       '<label class="check"><input type="checkbox" id="sChrist"' + (S.christ ? ' checked' : '') + '> <span>Christ → Messiah</span></label>' +
+      '<label class="check"><input type="checkbox" id="sSpirit"' + (S.spirit ? ' checked' : '') + '> <span>Holy Spirit → Ruach ha-Qodesh</span></label>' +
+      '<label class="check"><input type="checkbox" id="sBrackets"' + (S.brackets ? ' checked' : '') + '> <span>Keep the original ESV word and add the name in brackets</span></label>' +
       '<p class="hint">Chapters already imported keep their names. Re-import a chapter to change it.</p></div>' +
     '<p class="status">' + esc(storageNote()) + '</p>';
   function seg(id, k, num) {
@@ -1109,7 +1202,7 @@ function openSettings() {
   }
   document.getElementById('sGreet').oninput = function () { S.greet = this.value.trim(); saveSettings(); };
   seg('sTheme', 'theme'); seg('sSize', 'size', true); seg('sName', 'name'); seg('sJesus', 'jesus'); seg('sLord', 'lord');
-  [['sShade', 'shade'], ['sHide', 'autohide'], ['sGod', 'god'], ['sChrist', 'christ']].forEach(function (p) {
+  [['sShade', 'shade'], ['sHide', 'autohide'], ['sGod', 'god'], ['sChrist', 'christ'], ['sSpirit', 'spirit'], ['sBrackets', 'brackets']].forEach(function (p) {
     document.getElementById(p[0]).onchange = function () { S[p[1]] = this.checked; saveSettings(); if (p[1] === 'shade') refreshView(); };
   });
 }
