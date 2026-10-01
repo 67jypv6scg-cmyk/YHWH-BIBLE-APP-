@@ -226,6 +226,12 @@ textarea { min-height: 12rem; resize: vertical; line-height: 1.5; }
 .cmpr .txt.miss { color: var(--soft); font-style: italic; font-size: .9rem; }
 .cmph { width: 100%; text-align: right; background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: .5rem .7rem; margin-top: .35rem; color: var(--ink); }
 .cmph .hh { display: block; direction: rtl; font-family: 'Frank Ruhl Libre', 'Times New Roman', serif; font-size: calc(var(--size) * 1.25); line-height: 1.5; }
+.cmph .ws { display: flex; flex-wrap: wrap; direction: rtl; gap: .55rem .5rem; }
+.cmph .cw { direction: ltr; text-align: center; min-width: 3rem; }
+.cmph .cw .h { display: block; direction: rtl; font-family: 'Frank Ruhl Libre', 'Times New Roman', serif; font-size: calc(var(--size) * 1.2); line-height: 1.35; }
+.cmph .cw .t { display: block; font-size: .8rem; color: var(--accent); margin-top: .05rem; }
+.cmph .cw .g { display: block; font-size: .78rem; font-style: italic; color: var(--soft); }
+.cmph .tap { display: block; text-align: left; font-size: .72rem; color: var(--soft); margin-top: .4rem; }
 .cmph .ll { display: block; text-align: left; font-size: .85rem; font-style: italic; color: var(--soft); margin-top: .2rem; }
 .greet { font-size: 1.35rem; margin: 0 0 .15rem; }
 .greet-d { color: var(--soft); font-size: .85rem; margin: 0 0 1rem; }
@@ -2098,7 +2104,9 @@ async function showCompare(b, c, flashV) {
     });
     if (heb) {
       var ws = hch && hch[v];
-      if (ws) html += '<button class="cmph" data-hv="' + v + '"><span class="hh">' + esc(ws.map(function (w) { return w[0]; }).join(' ')) + '</span><span class="ll">Word for word: ' + esc(ws.map(function (w) { return w[2] || '–'; }).join(' · ')) + '</span></button>';
+      if (ws) html += '<button class="cmph" data-hv="' + v + '"><span class="ws">' + ws.map(function (w) {
+          return '<span class="cw"><span class="h">' + esc(w[0]) + '</span><span class="t">' + esc(w[1]) + '</span><span class="g">' + esc(w[2] || '–') + '</span></span>';
+        }).join('') + '</span><span class="tap">Hebrew · how it sounds · word for word. Tap for the full interlinear.</span></button>';
       else if (!hd) html += '<div class="cmpr"><span class="lbl">Hebrew</span><span class="txt miss">Download the Hebrew from the א Hebrew view of this book first.</span></div>';
     }
     html += '</div>';
