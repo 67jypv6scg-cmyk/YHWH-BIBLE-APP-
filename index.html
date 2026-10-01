@@ -217,6 +217,16 @@ textarea { min-height: 12rem; resize: vertical; line-height: 1.5; }
 .wdef { font-size: .9rem; color: var(--soft); white-space: pre-line; margin: .6rem 0; }
 .refchips { display: flex; flex-wrap: wrap; gap: .35rem; margin: .4rem 0 .8rem; }
 .refchips button { background: none; border: 1px solid var(--rule); border-radius: 999px; padding: .2rem .6rem; font-size: .8rem; color: var(--accent); }
+.cmpv { border-top: 1px solid var(--rule); padding: .8rem 0 .9rem; }
+.cmpv.flash { background: var(--hit); border-radius: 8px; }
+.cmpv .vno { color: var(--accent); font-weight: 600; font-size: .9rem; margin-bottom: .35rem; }
+.cmpr { display: grid; grid-template-columns: 4.2rem minmax(0, 1fr); gap: .6rem; padding: .25rem 0; align-items: baseline; }
+.cmpr .lbl { font-size: .75rem; letter-spacing: .04em; color: var(--soft); font-weight: 600; }
+.cmpr .txt { line-height: 1.55; }
+.cmpr .txt.miss { color: var(--soft); font-style: italic; font-size: .9rem; }
+.cmph { width: 100%; text-align: right; background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: .5rem .7rem; margin-top: .35rem; color: var(--ink); }
+.cmph .hh { display: block; direction: rtl; font-family: 'Frank Ruhl Libre', 'Times New Roman', serif; font-size: calc(var(--size) * 1.25); line-height: 1.5; }
+.cmph .ll { display: block; text-align: left; font-size: .85rem; font-style: italic; color: var(--soft); margin-top: .2rem; }
 .greet { font-size: 1.35rem; margin: 0 0 .15rem; }
 .greet-d { color: var(--soft); font-size: .85rem; margin: 0 0 1rem; }
 .votd { position: relative; border-radius: 16px; overflow: hidden; min-height: 19rem; margin: 0 0 1rem; background: #23301f center / cover no-repeat; color: #fff; display: flex; flex-direction: column; }
@@ -700,6 +710,7 @@ function neighbour(dir) {
   return null;
 }
 function showChapter(b, c, verses) {
+  cmpView = null; hebView = null;
   if (planCtx) { var pc = planCtx.list[planCtx.i]; if (!pc || pc.b !== b || pc.c !== c) planCtx = null; }
   pos = { b: b, c: c };
   S.last = { b: b, c: c }; saveSettings();
@@ -710,6 +721,7 @@ function showChapter(b, c, verses) {
     if (!Object.keys(chapters).length) return renderEmpty();
     main.innerHTML = planBanner() + '<div class="empty"><h2>' + esc(BOOKS[b][0] + ' ' + c) + '</h2><p>This chapter hasn’t been imported yet.</p><button class="primary" id="impHere">Import it now</button></div>' + (planCtx ? planNavHtml() : '');
     document.getElementById('impHere').onclick = function () { openImport(b, c); };
+    var em = main.querySelector('.empty'); if (em) { var cb = document.createElement('button'); cb.className = 'quiet'; cb.style.marginTop = '.8rem'; cb.textContent = 'Compare versions'; cb.onclick = function () { showCompare(b, c); }; em.appendChild(cb); }
     bindPlanBits();
     window.scrollTo(0, 0);
     return;
@@ -718,7 +730,7 @@ function showChapter(b, c, verses) {
   notesForChapter(b, c).forEach(function (n) { (noteAt[n.v1] = noteAt[n.v1] || []).push(n); for (var v = n.v1; v <= n.v2; v++) notedV[v] = 1; });
   var headAt = {};
   (doc.heads || []).forEach(function (h) { (headAt[h.v] = headAt[h.v] || []).push(h.t); });
-  var html = planBanner() + '<h1 class="ch-title">' + esc(bn(b) + ' ' + c) + '</h1><p class="ch-sub">ESV, with the Names restored</p>' + (b < NT_START ? '<button class="hebbtn" id="toHeb">א Hebrew</button>' : '') + '<div class="text"><p>';
+  var html = planBanner() + '<h1 class="ch-title">' + esc(bn(b) + ' ' + c) + '</h1><p class="ch-sub">ESV, with the Names restored</p>' + '<div style="display:flex;gap:.5rem;flex-wrap:wrap">' + (b < NT_START ? '<button class="hebbtn" id="toHeb">א Hebrew</button>' : '') + '<button class="hebbtn" id="toCmp">Compare</button></div>' + '<div class="text"><p>';
   doc.verses.forEach(function (x, i) {
     if (headAt[x.v]) {
       html += '</p>';
@@ -734,7 +746,9 @@ function showChapter(b, c, verses) {
           '<button id="nextCh"' + (next ? '' : ' disabled') + '>' + (next ? esc(BOOKS[next.b][0] + ' ' + next.c) : 'End') + ' ›</button></nav>';
   main.innerHTML = html;
   hebView = null;
+  cmpView = null;
   var th = document.getElementById('toHeb'); if (th) th.onclick = function () { showHebrew(b, c); };
+  var tc = document.getElementById('toCmp'); if (tc) tc.onclick = function () { showCompare(b, c); };
   bindPlanBits();
   if (!planCtx) {
     if (prev) document.getElementById('prevCh').onclick = function () { showChapter(prev.b, prev.c); };
@@ -953,7 +967,7 @@ document.getElementById('refBtn').onclick = function () { openPicker(); };
 function menu() {
   openSheet('Menu');
   sheetBody.innerHTML = '<div class="actions" style="flex-direction:column;align-items:stretch">' +
-    '<button class="primary" id="mImp">Import chapters</button><button class="quiet" id="mNotes">My notes</button><button class="quiet" id="mPlan">Reading plans</button><button class="quiet" id="mStudy">Hebrew study</button><button class="quiet" id="mBak">Back up and restore</button><button class="quiet" id="mFull">' + (isFull() ? 'Leave full screen' : 'Full screen') + '</button><button class="quiet" id="mSet">Settings</button></div>' +
+    '<button class="primary" id="mImp">Import chapters</button><button class="quiet" id="mNotes">My notes</button><button class="quiet" id="mPlan">Reading plans</button><button class="quiet" id="mStudy">Hebrew study</button><button class="quiet" id="mCmp">Compare versions</button><button class="quiet" id="mVer">My versions</button><button class="quiet" id="mBak">Back up and restore</button><button class="quiet" id="mFull">' + (isFull() ? 'Leave full screen' : 'Full screen') + '</button><button class="quiet" id="mSet">Settings</button></div>' +
     '<p class="status" style="margin-top:1.2rem">' + esc(storageNote()) + ' ' + Object.keys(chapters).length + ' chapters imported.</p>';
   document.getElementById('mImp').onclick = function () { openImport(pos.b, nextMissing(pos.b)); };
   document.getElementById('mSet').onclick = openSettings;
@@ -961,6 +975,8 @@ function menu() {
   document.getElementById('mNotes').onclick = openNotesList;
   document.getElementById('mPlan').onclick = function () { openToday(); };
   document.getElementById('mStudy').onclick = openStudySection;
+  document.getElementById('mCmp').onclick = function () { closeSheet(); closeSearch(); showCompare(pos.b, pos.c); };
+  document.getElementById('mVer').onclick = openMyVersions;
   document.getElementById('mFull').onclick = function () { closeSheet(); toggleFull(); };
 }
 document.getElementById('menuBtn').onclick = menu;
@@ -1231,7 +1247,7 @@ function openSettings() {
     document.getElementById(p[0]).onchange = function () { S[p[1]] = this.checked; saveSettings(); if (p[1] === 'shade') refreshView(); };
   });
 }
-function refreshView() { if (qEl.value.trim()) renderSearch(); else if (hebView) { var y0 = window.scrollY; showHebrew(hebView.b, hebView.c).then(function () { window.scrollTo(0, y0); }); } else if (has(pos.b, pos.c)) { var y = window.scrollY; showChapter(pos.b, pos.c); window.scrollTo(0, y); } }
+function refreshView() { if (qEl.value.trim()) renderSearch(); else if (cmpView) { var y1 = window.scrollY; showCompare(cmpView.b, cmpView.c).then(function () { window.scrollTo(0, y1); }); } else if (hebView) { var y0 = window.scrollY; showHebrew(hebView.b, hebView.c).then(function () { window.scrollTo(0, y0); }); } else if (has(pos.b, pos.c)) { var y = window.scrollY; showChapter(pos.b, pos.c); window.scrollTo(0, y); } }
 
 // ======================================================================
 // Notes: on verses, and on reading-plan days
@@ -1832,11 +1848,11 @@ function morphPlain(mo, full) {
   if (!full) { var main = parts.filter(function (x) { return /^(verb|noun|proper|people|adjective|number|ordinal|personal|demonstrative pronoun|adverb)/.test(x); })[0] || parts[parts.length - 1] || ''; return main.split(' · ').slice(0, 3).join(' · '); }
   return lang + parts.join('  +  ');
 }
-function glossNames(g) { return restore(g.replace(/\bYahweh\b/g, 'LORD')); }
+function glossNames(g) { return g; }   // STEP Bible's English is shown exactly as published
 
 // Interlinear view
 async function showHebrew(b, c, flashV) {
-  hebView = { b: b, c: c }; planCtx = null; pos = { b: b, c: c };
+  hebView = { b: b, c: c }; cmpView = null; planCtx = null; pos = { b: b, c: c };
   selected.clear(); updateSelbar();
   document.getElementById('refBtn').textContent = bn(b) + ' ' + c;
   var set = hebSetFor(b);
@@ -1993,6 +2009,155 @@ async function openStudySection() {
     };
   });
 }
+
+// ======================================================================
+// Compare versions. Other versions are kept exactly as published: no Names changes, no highlighting.
+// ======================================================================
+var VERSIONS = [
+  { id: 'esv', label: 'ESV', name: 'ESV, with the Names restored' },
+  { id: 'kjv', label: 'KJV', name: 'King James Version', download: true, credit: 'King James Version (public domain), via getBible.net' }
+];
+var verDb = null, verCache = {}, verMeta = null;
+function verOpen() {
+  if (verDb) return Promise.resolve(verDb);
+  return new Promise(function (res) {
+    try { var r = indexedDB.open('nrb-versions', 1); r.onupgradeneeded = function () { r.result.createObjectStore('kv'); }; r.onsuccess = function () { verDb = r.result; res(verDb); }; r.onerror = function () { res(null); }; }
+    catch (e) { res(null); }
+  });
+}
+async function verGet(k) { var db = await verOpen(); if (!db) return null; return new Promise(function (res) { try { var q = db.transaction('kv').objectStore('kv').get(k); q.onsuccess = function () { res(q.result || null); }; q.onerror = function () { res(null); }; } catch (e) { res(null); } }); }
+async function verPut(k, v) { var db = await verOpen(); if (!db) throw new Error('nostore'); return new Promise(function (res, rej) { var tx = db.transaction('kv', 'readwrite'); tx.objectStore('kv').put(v, k); tx.oncomplete = res; tx.onerror = tx.onabort = function () { rej(tx.error || new Error('space')); }; }); }
+async function verDel(k) { var db = await verOpen(); if (!db) return; return new Promise(function (res) { var tx = db.transaction('kv', 'readwrite'); tx.objectStore('kv').delete(k); tx.oncomplete = res; tx.onerror = res; }); }
+async function verLoadMeta() { if (!verMeta) verMeta = (await verGet('meta')) || {}; return verMeta; }
+async function verBook(id, b) { var k = id + ':' + b; if (verCache[k]) return verCache[k]; var d = await verGet(k); if (d) verCache[k] = d; return d; }
+// Text of one chapter in a version: { verse: text }
+async function verChapter(id, b, c) {
+  if (id === 'esv') { var d = chapters[key(b, c)]; if (!d) return null; var o = {}; d.verses.forEach(function (x) { o[x.v] = x.t; }); return o; }
+  var bk = await verBook(id, b); return bk ? (bk[c] || null) : null;
+}
+function getbibleBook(bk, into) {
+  var b = (+bk.nr || +bk.book_nr) - 1; if (!(b >= 0 && b < 66)) return;
+  var out = into[b] = into[b] || {};
+  (bk.chapters || []).forEach(function (ch) {
+    var c = +ch.chapter; if (!c) return;
+    var cv = out[c] = out[c] || {};
+    (ch.verses || []).forEach(function (v) { if (v && v.verse && typeof v.text === 'string') cv[+v.verse] = v.text.replace(/\s+$/, ''); });
+  });
+}
+async function downloadKjv(stat) {
+  var all = {};
+  stat('Downloading the King James Version…');
+  try {
+    var txt = await fetchText('https://api.getbible.net/v2/kjv.json', function (g, t) { stat('Downloading the King James Version… ' + (g / 1048576).toFixed(1) + ' MB' + (t ? ' of ' + (t / 1048576).toFixed(1) + ' MB' : '')); });
+    var j = JSON.parse(txt); (j.books || []).forEach(function (bk) { getbibleBook(bk, all); });
+  } catch (e) { all = {}; }
+  if (Object.keys(all).length < 66) {
+    for (var n = 1; n <= 66; n++) {
+      if (all[n - 1]) continue;
+      stat('Downloading the King James Version… book ' + n + ' of 66');
+      var r = await fetch('https://api.getbible.net/v2/kjv/' + n + '.json');
+      if (!r.ok) throw new Error('download ' + r.status);
+      var bj = await r.json(); if (!bj.nr && !bj.book_nr) bj.nr = n; getbibleBook(bj, all);
+    }
+  }
+  var bks = Object.keys(all).map(Number);
+  if (bks.length < 66) throw new Error('format');
+  stat('Saving to this device…');
+  for (var i = 0; i < bks.length; i++) { await verPut('kjv:' + bks[i], all[bks[i]]); verCache['kjv:' + bks[i]] = all[bks[i]]; }
+  var meta = await verLoadMeta(); meta.kjv = { when: Date.now(), books: 66 }; await verPut('meta', meta);
+  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
+}
+function cmpSel() { var s = Array.isArray(S.cmp) && S.cmp.length ? S.cmp.slice(0, 3) : ['esv', 'kjv']; return s.filter(function (id) { return VERSIONS.some(function (v) { return v.id === id; }); }); }
+
+async function showCompare(b, c, flashV) {
+  hebView = null; planCtx = null; pos = { b: b, c: c }; cmpView = { b: b, c: c };
+  selected.clear(); updateSelbar();
+  document.getElementById('refBtn').textContent = bn(b) + ' ' + c;
+  var sel = cmpSel(), meta = await verLoadMeta(), heb = b < NT_START && S.cmpHeb !== false;
+  if (!cmpView || cmpView.b !== b || cmpView.c !== c) return;
+  var chips = VERSIONS.map(function (v) { return '<button data-ver="' + v.id + '" class="' + (sel.indexOf(v.id) >= 0 ? 'on' : '') + '">' + v.label + '</button>'; }).join('') +
+    (b < NT_START ? '<button data-ver="heb" class="' + (heb ? 'on' : '') + '">א Hebrew</button>' : '');
+  var html = '<div class="ilbar"><button id="cmBack">‹ Reading</button><span class="sp"></span>' + chips + '</div>' +
+    '<h1 class="ch-title">' + esc(bn(b) + ' ' + c) + '</h1><p class="ch-sub">Compare versions. Only your ESV has the Names restored; the others are shown exactly as published.</p>';
+  if (sel.indexOf('kjv') >= 0 && !meta.kjv) {
+    html += window.claude ? '<div class="card"><p class="hint" style="margin:0">The King James Version downloads in your installed app. Open the Scriptures app from your home-screen icon to compare with it.</p></div>' :
+      '<div class="card"><h3>Download the King James Version</h3><p class="hint">A one-time download of the whole KJV, about 5 MB. After that it works offline. The text is kept exactly as published.</p><div class="actions"><button class="primary" id="kjvGet">Download now</button></div><p class="status" id="kjvStat"></p></div>';
+  }
+  var texts = {}, vset = {};
+  for (var i = 0; i < sel.length; i++) { var t = await verChapter(sel[i], b, c); texts[sel[i]] = t; if (t) Object.keys(t).forEach(function (v) { vset[v] = 1; }); }
+  var hd = heb ? await hebBook(b) : null, hch = hd && hd[c] ? hd[c] : null;
+  if (hch) Object.keys(hch).forEach(function (v) { vset[v] = 1; });
+  var vs = Object.keys(vset).map(Number).sort(function (a, z) { return a - z; });
+  if (!vs.length) html += '<p class="hint">Nothing to compare yet for this chapter. Import it in the ESV, or download the King James Version.</p>';
+  vs.forEach(function (v) {
+    html += '<div class="cmpv" id="cv' + v + '"><div class="vno">Verse ' + v + '</div>';
+    sel.forEach(function (id) {
+      var ver = VERSIONS.filter(function (x) { return x.id === id; })[0], t = texts[id] && texts[id][v];
+      html += '<div class="cmpr"><span class="lbl">' + ver.label + '</span><span class="txt' + (t ? '' : ' miss') + '">' +
+        (t ? (id === 'esv' ? fmtVerse(t) : esc(t)) : (texts[id] ? 'Not in this version here' : id === 'esv' ? 'Not imported yet' : 'Not downloaded yet')) + '</span></div>';
+    });
+    if (heb) {
+      var ws = hch && hch[v];
+      if (ws) html += '<button class="cmph" data-hv="' + v + '"><span class="hh">' + esc(ws.map(function (w) { return w[0]; }).join(' ')) + '</span><span class="ll">Word for word: ' + esc(ws.map(function (w) { return w[2] || '–'; }).join(' · ')) + '</span></button>';
+      else if (!hd) html += '<div class="cmpr"><span class="lbl">Hebrew</span><span class="txt miss">Download the Hebrew from the א Hebrew view of this book first.</span></div>';
+    }
+    html += '</div>';
+  });
+  var nb = c < BOOKS[b][1] ? c + 1 : 0, pb = c > 1 ? c - 1 : 0;
+  html += '<nav class="chnav"><button id="cPrev"' + (pb ? '' : ' disabled') + '>‹ ' + (pb ? esc(bn(b) + ' ' + pb) : 'Start') + '</button><button id="cNext"' + (nb ? '' : ' disabled') + '>' + (nb ? esc(bn(b) + ' ' + nb) : 'End') + ' ›</button></nav>' +
+    '<p class="status" style="margin-top:1.5rem">King James Version: public domain, via getBible.net. Hebrew text and word-for-word English: STEP Bible (stepbible.org), Tyndale House, Cambridge, CC BY 4.0.</p>';
+  main.innerHTML = html;
+  document.getElementById('cmBack').onclick = function () { cmpView = null; showChapter(b, c); };
+  if (pb) document.getElementById('cPrev').onclick = function () { showCompare(b, pb); };
+  if (nb) document.getElementById('cNext').onclick = function () { showCompare(b, nb); };
+  main.querySelectorAll('[data-ver]').forEach(function (el) {
+    el.onclick = function () {
+      var id = el.dataset.ver;
+      if (id === 'heb') { S.cmpHeb = !heb; saveSettings(); showCompare(b, c); return; }
+      var cur = cmpSel(), at = cur.indexOf(id);
+      if (at >= 0) { if (cur.length === 1) { toast('Keep at least one version'); return; } cur.splice(at, 1); }
+      else { if (cur.length >= 3) { toast('Up to three versions at a time'); return; } cur.push(id); }
+      S.cmp = VERSIONS.map(function (x) { return x.id; }).filter(function (x) { return cur.indexOf(x) >= 0; }); saveSettings(); showCompare(b, c);
+    };
+  });
+  main.querySelectorAll('[data-hv]').forEach(function (el) { el.onclick = function () { cmpView = null; showHebrew(b, c, +el.dataset.hv); }; });
+  var kg = document.getElementById('kjvGet');
+  if (kg) kg.onclick = async function () {
+    var st = document.getElementById('kjvStat'); kg.disabled = true;
+    try { await downloadKjv(function (m) { st.textContent = m; }); toast('King James Version downloaded'); showCompare(b, c, flashV); }
+    catch (e) { kg.disabled = false; st.style.color = 'var(--name)'; st.textContent = (e && e.message === 'nostore') ? 'This view can’t store it. Use the app from your home-screen icon.' : 'The download didn’t work (' + ((e && e.message) || 'error') + '). Check your connection and try again. If it keeps failing, send Claude a screenshot.'; }
+  };
+  if (flashV && document.getElementById('cv' + flashV)) { var fv = document.getElementById('cv' + flashV); fv.scrollIntoView({ block: 'center' }); fv.classList.add('flash'); setTimeout(function () { fv.classList.remove('flash'); }, 2200); }
+  else window.scrollTo(0, 0);
+}
+async function openMyVersions() {
+  openSheet('My versions');
+  var meta = await verLoadMeta(), n = Object.keys(chapters).length;
+  var h = '<p class="hint" style="margin-top:0">Only your ESV has the Names restored. Every other version is kept exactly as published, for side-by-side teaching.</p>' +
+    '<div class="wrow"><span>ESV</span><span>' + n + (n === 1 ? ' chapter' : ' chapters') + ' imported</span></div>' +
+    '<div class="wrow"><span>KJV</span><span>' + (meta.kjv ? 'Whole Bible, downloaded' : window.claude ? 'Downloads in your installed app' : '<button class="backlink" id="mvKjv" style="margin:0">Download (about 5 MB)</button>') + '</span></div>' +
+    '<div class="wrow"><span>NKJV</span><span class="status" style="margin:0">Coming next</span></div>' +
+    '<div class="wrow"><span>LSB</span><span class="status" style="margin:0">Coming next</span></div>' +
+    '<div class="wrow"><span>ISR 2009</span><span class="status" style="margin:0">Coming next</span></div>' +
+    '<p class="status" id="mvStat"></p>' +
+    '<div class="actions"><button class="primary" id="mvCmp">Compare ' + esc(bn(pos.b) + ' ' + pos.c) + '</button>' + (meta.kjv ? '<button class="quiet" id="mvDel">Remove the KJV</button>' : '') + '</div>' +
+    '<p class="status">King James Version: public domain, via getBible.net.</p>';
+  sheetBody.innerHTML = h;
+  document.getElementById('mvCmp').onclick = function () { closeSheet(); closeSearch(); showCompare(pos.b, pos.c); };
+  var dl = document.getElementById('mvKjv');
+  if (dl) dl.onclick = async function () {
+    var st = document.getElementById('mvStat'); dl.disabled = true;
+    try { await downloadKjv(function (m) { st.textContent = m; }); toast('King James Version downloaded'); openMyVersions(); }
+    catch (e) { dl.disabled = false; st.style.color = 'var(--name)'; st.textContent = 'The download didn’t work (' + ((e && e.message) || 'error') + '). Try again on Wi-Fi.'; }
+  };
+  var del = document.getElementById('mvDel');
+  if (del) del.onclick = async function () {
+    if (del.dataset.armed !== '1') { del.dataset.armed = '1'; del.textContent = 'Tap again to remove'; return; }
+    for (var b = 0; b < 66; b++) { await verDel('kjv:' + b); delete verCache['kjv:' + b]; }
+    var m = await verLoadMeta(); delete m.kjv; await verPut('meta', m); toast('King James Version removed'); openMyVersions();
+  };
+}
+var cmpView = null;
 
 // ======================================================================
 // Verse of the day
