@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Scriptures, Names Restored</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Scriptures">
+<meta name="theme-color" content="#0B0D0B">
+<style>
+@font-face { font-family: 'Lora'; src: url('lora.ttf') format('truetype'); font-weight: 400 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Lora'; src: url('lora-italic.ttf') format('truetype'); font-weight: 400 700; font-style: italic; font-display: swap; }
+:root {
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  --bg: #F7F7F2; --panel: #FFFFFF; --ink: #1F2A22; --soft: #5B665D; --rule: #D9DDD3;
+  --accent: #3F5634; --accent-ink: #FFFFFF; --name: #8A6420; --sel: rgba(63,86,52,.13); --hit: rgba(154,116,48,.25);
+  --serif: 'Lora', Georgia, 'Times New Roman', serif;
+  --heb: 'Frank Ruhl Libre', 'Times New Roman', 'David', serif;
+  --size: 19px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B0D0B; --panel: #151915; --ink: #ECEDE6; --soft: #9AA396; --rule: #283026;
+    --accent: #A9C596; --accent-ink: #0B0D0B; --name: #E2C27D; --sel: rgba(169,197,150,.16); --hit: rgba(226,194,125,.28);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0B0D0B; --panel: #151915; --ink: #ECEDE6; --soft: #9AA396; --rule: #283026;
+  --accent: #A9C596; --accent-ink: #0B0D0B; --name: #E2C27D; --sel: rgba(169,197,150,.16); --hit: rgba(226,194,125,.28);
+}
+*, *::before, *::after { box-sizing: inherit; }
+html { height: 100%; scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 4.5rem); }
+body {
+  margin: 0; min-height: 100%; background: var(--bg); color: var(--ink);
+  font-family: var(--serif); font-size: 16px; line-height: 1.5; -webkit-text-size-adjust: 100%;
+}
+button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.hidden { display: none !important; }
+
+/* ---------- top bar ---------- */
+.bar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  background: var(--bg); border-bottom: 1px solid var(--rule);
+}
+.bar { transition: transform .25s ease; }
+.bar.away { transform: translateY(calc(-100% - env(safe-area-inset-top, 0px))); }
+@media (prefers-reduced-motion: reduce) { .bar { transition: none; } }
+.bar-in { max-width: 46rem; margin: 0 auto; display: flex; gap: .5rem; align-items: center; padding: .55rem .8rem; }
+.refbtn {
+  flex: none; background: none; border: 1px solid var(--rule); border-radius: 999px;
+  padding: .4rem .85rem; font-weight: 500; white-space: nowrap; max-width: 45%; overflow: hidden; text-overflow: ellipsis;
+}
+.search { flex: 1; min-width: 0; position: relative; }
+.search input {
+  width: 100%; font: inherit; font-size: 16px; color: var(--ink); background: var(--panel);
+  border: 1px solid var(--rule); border-radius: 999px; padding: .45rem 2rem .45rem .95rem;
+}
+input[type=search]::-webkit-search-cancel-button, input[type=search]::-webkit-search-decoration { -webkit-appearance: none; appearance: none; display: none; }
+.search .x { position: absolute; right: .3rem; top: 50%; transform: translateY(-50%); background: none; border: 0; color: var(--soft); padding: .3rem .5rem; font-size: 1.1rem; line-height: 1; }
+.iconbtn { flex: none; background: none; border: 0; padding: .4rem .45rem; color: var(--soft); font-size: 1.35rem; line-height: 1; border-radius: 8px; }
+
+main { max-width: 46rem; margin: 0 auto; padding: 1.2rem 1.1rem 7rem; }
+
+/* ---------- reading ---------- */
+.ch-title { font-weight: 400; font-size: 2rem; margin: .6rem 0 .2rem; letter-spacing: .01em; }
+.ch-sub { color: var(--soft); font-size: .85rem; margin: 0 0 1.4rem; }
+.text { font-size: var(--size); line-height: 1.85; }
+.text p { margin: 0 0 .9em; }
+.shead { font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin: 1.6em 0 .5em; font-weight: 600; font-family: var(--serif); }
+.v { border-radius: 4px; transition: background-color .25s; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.v.sel { background: var(--sel); box-shadow: inset 0 -2px 0 var(--accent); }
+.v.flash { background: var(--hit); }
+.vn { font-size: .58em; font-weight: 600; color: var(--accent); vertical-align: super; line-height: 0; margin: 0 .18em 0 .1em; font-family: var(--serif); }
+.nm { color: var(--name); }
+.heb { font-family: var(--heb); font-size: 1.1em; font-weight: 500; unicode-bidi: isolate; }
+.chnav { display: flex; justify-content: space-between; gap: .8rem; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--rule); }
+.chnav button { background: none; border: 1px solid var(--rule); border-radius: 8px; padding: .55rem .9rem; color: var(--ink); }
+.chnav button[disabled] { opacity: .35; cursor: default; }
+
+.empty { text-align: center; padding: 3rem .5rem; }
+.empty .mark { font-family: var(--heb); font-size: 4rem; color: var(--name); line-height: 1; direction: rtl; }
+.empty h2 { font-weight: 400; font-size: 1.6rem; margin: 1rem 0 .4rem; }
+.empty p { color: var(--soft); margin: 0 auto 1.4rem; max-width: 28rem; }
+.primary { background: var(--accent); color: var(--accent-ink); border: 1px solid var(--accent); border-radius: 8px; padding: .65rem 1.2rem; font-weight: 500; }
+.quiet { background: none; color: var(--accent); border: 1px solid var(--accent); border-radius: 8px; padding: .65rem 1.2rem; }
+
+/* ---------- search results ---------- */
+.res-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin: .2rem 0 1rem; }
+.res-head .count { color: var(--soft); font-size: .92rem; }
+.scope { display: flex; gap: .35rem; flex-wrap: wrap; }
+.chip { background: none; border: 1px solid var(--rule); border-radius: 999px; padding: .25rem .75rem; font-size: .85rem; color: var(--soft); }
+.chip.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.goto { display: block; width: 100%; text-align: left; background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: .7rem .9rem; margin-bottom: 1rem; color: var(--ink); }
+.goto b { color: var(--accent); font-weight: 600; }
+.hit { display: block; width: 100%; text-align: left; background: none; border: 0; border-bottom: 1px solid var(--rule); padding: .8rem .1rem; color: var(--ink); }
+.hit .ref { font-size: .8rem; font-weight: 600; color: var(--accent); letter-spacing: .04em; display: block; margin-bottom: .15rem; }
+.hit .t { font-size: 1.02rem; line-height: 1.6; }
+mark { background: var(--hit); color: inherit; border-radius: 3px; padding: 0 .08em; }
+.more { margin: 1.2rem auto; display: block; }
+.hint { color: var(--soft); font-size: .88rem; }
+
+/* ---------- sheets ---------- */
+.scrim { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 40; }
+.sheet {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; background: var(--panel); color: var(--ink);
+  border-radius: 16px 16px 0 0; max-height: 88%; overflow: auto; overscroll-behavior: contain;
+  padding: 0 1.1rem calc(1.4rem + env(safe-area-inset-bottom, 0px));
+  max-width: 46rem; margin: 0 auto; border: 1px solid var(--rule); border-bottom: 0;
+}
+.sheet-head { position: sticky; top: 0; background: var(--panel); display: flex; justify-content: space-between; align-items: center; padding: 1rem 0 .7rem; border-bottom: 1px solid var(--rule); margin-bottom: 1rem; z-index: 1; }
+.sheet-head h2 { margin: 0; font-weight: 500; font-size: 1.15rem; }
+.sheet-head button { background: none; border: 0; color: var(--accent); font-weight: 500; padding: .3rem 0 .3rem .8rem; }
+.grp { font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--soft); margin: 1.1rem 0 .5rem; }
+.books { display: grid; grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); gap: .4rem; }
+.book { text-align: left; background: none; border: 1px solid var(--rule); border-radius: 8px; padding: .5rem .65rem; color: var(--soft); font-size: .93rem; }
+.book.has { color: var(--ink); border-color: var(--accent); }
+.book.cur { background: var(--sel); }
+.chaps { display: grid; grid-template-columns: repeat(auto-fill, minmax(3rem, 1fr)); gap: .4rem; }
+.chap { background: none; border: 1px solid var(--rule); border-radius: 8px; padding: .55rem 0; color: var(--soft); font-variant-numeric: tabular-nums; }
+.chap.has { color: var(--ink); border-color: var(--accent); }
+.chap.cur { background: var(--accent); color: var(--accent-ink); }
+.backlink { background: none; border: 0; color: var(--accent); padding: 0; margin-bottom: .6rem; }
+
+.field { display: block; margin: 0 0 1rem; }
+.field > span { display: block; font-size: .85rem; color: var(--soft); margin-bottom: .3rem; }
+.field select, .field input, textarea {
+  width: 100%; font: inherit; font-size: 16px; color: var(--ink); background: var(--bg);
+  border: 1px solid var(--rule); border-radius: 8px; padding: .55rem .7rem;
+}
+textarea { min-height: 12rem; resize: vertical; line-height: 1.5; }
+.row2 { display: grid; grid-template-columns: minmax(0, 1fr) 6.5rem; gap: .6rem; }
+.seg { display: flex; flex-wrap: wrap; gap: .4rem; }
+.seg button { background: none; border: 1px solid var(--rule); border-radius: 999px; padding: .3rem .85rem; color: var(--ink); }
+.seg button.on { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.check { display: flex; gap: .6rem; align-items: flex-start; margin: .6rem 0; cursor: pointer; }
+.check input { margin-top: .3rem; width: 1.05rem; height: 1.05rem; accent-color: var(--accent); }
+.set { padding: .2rem 0 1rem; border-bottom: 1px dashed var(--rule); margin-bottom: 1rem; }
+.set:last-child { border-bottom: 0; }
+.set-t { font-size: .92rem; margin-bottom: .5rem; }
+.actions { display: flex; gap: .6rem; flex-wrap: wrap; margin-top: .9rem; }
+.preview { margin-top: 1rem; border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; }
+.pv { display: flex; justify-content: space-between; gap: 1rem; padding: .6rem .8rem; border-bottom: 1px solid var(--rule); font-size: .93rem; }
+.pv:last-child { border-bottom: 0; }
+.pv .warn { color: var(--name); }
+.pv .ok { color: var(--accent); }
+.status { font-size: .85rem; color: var(--soft); margin: .2rem 0 0; }
+.danger { background: none; border: 1px solid var(--name); color: var(--name); border-radius: 8px; padding: .5rem .9rem; }
+
+/* ---------- selection bar and toast ---------- */
+.selbar {
+  position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(1rem + env(safe-area-inset-bottom, 0px)); z-index: 30;
+  display: flex; gap: .4rem; align-items: center; background: var(--panel); border: 1px solid var(--rule); border-radius: 999px;
+  padding: .35rem .4rem .35rem 1rem; box-shadow: 0 6px 24px rgba(0,0,0,.35); max-width: calc(100% - 2rem);
+}
+.selbar .lbl { font-size: .9rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.selbar button { background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 999px; padding: .4rem .9rem; font-size: .9rem; white-space: nowrap; }
+.selbar button.q { background: none; color: var(--soft); padding: .4rem .6rem; }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(5rem + env(safe-area-inset-bottom, 0px)); z-index: 60; background: var(--ink); color: var(--bg); padding: .5rem 1rem; border-radius: 8px; font-size: .9rem; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: calc(100% - 2rem); text-align: center; }
+.toast.show { opacity: 1; }
+.todaybtn { flex: none; background: var(--accent); color: var(--accent-ink); border: 1px solid var(--accent); border-radius: 999px; padding: .4rem .8rem; font-weight: 500; font-size: .92rem; white-space: nowrap; }
+.todaybtn.plain { background: none; color: var(--accent); }
+.planbar { display: flex; align-items: center; gap: .6rem; background: var(--panel); border: 1px solid var(--rule); border-left: 3px solid var(--accent); border-radius: 10px; padding: .55rem .6rem .55rem .85rem; margin: 0 0 1rem; font-size: .9rem; }
+.planbar .pb-t { flex: 1; min-width: 0; }
+.planbar .pb-t b { font-weight: 600; color: var(--accent); }
+.planbar .pb-t span { color: var(--soft); display: block; font-size: .82rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.planbar button { background: none; border: 0; color: var(--accent); padding: .3rem .4rem; font-size: .88rem; }
+.daychips { display: flex; flex-wrap: wrap; gap: .35rem; margin: -.4rem 0 1.2rem; }
+.daychip { border: 1px solid var(--rule); border-radius: 999px; padding: .15rem .6rem; font-size: .8rem; color: var(--soft); background: none; }
+.daychip.done { border-color: var(--accent); color: var(--accent); }
+.daychip.now { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.plannav { margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--rule); display: flex; flex-direction: column; gap: .6rem; }
+.plannav .row { display: flex; justify-content: space-between; gap: .8rem; }
+.plannav .row button { background: none; border: 1px solid var(--rule); border-radius: 8px; padding: .55rem .9rem; color: var(--ink); }
+.plannav .row button[disabled] { opacity: .35; }
+.plannav .big { width: 100%; padding: .8rem 1rem; font-size: 1.02rem; }
+.card { background: var(--panel); border: 1px solid var(--rule); border-radius: 12px; padding: 1rem 1rem .9rem; margin: 0 0 1rem; }
+.card h3 { margin: 0 0 .25rem; font-weight: 500; font-size: 1.1rem; }
+.card p { margin: .2rem 0; }
+.opt-card { display: block; width: 100%; text-align: left; background: none; border: 1px solid var(--rule); border-radius: 12px; padding: .8rem .95rem; margin-bottom: .6rem; color: var(--ink); }
+.opt-card b { display: block; font-weight: 500; margin-bottom: .15rem; }
+.opt-card span { color: var(--soft); font-size: .88rem; }
+.opt-card.on { border-color: var(--accent); background: var(--sel); }
+.bigstat { font-size: 1.7rem; font-weight: 400; margin: 0; line-height: 1.2; }
+.meter { height: 6px; background: var(--rule); border-radius: 99px; overflow: hidden; margin: .7rem 0 .4rem; }
+.meter i { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
+.days { display: grid; grid-template-columns: repeat(auto-fill, minmax(2.15rem, 1fr)); gap: .3rem; }
+.day { aspect-ratio: 1; border: 1px solid var(--rule); border-radius: 6px; background: none; color: var(--soft); font-size: .72rem; padding: 0; font-variant-numeric: tabular-nums; }
+.day.done { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.day.miss { border-color: var(--name); color: var(--name); }
+.day.today { box-shadow: 0 0 0 2px var(--ink) inset; color: var(--ink); }
+.legend { display: flex; flex-wrap: wrap; gap: .9rem; font-size: .8rem; color: var(--soft); margin: .6rem 0 0; }
+.legend i { display: inline-block; width: .8rem; height: .8rem; border-radius: 3px; border: 1px solid var(--rule); vertical-align: -1px; margin-right: .3rem; }
+.dl-item { display: flex; align-items: center; gap: .6rem; padding: .55rem 0; border-bottom: 1px solid var(--rule); }
+.dl-item:last-child { border-bottom: 0; }
+.dl-item .nm2 { flex: 1; }
+.dl-item .nm2 small { display: block; color: var(--soft); font-size: .78rem; }
+.dl-item input { width: 1.15rem; height: 1.15rem; accent-color: var(--accent); }
+.dl-item button { background: none; border: 1px solid var(--rule); border-radius: 8px; padding: .3rem .7rem; color: var(--accent); font-size: .88rem; }
+.nmark { display: inline-block; background: none; border: 0; padding: .15em .3em; margin: -.3em 0 -.3em -.1em; color: var(--name); font-size: .75em; vertical-align: .4em; line-height: 1; cursor: pointer; }
+.v.noted { text-decoration: underline dotted var(--name); text-underline-offset: .28em; text-decoration-thickness: 1px; }
+.quote { border-left: 3px solid var(--accent); padding: .1rem 0 .1rem .8rem; color: var(--soft); font-size: .95rem; line-height: 1.6; margin: 0 0 1rem; max-height: 9.5rem; overflow: auto; }
+.nsec { font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--soft); margin: 1.2rem 0 .3rem; }
+.loading { text-align: center; color: var(--soft); padding: 4rem 0; }
+@media (prefers-reduced-motion: reduce) { .v, .toast { transition: none; } }
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="bar-in">
+    <button class="refbtn" id="refBtn" aria-label="Choose book and chapter">Genesis 1</button>
+    <button class="todaybtn plain" id="todayBtn" aria-label="Reading plan">Plan</button>
+    <div class="search">
+      <input id="q" type="search" placeholder="Gen 3:15 or a word" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" aria-label="Search">
+      <button class="x hidden" id="qx" aria-label="Clear search">×</button>
+    </div>
+    <button class="iconbtn" id="menuBtn" aria-label="Import and settings">☰</button>
+  </div>
+</header>
+
+<main id="main"><div class="loading">Opening your Bible…</div></main>
+
+<div class="selbar hidden" id="selbar" role="toolbar" aria-label="Selected verses">
+  <span class="lbl" id="selLbl"></span>
+  <button id="selNote">Note</button>
+  <button id="selCopy">Copy</button>
+  <button class="q" id="selClear" aria-label="Clear selection">✕</button>
+</div>
+<div class="scrim hidden" id="scrim"></div>
+<section class="sheet hidden" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  <div class="sheet-head"><h2 id="sheetTitle"></h2><button id="sheetClose">Done</button></div>
+  <div id="sheetBody"></div>
+</section>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+'use strict';
+// ======================================================================
+// Books
+// ======================================================================
+var BOOKS = [['Genesis',50],['Exodus',40],['Leviticus',27],['Numbers',36],['Deuteronomy',34],['Joshua',24],['Judges',21],['Ruth',4],
+  ['1 Samuel',31],['2 Samuel',24],['1 Kings',22],['2 Kings',25],['1 Chronicles',29],['2 Chronicles',36],['Ezra',10],['Nehemiah',13],
+  ['Esther',10],['Job',42],['Psalms',150],['Proverbs',31],['Ecclesiastes',12],['Song of Solomon',8],['Isaiah',66],['Jeremiah',52],
+  ['Lamentations',5],['Ezekiel',48],['Daniel',12],['Hosea',14],['Joel',3],['Amos',9],['Obadiah',1],['Jonah',4],['Micah',7],['Nahum',3],
+  ['Habakkuk',3],['Zephaniah',3],['Haggai',2],['Zechariah',14],['Malachi',4],
+  ['Matthew',28],['Mark',16],['Luke',24],['John',21],['Acts',28],['Romans',16],['1 Corinthians',16],['2 Corinthians',13],['Galatians',6],
+  ['Ephesians',6],['Philippians',4],['Colossians',4],['1 Thessalonians',5],['2 Thessalonians',3],['1 Timothy',6],['2 Timothy',4],['Titus',3],
+  ['Philemon',1],['Hebrews',13],['James',5],['1 Peter',5],['2 Peter',3],['1 John',5],['2 John',1],['3 John',1],['Jude',1],['Revelation',22]];
+var NT_START = 39;
+var ALIAS = {
+  gn:0, ge:0, bereshit:0, bereshith:0, bereshis:0,
+  ex:1, exod:1, shemot:1, shemoth:1,
+  lv:2, le:2, vayikra:2, wayyiqra:2,
+  nu:3, nm:3, bamidbar:3, bemidbar:3,
+  dt:4, deut:4, devarim:4, debarim:4,
+  jdg:6, jg:6, jgs:6,
+  '1sa':8, '2sa':9, '1ki':10, '2ki':11, '1kgs':10, '2kgs':11, '1ch':12, '2ch':13, '1chr':12, '2chr':13,
+  ps:18, psa:18, pss:18, psalm:18, pr:19, prv:19, ec:20, ecc:20, qoh:20, sos:21, song:21, songofsongs:21, canticles:21,
+  ezk:25, jl:28, am:29, ob:30, jon:31, mic:32, na:33, hab:34, zep:35, hag:36, zec:37, mal:38,
+  mt:39, mk:40, lk:41, jn:42, jhn:42, ac:43, ro:44, '1co':45, '2co':46, ga:47, eph:48, php:49, col:50,
+  '1th':51, '2th':52, '1ti':53, '2ti':54, tit:55, phm:56, heb:57, jas:58, '1pe':59, '2pe':60, '1jn':61, '2jn':62, '3jn':63, jude:64, rv:65, re:65, rev:65
+};
+function normBook(s) {
+  return s.toLowerCase().replace(/\./g, '').replace(/^(iii|ii|i)\s+/, function (m) { return { 'iii ': '3', 'ii ': '2', 'i ': '1' }[m] || m; })
+    .replace(/^(1st|first)\s*/, '1').replace(/^(2nd|second)\s*/, '2').replace(/^(3rd|third)\s*/, '3').replace(/\s+/g, '');
+}
+var NORM_NAMES = BOOKS.map(function (b) { return normBook(b[0]); });
+function findBook(s) {
+  var n = normBook(s);
+  if (!n || n.length < 2) return -1;
+  if (Object.prototype.hasOwnProperty.call(ALIAS, n)) return ALIAS[n];
+  for (var i = 0; i < NORM_NAMES.length; i++) if (NORM_NAMES[i] === n) return i;
+  if (n.length < 3 && !/^\d/.test(n)) return -1;
+  for (var j = 0; j < NORM_NAMES.length; j++) if (NORM_NAMES[j].indexOf(n) === 0) return j;
+  return -1;
+}
+function bn(b, one) { return b === 18 && one !== false ? 'Psalm' : BOOKS[b][0]; }
+function key(b, c) { return String(b + 1).padStart(2, '0') + '-' + String(c).padStart(3, '0'); }
+function refLabel(b, c, vs) {
+  var s = bn(b) + ' ' + c;
+  if (!vs || !vs.length) return s;
+  vs = vs.slice().sort(function (a, z) { return a - z; });
+  var parts = [], st = vs[0], pv = vs[0];
+  for (var i = 1; i <= vs.length; i++) {
+    if (i < vs.length && vs[i] === pv + 1) { pv = vs[i]; continue; }
+    parts.push(st === pv ? String(st) : st + '–' + pv);
+    if (i < vs.length) { st = pv = vs[i]; }
+  }
+  return s + ':' + parts.join(', ');
+}
+
+// ======================================================================
+// Storage: account (db) when available, this device otherwise
+// ======================================================================
+var store = { mode: 'local', col: null, settingsRef: null };
+var chapters = {};          // key -> {book, ch, verses:[{v,t}], heads:[{v,t}]}
+var S = { autohide: true, theme: 'dark', size: 19, name: 'heb', jesus: 'heb', god: true, christ: true, lord: 'keep', shade: true, last: null };
+
+// Offline copy: big items (chapters, notes, plan) are kept in IndexedDB, which has room for the whole Bible.
+var BIG = { 'nb-chapters': 1, 'nb-vnotes': 1, 'nb-pnotes': 1, 'nb-plan': 1, 'nb-notes': 1 };
+var big = {}, idb = null;
+function idbOpen() {
+  return new Promise(function (res) {
+    try {
+      var r = indexedDB.open('names-restored-bible', 1);
+      r.onupgradeneeded = function () { r.result.createObjectStore('kv'); };
+      r.onsuccess = function () { res(r.result); };
+      r.onerror = function () { res(null); };
+    } catch (e) { res(null); }
+  });
+}
+async function idbPreload() {
+  idb = await idbOpen();
+  if (!idb) return;
+  await new Promise(function (res) {
+    var tx = idb.transaction('kv', 'readonly'), st = tx.objectStore('kv'), cur = st.openCursor();
+    cur.onsuccess = function () { var c = cur.result; if (c) { big[c.key] = c.value; c.continue(); } else res(); };
+    cur.onerror = function () { res(); };
+  });
+  // Move anything an earlier version left in localStorage
+  Object.keys(BIG).forEach(function (k) {
+    try { var v = localStorage.getItem(k); if (v != null) { if (!(k in big)) { big[k] = JSON.parse(v); idbPut(k, big[k]); } localStorage.removeItem(k); } } catch (e) {}
+  });
+  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
+}
+var idbQueue = Promise.resolve();
+function idbPut(k, v) {
+  if (!idb) return;
+  var copy = v === undefined ? undefined : JSON.parse(JSON.stringify(v));
+  idbQueue = idbQueue.then(function () {
+    return new Promise(function (res) {
+      try {
+        var tx = idb.transaction('kv', 'readwrite'), st = tx.objectStore('kv');
+        if (copy === undefined) st.delete(k); else st.put(copy, k);
+        tx.oncomplete = function () { res(); };
+        tx.onerror = tx.onabort = function () { toast('This device is out of storage space. The last change wasn’t kept.'); res(); };
+      } catch (e) { res(); }
+    });
+  });
+}
+function lsGet(k, d) {
+  if (BIG[k] && idb) return k in big ? JSON.parse(JSON.stringify(big[k])) : d;
+  try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; }
+}
+function lsSet(k, v) {
+  if (BIG[k] && idb) { big[k] = v; idbPut(k, v); return true; }
+  try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; }
+}
+
+async function initStore() {
+  var db = null, user = null;
+  try { if (window.claude && typeof window.claude.use === 'function') { db = await window.claude.use('db'); user = await window.claude.use('user'); } } catch (e) {}
+  var uid = null;
+  if (db && user) { try { uid = await user.id(); } catch (e) {} }
+  if (db && uid) {
+    store.mode = 'db';
+    var root = db.collection('data/users/' + uid);
+    store.settingsRef = root.doc('settings');
+    store.col = root.doc('bible').collection('chapters');
+    store.planRef = root.doc('plan');
+    store.notes = root.doc('plan').collection('notes');
+    store.vnotes = root.doc('bible').collection('vnotes');
+  }
+}
+async function loadAll() {
+  Object.assign(S, lsGet('nb-settings', {}));
+  if (store.mode === 'db') {
+    try {
+      var s = await store.settingsRef.get();
+      if (s.exists) Object.assign(S, s.data());
+    } catch (e) {}
+    var last = '';
+    for (var guard = 0; guard < 10; guard++) {
+      var q = store.col.orderBy('key').limit(500);
+      if (last) q = store.col.where('key', '>', last).orderBy('key').limit(500);
+      var snap;
+      try { snap = await q.get(); } catch (e) { await sleep(600 + Math.random() * 600); snap = await q.get(); }
+      snap.docs.forEach(function (d) { var x = d.data(); if (x && x.key) chapters[x.key] = x; last = x.key; });
+      if (snap.size < 500) break;
+    }
+  } else {
+    chapters = {};
+    if (idb) {
+      Object.keys(big).forEach(function (k) { if (k.indexOf('ch:') === 0) chapters[k.slice(3)] = big[k]; });
+      var legacy = big['nb-chapters'];
+      if (legacy) {
+        Object.keys(legacy).forEach(function (k) { if (!chapters[k]) { chapters[k] = legacy[k]; idbPut('ch:' + k, legacy[k]); } });
+        idbPut('nb-chapters', undefined); delete big['nb-chapters'];
+      }
+    } else chapters = lsGet('nb-chapters', {});
+  }
+}
+var settingsTimer = null;
+function saveSettings() {
+  lsSet('nb-settings', S);
+  if (store.mode !== 'db') return;
+  clearTimeout(settingsTimer);
+  settingsTimer = setTimeout(function () {
+    store.settingsRef.set(JSON.parse(JSON.stringify(S))).catch(function () {});
+  }, 800);
+}
+function withTimeout(p, ms) {
+  return Promise.race([p, new Promise(function (_, rej) { setTimeout(function () { rej({ code: 'timeout', message: 'no reply from storage after ' + Math.round(ms / 1000) + 's' }); }, ms); })]);
+}
+async function putChapter(doc) {
+  if (store.mode === 'db') {
+    var clean = JSON.parse(JSON.stringify(doc));
+    for (var attempt = 1; ; attempt++) {
+      try { await withTimeout(store.col.doc(doc.key).set(clean), 20000); break; }
+      catch (e) {
+        var retry = e && (e.code === 'unavailable' || e.code === 'resource_exhausted' || e.code === 'timeout');
+        if (!retry || attempt >= 3) throw e;
+        await sleep(800 * attempt + Math.random() * 600);
+      }
+    }
+  }
+  chapters[doc.key] = doc;
+  if (store.mode !== 'db') {
+    if (idb) idbPut('ch:' + doc.key, doc);
+    else if (!lsSet('nb-chapters', chapters)) throw { code: 'quota_exceeded', message: 'This device is out of storage space.' };
+  }
+}
+async function removeChapter(k) {
+  if (store.mode === 'db') await store.col.doc(k).delete();
+  delete chapters[k];
+  if (store.mode !== 'db') { if (idb) idbPut('ch:' + k, undefined); else lsSet('nb-chapters', chapters); }
+}
+function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+// Combine a new paste with a chapter already saved: new verses win, existing verses the paste doesn't cover are kept.
+function mergeChapter(old, c) {
+  if (!old) return { verses: c.verses, heads: c.heads, mode: 'new' };
+  var newNums = new Set(c.verses.map(function (x) { return x.v; }));
+  var covers = old.verses.every(function (x) { return newNums.has(x.v); });
+  if (covers) return { verses: c.verses, heads: c.heads, mode: 'replace' };
+  var map = {};
+  old.verses.forEach(function (x) { map[x.v] = x.t; });
+  c.verses.forEach(function (x) { map[x.v] = x.t; });
+  var verses = Object.keys(map).map(Number).sort(function (a, z) { return a - z; }).map(function (v) { return { v: v, t: map[v] }; });
+  var heads = (old.heads || []).filter(function (h) { return !newNums.has(h.v); }).concat(c.heads || [])
+    .sort(function (a, z) { return a.v - z.v; });
+  return { verses: verses, heads: heads, mode: 'merge' };
+}
+function spanText(nums) {
+  var parts = [], st = nums[0], pv = nums[0];
+  for (var i = 1; i <= nums.length; i++) {
+    if (i < nums.length && nums[i] === pv + 1) { pv = nums[i]; continue; }
+    parts.push(st === pv ? String(st) : st + '–' + pv);
+    if (i < nums.length) st = pv = nums[i];
+  }
+  return parts.join(', ');
+}
+function has(b, c) { return !!chapters[key(b, c)]; }
+function loadedIn(b) { var n = 0; for (var c = 1; c <= BOOKS[b][1]; c++) if (has(b, c)) n++; return n; }
+
+// ======================================================================
+// Import: clean-up, parse into chapters and verses, restore the names
+// ======================================================================
+var COMMON = new Set(('a an and the he she it they them their his her him its is are was were be been being am i we us our you your yours me my mine ' +
+  'of to in on at by for from with without into onto upon over under out up down off about above after before behind below beneath beside between beyond ' +
+  'but or nor so yet if then than that this these those there here where when while who whom whose which what why how all any each every both either neither ' +
+  'no not none one two three four five six seven eight nine ten some such own same other another many much more most few less least only also even again ' +
+  'as because since until till unless though although whether lest shall should will would may might must can could do does did done have has had having ' +
+  'said say says saying spoke speak told tell came come comes go goes went gone gave give given took take taken made make makes saw see seen knew know known ' +
+  'let lord god man men woman women son sons daughter daughters father fathers mother brother brothers sister wife husband child children people ' +
+  'land earth heaven heavens water waters day days night light dark darkness life death house city king kings word words name hand hands eyes eye face ' +
+  'heart soul spirit blood bread wine fruit tree trees seed field garden good evil great little old new first last now very thing things ' +
+  'called call behold bring brought bear bore born dwell dwelt eat ate drink hear heard answered answer blessed bless curse cursed fear sent send ' +
+  'set put sat stood returned turned became become began lived live died die dead kill killed built build left right walk walked way ways ' +
+  'away among around against along toward towards through throughout therefore thus indeed truly surely forth near far long whole ' +
+  'ah oh lo yes nay art thou thee thy hath doth unto amen ' +
+  'able beast beasts serpent ground dust rib flesh bone bones naked ashamed wise food delight desired eaten touch midst opened sewed leaves ' +
+  'read rest reason rain rise risen rose road rock rod room root rule ruler rulers break breath brethren bright broad brown burn burned ' +
+  'ark age ages air altar angel angels anger arm arms army ask asked ass bag bank bare bed best bird birds boat body book bow box boy branch ' +
+  'camp care cast cattle cause cloud cold count cover cup cut deep desert door dream dry east end enemy ever evening faith fall family ' +
+  'fast feast feet fell fight fill find fine fire fish flock flood floor fly foot form found free friend gate gather glory gold grace grain ' +
+  'grass grave grow guard hair half hall hard harvest head health heat high hill hold holy honor horse hour hunger idol iron journey joy ' +
+  'judge judgment keep kind kingdom lamb law lay lead learn lie lift line lion lip lips love lot low mark meat meet mercy mind money moon morning ' +
+  'mount mountain mouth neck nation nations north oath offer offering oil open order pass path peace place plain plant poor power praise pray ' +
+  'prayer priest promise pure rich ring river sabbath salt sand save sea season seat servant serve shadow sheep shepherd shield side sight ' +
+  'sign silver sin sing sleep smoke south stand star stars stone stones strength strong sun sword table teach temple tent test throne time ' +
+  'tongue top tower tribe truth voice war wash watch west wheat white wind wing wings winter wood work world worship wrath year years young ' +
+  'band bold sold fold slay slew clay swine beat shear tone lone flay spray stay sway play gray grey fray bray dove fled bled bout bash ' +
+  'brow crow glow slow snow show flow blow scare scar star tart dare fare hare pare ware rare mare spare stare share').split(' '));
+
+function stripCrossRefs(text) {
+  var expected = null;
+  var re = /(^|[\s“‘"'(\u2014\u2013\[])([a-z])([A-Z“‘"'][A-Za-z’'-]*|[a-z][A-Za-z’'-]*)/g;
+  return text.replace(re, function (m, pre, letter, rest) {
+    var marker;
+    if (/^[A-Z“‘"']/.test(rest)) marker = true;
+    else {
+      var full = (letter + rest).toLowerCase().replace(/[’'-].*$/, '');
+      var core = rest.toLowerCase().replace(/[’'-].*$/, '');
+      if (COMMON.has(full)) marker = false;
+      else if (COMMON.has(core)) marker = expected === null || letter === expected;
+      else marker = expected !== null && letter === expected;
+    }
+    if (!marker) return m;
+    expected = String.fromCharCode((letter.charCodeAt(0) - 97 + 1) % 26 + 97);
+    return pre + rest;
+  });
+}
+function cleanup(raw) {
+  var SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+  var t = raw.replace(/\r\n?/g, '\n').replace(/[\u00A0\u2009\u202F\u2002\u2003]/g, ' ')
+    .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]+/g, function (m) { return ' ' + m.split('').map(function (c) { return SUP.indexOf(c); }).join('') + ' '; });
+  var cut = t.search(/^\s*(Footnotes|Cross References)\s*$/mi);
+  if (cut >= 0) t = t.slice(0, cut);
+  t = t.split('\n').filter(function (l) {
+    return !/English Standard Version|Crossway|^\s*\(?ESV\)?\s*$|^\s*\[\d+\]\s+\d+:\d+/.test(l);
+  }).join('\n');
+  t = t.replace(/\[(\d{1,3})\]\s*/g, ' $1 ');
+  // verse numbers glued to the start of a word: "1In", "3but"
+  t = t.replace(/(^|[\s“‘"(])(\d{1,3})(?=[A-Za-z“‘"'])(?!st\b|nd\b|rd\b|th\b)/gm, '$1$2 ');
+  t = t.replace(/([A-Za-z\u0590-\u05FF.,;:!?’”'")\]])\d{1,2}(?=[\s.,;:!?’”'")\]—–]|$)/gm, '$1');
+  t = stripCrossRefs(t);
+  return t;
+}
+var HEAD_RE = new RegExp('^(' + BOOKS.map(function (b) { return b[0]; }).join('|') + '|Psalm|Song of Songs)\\s+(\\d{1,3})(?::\\d{1,3}(?:\\s*[-–]\\s*\\d{1,3}(?::\\d{1,3})?)?)?(?:\\s*\\(?ESV\\)?)?$', 'i');
+var SMALL = new Set('with from into upon over unto that than them they this what when your their onto about after before under among'.split(' '));
+function isSectionHeading(line) {
+  if (line.length > 70 || /[.,;:!?”’"')\]]$/.test(line) || !/^[A-Z‘“"']/.test(line) || /\d/.test(line)) return false;
+  var words = line.split(/\s+/);
+  if (words.length > 9) return false;
+  return words.every(function (w) { var c = w.replace(/^[‘“"'(]/, ''); return c.length <= 3 || SMALL.has(c.toLowerCase()) || /^[A-Z]/.test(c); });
+}
+function parseImport(raw, bookIdx, startCh) {
+  var lines = cleanup(raw).split('\n').map(function (l) { return l.trim(); }).filter(Boolean);
+  var out = {}, order = [];
+  var book = bookIdx, chap = startCh, verse = null, awaiting = true, pendingHeads = [], cur = null;
+  function ensure(c) {
+    var k = key(book, c);
+    if (!out[k]) { out[k] = { key: k, book: book, ch: c, verses: [], heads: [] }; order.push(k); }
+    return out[k];
+  }
+  function startVerse(v) {
+    cur = ensure(chap);
+    cur.verses.push({ v: v, t: '' });
+    pendingHeads.forEach(function (h) { cur.heads.push({ v: v, t: h }); });
+    pendingHeads = [];
+  }
+  function append(txt) {
+    txt = txt.trim();
+    if (!txt || !cur || !cur.verses.length) return;
+    var last = cur.verses[cur.verses.length - 1];
+    last.t = last.t ? last.t + ' ' + txt : txt;
+  }
+  var firstBookSet = false;
+  lines.forEach(function (line) {
+    var h = line.match(HEAD_RE);
+    if (h) {
+      var name = h[1].toLowerCase() === 'psalm' ? 'Psalms' : h[1].toLowerCase() === 'song of songs' ? 'Song of Solomon' : h[1];
+      var bi = BOOKS.findIndex(function (b) { return b[0].toLowerCase() === name.toLowerCase(); });
+      if (bi >= 0 && !firstBookSet && !order.length) book = bi;
+      firstBookSet = true;
+      chap = +h[2]; verse = null; awaiting = true;
+      return;
+    }
+    var chm = line.match(/^chapter\s+(\d{1,3})$/i);
+    if (chm) { chap = +chm[1]; verse = null; awaiting = true; return; }
+    if (isSectionHeading(line)) { pendingHeads.push(line); return; }
+    var re = /(^|[\s“‘"(\[])(\d{1,3})(?=\s|$)/g, m, pos = 0;
+    while ((m = re.exec(line)) !== null) {
+      var n = +m[2], ok = false, nv = null, nc = chap;
+      if (awaiting) { ok = true; nv = (n === chap || n === 1) ? 1 : n; }
+      else if (n === verse + 1) { ok = true; nv = n; }
+      else if (n === chap + 1) { ok = true; nc = n; nv = 1; }
+      else if (m.index === 0 && n > verse && n <= verse + 20) { ok = true; nv = n; }
+      if (!ok) continue;
+      var numStart = m.index + m[1].length;
+      append(line.slice(pos, numStart));
+      chap = nc; verse = nv; awaiting = false;
+      startVerse(nv);
+      pos = numStart + m[2].length;
+    }
+    append(line.slice(pos));
+  });
+  var list = order.map(function (k) {
+    var c = out[k];
+    c.verses = c.verses.filter(function (x) { return x.t; });
+    c.verses.forEach(function (x) { x.t = restore(x.t); });
+    c.heads.forEach(function (x) { x.t = restore(x.t); });
+    return c;
+  }).filter(function (c) { return c.verses.length; });
+  return list;
+}
+var NAMEF = { heb: 'יהוה', Yahweh: 'Yahweh', Yehovah: 'Yehovah' };
+var JESUSF = { heb: 'יהושע', Yehoshua: 'Yehoshua', Yeshua: 'Yeshua', keep: 'Jesus' };
+function restore(t) {
+  var name = NAMEF[S.name] || 'יהוה', lordWord = S.lord === 'keep' ? 'Lord' : S.lord;
+  var rules = [[/\bLord GOD\b/g, lordWord + ' ' + name], [/\b[Tt]he LORD\b/g, name], [/\bLORD\b/g, name], [/\bGOD\b/g, name]];
+  if (S.jesus !== 'keep') rules.push([/\bJesus\b/g, JESUSF[S.jesus]]);
+  if (S.christ) rules.push([/\bChrist\b/g, 'Messiah']);
+  if (S.god) rules.push([/\bGod\b/g, 'Elohim']);
+  if (S.lord !== 'keep') rules.push([/\bLord\b/g, S.lord]);
+  // Protect replaced text from later rules using placeholders
+  var bag = [];
+  rules.forEach(function (r) {
+    t = t.replace(r[0], function () { bag.push(r[1]); return '\uE000' + (bag.length - 1) + '\uE001'; });
+  });
+  return t.replace(/\uE000(\d+)\uE001/g, function (m, i) { return bag[+i]; });
+}
+
+// ======================================================================
+// Rendering helpers
+// ======================================================================
+function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+var NAME_WORDS = /(Yahweh|Yehovah|Yehoshua|Yeshua|Elohim|Messiah|Adonai)/g;
+function fmtVerse(t) {
+  var h = esc(t);
+  if (S.shade) h = h.replace(NAME_WORDS, '<span class="nm">$1</span>');
+  return h.replace(/[\u0590-\u05FF]+/g, function (x) { return '<bdi class="heb' + (S.shade ? ' nm' : '') + '" dir="rtl">' + x + '</bdi>'; });
+}
+var main = document.getElementById('main');
+var toastEl = document.getElementById('toast');
+var toastT;
+function toast(msg) { toastEl.textContent = msg; toastEl.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(function () { toastEl.classList.remove('show'); }, 2200); }
+function applyLook() {
+  document.documentElement.setAttribute('data-theme', S.theme === 'light' ? 'light' : 'dark');
+  document.documentElement.style.setProperty('--size', S.size + 'px');
+}
+
+// ======================================================================
+// Reading view
+// ======================================================================
+var pos = { b: 0, c: 1 };
+var selected = new Set();
+function firstLoaded() {
+  for (var b = 0; b < BOOKS.length; b++) for (var c = 1; c <= BOOKS[b][1]; c++) if (has(b, c)) return { b: b, c: c };
+  return null;
+}
+function neighbour(dir) {
+  var b = pos.b, c = pos.c;
+  for (var guard = 0; guard < 1300; guard++) {
+    c += dir;
+    if (c < 1) { b--; if (b < 0) return null; c = BOOKS[b][1]; }
+    if (c > BOOKS[b][1]) { b++; if (b >= BOOKS.length) return null; c = 1; }
+    if (has(b, c)) return { b: b, c: c };
+  }
+  return null;
+}
+function showChapter(b, c, verses) {
+  if (planCtx) { var pc = planCtx.list[planCtx.i]; if (!pc || pc.b !== b || pc.c !== c) planCtx = null; }
+  pos = { b: b, c: c };
+  S.last = { b: b, c: c }; saveSettings();
+  selected.clear(); updateSelbar();
+  document.getElementById('refBtn').textContent = bn(b) + ' ' + c;
+  var doc = chapters[key(b, c)];
+  if (!doc) {
+    if (!Object.keys(chapters).length) return renderEmpty();
+    main.innerHTML = planBanner() + '<div class="empty"><h2>' + esc(BOOKS[b][0] + ' ' + c) + '</h2><p>This chapter hasn’t been imported yet.</p><button class="primary" id="impHere">Import it now</button></div>' + (planCtx ? planNavHtml() : '');
+    document.getElementById('impHere').onclick = function () { openImport(b, c); };
+    bindPlanBits();
+    window.scrollTo(0, 0);
+    return;
+  }
+  var noteAt = {}, notedV = {};
+  notesForChapter(b, c).forEach(function (n) { (noteAt[n.v1] = noteAt[n.v1] || []).push(n); for (var v = n.v1; v <= n.v2; v++) notedV[v] = 1; });
+  var headAt = {};
+  (doc.heads || []).forEach(function (h) { (headAt[h.v] = headAt[h.v] || []).push(h.t); });
+  var html = planBanner() + '<h1 class="ch-title">' + esc(bn(b) + ' ' + c) + '</h1><p class="ch-sub">ESV, with the Names restored</p><div class="text"><p>';
+  doc.verses.forEach(function (x, i) {
+    if (headAt[x.v]) {
+      html += '</p>';
+      headAt[x.v].forEach(function (h) { html += '<h2 class="shead">' + fmtVerse(h) + '</h2>'; });
+      html += '<p>';
+    }
+    var marks = (noteAt[x.v] || []).map(function (n) { return '<button class="nmark" data-note="' + esc(n.id) + '" aria-label="Your note on ' + esc(vnoteRef(n)) + '">✎</button>'; }).join('');
+    html += '<span class="v' + (notedV[x.v] ? ' noted' : '') + '" data-v="' + x.v + '" id="v' + x.v + '"><span class="vn">' + x.v + '</span>' + marks + fmtVerse(x.t) + '</span> ';
+  });
+  html += '</p></div>';
+  var prev = neighbour(-1), next = neighbour(1);
+  if (planCtx) html += planNavHtml(); else html += '<nav class="chnav"><button id="prevCh"' + (prev ? '' : ' disabled') + '>‹ ' + (prev ? esc(BOOKS[prev.b][0] + ' ' + prev.c) : 'Start') + '</button>' +
+          '<button id="nextCh"' + (next ? '' : ' disabled') + '>' + (next ? esc(BOOKS[next.b][0] + ' ' + next.c) : 'End') + ' ›</button></nav>';
+  main.innerHTML = html;
+  bindPlanBits();
+  if (!planCtx) {
+    if (prev) document.getElementById('prevCh').onclick = function () { showChapter(prev.b, prev.c); };
+    if (next) document.getElementById('nextCh').onclick = function () { showChapter(next.b, next.c); };
+  }
+  main.querySelectorAll('.nmark').forEach(function (el) {
+    el.addEventListener('click', function (e) { e.stopPropagation(); var n = vnotes[el.dataset.note]; if (n) openNoteEditor(n.book, n.ch, n.v1, n.v2, 'read'); });
+  });
+  main.querySelectorAll('.v').forEach(function (el) {
+    el.addEventListener('click', function () {
+      var v = +el.dataset.v;
+      if (selected.has(v)) { selected.delete(v); el.classList.remove('sel'); } else { selected.add(v); el.classList.add('sel'); }
+      updateSelbar();
+    });
+  });
+  if (verses && verses.length) {
+    var first = document.getElementById('v' + verses[0]);
+    if (first) {
+      first.scrollIntoView({ block: 'center' });
+      verses.forEach(function (v) {
+        var el = document.getElementById('v' + v);
+        if (el) { el.classList.add('flash'); setTimeout(function () { el.classList.remove('flash'); }, 2200); }
+      });
+    }
+  } else window.scrollTo(0, 0);
+}
+function renderEmpty() {
+  document.getElementById('refBtn').textContent = 'Books';
+  main.innerHTML = '<div class="empty"><div class="mark">יהוה</div><h2>Your Bible is empty</h2>' +
+    '<p>Import chapters from your ESV app, a few at a time. The footnote marks are cleaned away and the Names are restored as each chapter goes in.</p>' +
+    '<button class="primary" id="impFirst">Import chapters</button><p class="status" style="margin-top:1.4rem">' + esc(storageNote()) + '</p></div>';
+  document.getElementById('impFirst').onclick = function () { openImport(0, 1); };
+}
+function storageNote() {
+  return store.mode === 'db' ? 'Saved to your account, so it’s the same on your iPad and phone.' : 'Saved on this device. Use Backup to move it to your other device.';
+}
+function updateSelbar() {
+  var bar = document.getElementById('selbar');
+  if (!selected.size) { bar.classList.add('hidden'); return; }
+  document.getElementById('selLbl').textContent = refLabel(pos.b, pos.c, Array.from(selected));
+  bar.classList.remove('hidden');
+}
+function copyText(txt) {
+  function fallback() {
+    var ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select(); var ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta); toast(ok ? 'Copied' : 'Couldn’t copy on this device');
+  }
+  try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(function () { toast('Copied'); }, fallback); else fallback(); }
+  catch (e) { fallback(); }
+}
+document.getElementById('selCopy').onclick = function () {
+  var doc = chapters[key(pos.b, pos.c)]; if (!doc) return;
+  var vs = Array.from(selected).sort(function (a, z) { return a - z; });
+  var body = doc.verses.filter(function (x) { return selected.has(x.v); })
+    .map(function (x) { return (vs.length > 1 ? x.v + ' ' : '') + x.t.replace(/([\u0590-\u05FF]+)/g, '$1\u200E'); }).join(' ');
+  copyText('“' + body + '” (' + refLabel(pos.b, pos.c, vs) + ')');
+};
+document.getElementById('selClear').onclick = function () {
+  selected.clear(); main.querySelectorAll('.v.sel').forEach(function (e) { e.classList.remove('sel'); }); updateSelbar();
+};
+
+// ======================================================================
+// Search: references and words
+// ======================================================================
+var qEl = document.getElementById('q'), qx = document.getElementById('qx');
+var scope = 'all', shown = 150;
+function parseRef(q) {
+  var m = q.trim().match(/^((?:[1-3]|i{1,3})?\s*[A-Za-z][A-Za-z .]*?)\s*(\d{1,3})?(?:\s*[:.]\s*(\d{1,3})(?:\s*[-–]\s*(\d{1,3}))?)?\s*$/i);
+  if (!m) return null;
+  var b = findBook(m[1]);
+  if (b < 0) return null;
+  var c = m[2] ? Math.min(+m[2], BOOKS[b][1]) : null;
+  var v1 = m[3] ? +m[3] : null, v2 = m[4] ? +m[4] : v1;
+  var vs = [];
+  if (v1) for (var v = v1; v <= Math.max(v1, v2) && vs.length < 200; v++) vs.push(v);
+  return { b: b, c: c, vs: vs, bookOnly: !m[2] };
+}
+var GROUPS = [['יהוה', 'yahweh', 'yehovah', 'yhwh'], ['יהושע', 'yehoshua', 'yeshua', 'jesus'], ['elohim', 'god']];
+function terms(q) {
+  var out = [], re = /"([^"]+)"|“([^”]+)”|(\S+)/g, m;
+  while ((m = re.exec(q)) !== null) {
+    var t = (m[1] || m[2] || m[3]).toLowerCase().replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, '');
+    if (!t) continue;
+    var alts = [t];
+    GROUPS.forEach(function (g) { if (g.indexOf(t) >= 0) alts = g.slice(); });
+    out.push(alts);
+  }
+  return out;
+}
+function escRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+function termRe(alts) { return new RegExp('(^|[^\\p{L}\\p{N}])(' + alts.map(escRe).join('|') + ')', 'iu'); }
+function runSearch(q) {
+  var ts = terms(q);
+  var res = [];
+  if (!ts.length) return res;
+  var res_ = ts.map(termRe);
+  var keys = Object.keys(chapters).sort();
+  keys.forEach(function (k) {
+    var d = chapters[k];
+    if (scope === 'ot' && d.book >= NT_START) return;
+    if (scope === 'nt' && d.book < NT_START) return;
+    if (scope === 'book' && d.book !== pos.b) return;
+    d.verses.forEach(function (x) {
+      for (var i = 0; i < res_.length; i++) if (!res_[i].test(x.t)) return;
+      res.push({ b: d.book, c: d.ch, v: x.v, t: x.t });
+    });
+  });
+  return { list: res, ts: ts };
+}
+function highlight(t, ts) {
+  var h = fmtVerse(t);
+  // highlight on escaped HTML text outside tags
+  ts.forEach(function (alts) {
+    var re = new RegExp('(^|[^\\p{L}\\p{N}])(' + alts.map(function (a) { return escRe(esc(a)); }).join('|') + ')', 'giu');
+    h = h.split(/(<[^>]+>)/).map(function (part) { return part.charAt(0) === '<' ? part : part.replace(re, '$1<mark>$2</mark>'); }).join('');
+  });
+  return h;
+}
+function renderSearch() {
+  var q = qEl.value.trim();
+  qx.classList.toggle('hidden', !q);
+  if (!q) { showChapter(pos.b, pos.c); return; }
+  var ref = parseRef(q);
+  if (ref && !ref.bookOnly) return; // references open on Enter / Go
+  var html = '';
+  if (ref && ref.bookOnly) {
+    html += '<button class="goto" id="gotoBook">Go to <b>' + esc(BOOKS[ref.b][0]) + '</b></button>';
+  }
+  if (q.replace(/\s/g, '').length < 2) { main.innerHTML = html + '<p class="hint">Keep typing…</p>'; bindGoto(ref); return; }
+  var r = runSearch(q);
+  var n = r.list.length;
+  var nh = searchNotes(r.ts);
+  html += '<div class="res-head"><span class="count">' + (n ? n + (n === 1 ? ' verse' : ' verses') : 'No verses found') + '</span><div class="scope">' +
+    [['all', 'All'], ['ot', 'Tanakh'], ['nt', 'New Testament'], ['book', BOOKS[pos.b][0]]].map(function (s) {
+      return '<button class="chip' + (scope === s[0] ? ' on' : '') + '" data-scope="' + s[0] + '">' + esc(s[1]) + '</button>';
+    }).join('') + '</div></div>';
+  if (nh.length) {
+    html += '<div class="nsec" style="margin-top:0">Your notes · ' + nh.length + '</div>';
+    nh.slice(0, 30).forEach(function (x, i) {
+      html += '<button class="hit" data-nh="' + i + '"><span class="ref" style="color:var(--name)">' + esc(x.label) + '</span><span class="t">' + highlight(noteSnippet(x.n.text, 220), r.ts) + '</span></button>';
+    });
+    html += '<div class="nsec">Bible</div>';
+  }
+  r.list.slice(0, shown).forEach(function (x, i) {
+    html += '<button class="hit" data-i="' + i + '"><span class="ref">' + esc(BOOKS[x.b][0] + ' ' + x.c + ':' + x.v) + '</span><span class="t">' + highlight(x.t, r.ts) + '</span></button>';
+  });
+  if (n > shown) html += '<button class="quiet more" id="more">Show more (' + (n - shown) + ' left)</button>';
+  if (!n && !Object.keys(chapters).length) html += '<p class="hint">Nothing has been imported yet.</p>';
+  main.innerHTML = html;
+  bindGoto(ref);
+  main.querySelectorAll('.chip').forEach(function (b) { b.onclick = function () { scope = b.dataset.scope; shown = 150; renderSearch(); }; });
+  main.querySelectorAll('.hit[data-i]').forEach(function (b) {
+    b.onclick = function () { var x = r.list[+b.dataset.i]; closeSearch(); showChapter(x.b, x.c, [x.v]); };
+  });
+  main.querySelectorAll('.hit[data-nh]').forEach(function (b) {
+    b.onclick = function () { var x = nh[+b.dataset.nh]; if (x.kind === 'v') openNoteEditor(x.n.book, x.n.ch, x.n.v1, x.n.v2, 'search'); else openPlanNote(x.n); };
+  });
+  var more = document.getElementById('more'); if (more) more.onclick = function () { shown += 150; renderSearch(); };
+  window.scrollTo(0, 0);
+}
+function bindGoto(ref) {
+  var g = document.getElementById('gotoBook');
+  if (g) g.onclick = function () { closeSearch(); openPicker(ref.b); };
+}
+function closeSearch() { qEl.value = ''; qx.classList.add('hidden'); qEl.blur(); }
+var sT;
+qEl.addEventListener('input', function () { shown = 150; clearTimeout(sT); sT = setTimeout(renderSearch, 180); });
+qEl.addEventListener('keydown', function (e) {
+  if (e.key !== 'Enter') return;
+  e.preventDefault(); clearTimeout(sT);
+  var ref = parseRef(qEl.value);
+  if (ref && !ref.bookOnly) { closeSearch(); showChapter(ref.b, ref.c || 1, ref.vs); }
+  else { clearTimeout(sT); renderSearch(); qEl.blur(); }
+});
+qx.onclick = function () { closeSearch(); showChapter(pos.b, pos.c); };
+
+// ======================================================================
+// Sheets: picker, import, settings
+// ======================================================================
+var sheet = document.getElementById('sheet'), scrim = document.getElementById('scrim'), sheetBody = document.getElementById('sheetBody');
+function openSheet(title) { document.getElementById('sheetTitle').textContent = title; sheet.classList.remove('hidden'); scrim.classList.remove('hidden'); sheet.scrollTop = 0; }
+function closeSheet() { sheet.classList.add('hidden'); scrim.classList.add('hidden'); sheetBody.innerHTML = ''; if (typeof afterSheetClosed === 'function') afterSheetClosed(); }
+scrim.onclick = closeSheet;
+document.getElementById('sheetClose').onclick = closeSheet;
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !sheet.classList.contains('hidden')) closeSheet(); });
+
+function openPicker(bookSel) {
+  openSheet('Books');
+  function books() {
+    var h = '';
+    [['Tanakh', 0, NT_START], ['New Testament', NT_START, BOOKS.length]].forEach(function (g) {
+      h += '<div class="grp">' + g[0] + '</div><div class="books">';
+      for (var i = g[1]; i < g[2]; i++) h += '<button class="book' + (loadedIn(i) ? ' has' : '') + (i === pos.b ? ' cur' : '') + '" data-b="' + i + '">' + esc(BOOKS[i][0]) + '</button>';
+      h += '</div>';
+    });
+    sheetBody.innerHTML = h;
+    sheetBody.querySelectorAll('.book').forEach(function (el) { el.onclick = function () { chaps(+el.dataset.b); }; });
+  }
+  function chaps(b) {
+    document.getElementById('sheetTitle').textContent = BOOKS[b][0];
+    var n = loadedIn(b);
+    var h = '<button class="backlink" id="bk">‹ All books</button><p class="status" style="margin:0 0 .8rem">' + n + ' of ' + BOOKS[b][1] + ' chapters imported</p><div class="chaps">';
+    for (var c = 1; c <= BOOKS[b][1]; c++) h += '<button class="chap' + (has(b, c) ? ' has' : '') + (b === pos.b && c === pos.c ? ' cur' : '') + '" data-c="' + c + '">' + c + '</button>';
+    h += '</div>';
+    sheetBody.innerHTML = h;
+    document.getElementById('bk').onclick = function () { document.getElementById('sheetTitle').textContent = 'Books'; books(); };
+    sheetBody.querySelectorAll('.chap').forEach(function (el) { el.onclick = function () { closeSheet(); showChapter(b, +el.dataset.c); }; });
+  }
+  if (typeof bookSel === 'number') chaps(bookSel); else books();
+}
+document.getElementById('refBtn').onclick = function () { openPicker(Object.keys(chapters).length ? pos.b : undefined); };
+
+function menu() {
+  openSheet('Menu');
+  sheetBody.innerHTML = '<div class="actions" style="flex-direction:column;align-items:stretch">' +
+    '<button class="primary" id="mImp">Import chapters</button><button class="quiet" id="mNotes">My notes</button><button class="quiet" id="mPlan">Reading plan</button><button class="quiet" id="mBak">Back up and restore</button><button class="quiet" id="mFull">' + (isFull() ? 'Leave full screen' : 'Full screen') + '</button><button class="quiet" id="mSet">Settings</button></div>' +
+    '<p class="status" style="margin-top:1.2rem">' + esc(storageNote()) + ' ' + Object.keys(chapters).length + ' chapters imported.</p>';
+  document.getElementById('mImp').onclick = function () { openImport(pos.b, nextMissing(pos.b)); };
+  document.getElementById('mSet').onclick = openSettings;
+  document.getElementById('mBak').onclick = openBackup;
+  document.getElementById('mNotes').onclick = openNotesList;
+  document.getElementById('mPlan').onclick = function () { plan ? openTracker() : openPlanSetup(); };
+  document.getElementById('mFull').onclick = function () { closeSheet(); toggleFull(); };
+}
+document.getElementById('menuBtn').onclick = menu;
+function isFull() { return !!(document.fullscreenElement || document.webkitFullscreenElement); }
+function toggleFull() {
+  var el = document.documentElement;
+  try {
+    if (isFull()) { (document.exitFullscreen || document.webkitExitFullscreen).call(document); return; }
+    var req = el.requestFullscreen || el.webkitRequestFullscreen;
+    if (!req) throw new Error('none');
+    var r = req.call(el);
+    if (r && r.catch) r.catch(function () { fullFallback(); });
+  } catch (e) { fullFallback(); }
+}
+function fullFallback() {
+  S.autohide = true; saveSettings();
+  toast('This device doesn’t allow full screen here. The top bar now slides away as you read; scroll up to bring it back.');
+}
+// Slide the top bar away while reading down the page; bring it back on scrolling up
+(function () {
+  var bar = document.querySelector('.bar'), lastY = window.scrollY, ticking = false;
+  window.addEventListener('scroll', function () {
+    if (ticking) return; ticking = true;
+    requestAnimationFrame(function () {
+      var y = window.scrollY, dy = y - lastY;
+      var busy = document.activeElement === qEl || !sheet.classList.contains('hidden');
+      if (S.autohide !== false && !busy && y > 120 && dy > 6) bar.classList.add('away');
+      else if (dy < -6 || y < 60 || busy) bar.classList.remove('away');
+      lastY = y; ticking = false;
+    });
+  }, { passive: true });
+})();
+function nextMissing(b) { for (var c = 1; c <= BOOKS[b][1]; c++) if (!has(b, c)) return c; return 1; }
+
+function bookOptions(sel) {
+  var h = '';
+  [['Tanakh', 0, NT_START], ['New Testament', NT_START, BOOKS.length]].forEach(function (g) {
+    h += '<optgroup label="' + g[0] + '">';
+    for (var i = g[1]; i < g[2]; i++) h += '<option value="' + i + '"' + (i === sel ? ' selected' : '') + '>' + esc(BOOKS[i][0]) + '</option>';
+    h += '</optgroup>';
+  });
+  return h;
+}
+function openImport(b, c) {
+  openSheet('Import chapters');
+  sheetBody.innerHTML =
+    '<p class="hint" style="margin-top:0">Copy a few chapters from your ESV app, with their headings such as “Genesis 4”, and paste them here.</p>' +
+    '<div class="row2"><label class="field"><span>Book</span><select id="iBook">' + bookOptions(b) + '</select></label>' +
+    '<label class="field"><span>First chapter</span><input id="iCh" type="number" inputmode="numeric" min="1" value="' + (c || 1) + '"></label></div>' +
+    '<label class="field"><span>ESV text</span><textarea id="iText" placeholder="Genesis 1&#10;&#10;The Creation of the World&#10;1 In the beginning, God created the heavens and the earth…"></textarea></label>' +
+    '<div class="actions"><button class="primary" id="iCheck">Check</button><button class="quiet" id="iClear">Clear</button></div>' +
+    '<div id="iPrev"></div>' +
+    '<div class="grp" style="margin-top:1.6rem">Progress</div><div id="iProg"></div>';
+  var bookSel = document.getElementById('iBook'), chIn = document.getElementById('iCh'), txt = document.getElementById('iText');
+  var draft = lsGet('nb-draft', '');
+  if (draft) txt.value = draft;
+  txt.addEventListener('input', function () { lsSet('nb-draft', txt.value); document.getElementById('iPrev').innerHTML = ''; });
+  function prog() {
+    var bi = +bookSel.value, n = loadedIn(bi);
+    var h = '<p class="status" style="margin:0 0 .6rem">' + esc(BOOKS[bi][0]) + ': ' + n + ' of ' + BOOKS[bi][1] + ' chapters</p><div class="chaps">';
+    for (var k = 1; k <= BOOKS[bi][1]; k++) h += '<span class="chap' + (has(bi, k) ? ' has' : '') + '" style="text-align:center">' + k + '</span>';
+    h += '</div>';
+    if (n) h += '<div class="actions"><button class="danger" id="iDel">Remove ' + esc(BOOKS[bi][0]) + ' from my Bible</button></div>';
+    document.getElementById('iProg').innerHTML = h;
+    var del = document.getElementById('iDel');
+    if (del) del.onclick = function () {
+      if (del.dataset.armed !== '1') { del.dataset.armed = '1'; del.textContent = 'Tap again to remove all of ' + BOOKS[bi][0]; return; }
+      del.disabled = true; del.textContent = 'Removing…';
+      (async function () {
+        try { for (var k = 1; k <= BOOKS[bi][1]; k++) if (has(bi, k)) await removeChapter(key(bi, k)); toast(BOOKS[bi][0] + ' removed'); }
+        catch (e) { toast('Couldn’t remove everything. Try again.'); }
+        prog();
+      })();
+    };
+  }
+  bookSel.onchange = function () { chIn.value = nextMissing(+bookSel.value); document.getElementById('iPrev').innerHTML = ''; prog(); };
+  prog();
+  document.getElementById('iClear').onclick = function () { txt.value = ''; lsSet('nb-draft', ''); document.getElementById('iPrev').innerHTML = ''; txt.focus(); };
+  document.getElementById('iCheck').onclick = function () {
+    var pv = document.getElementById('iPrev');
+    txt.blur();
+    pv.innerHTML = '<p class="hint" style="margin-top:1rem">Reading the text…</p>';
+    setTimeout(function () {
+      try { checkNow(pv); }
+      catch (e) {
+        pv.innerHTML = '<p class="hint" style="margin-top:1rem;color:var(--name)">Something went wrong reading this text (' + esc(e && e.message || String(e)) + '). Please copy this message into your chat with Claude.</p>';
+      }
+      reveal(pv);
+    }, 30);
+  };
+  function reveal(el) {
+    try { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch (e) { el.scrollIntoView(); }
+  }
+  function checkNow(pv) {
+    var parsed = parseImport(txt.value, +bookSel.value, Math.max(1, +chIn.value || 1));
+    if (!parsed.length) {
+      var startTxt = txt.value.trim().slice(0, 160);
+      pv.innerHTML = '<p class="hint" style="margin-top:1rem">' + (startTxt ? 'No verse numbers were found in this text, so nothing could be added. It starts like this:</p><p class="hint" style="border-left:3px solid var(--name);padding-left:.7rem;white-space:pre-wrap">' + esc(startTxt) + '</p><p class="hint">Copy these first lines into your chat with Claude so the import can be adjusted to this format.' : 'Paste some chapters first.') + '</p>';
+      return;
+    }
+    var h = '<div class="preview">';
+    parsed.forEach(function (c) {
+      var ok = c.ch <= BOOKS[c.book][1];
+      var mg = mergeChapter(chapters[key(c.book, c.ch)], c);
+      var own = c.verses.map(function (x) { return x.v; });
+      var nums = mg.verses.map(function (x) { return x.v; });
+      var gaps = [];
+      for (var i = 1; i < nums.length; i++) if (nums[i] !== nums[i - 1] + 1) gaps.push(nums[i - 1] + 1 + (nums[i] - 1 > nums[i - 1] + 1 ? '–' + (nums[i] - 1) : ''));
+      var note = nums[0] !== 1 ? 'starts at verse ' + nums[0] : gaps.length ? 'missing ' + gaps.join(', ') : '';
+      var tag = mg.mode === 'replace' ? ' <span class="hint">(replaces)</span>' : mg.mode === 'merge' ? ' <span class="hint">(updates verses ' + esc(spanText(own)) + ')</span>' : '';
+      var count = mg.mode === 'merge' ? nums.length + ' verses after update' : nums.length + ' verses';
+      h += '<div class="pv"><span>' + esc(BOOKS[c.book][0] + ' ' + c.ch) + tag + '</span><span class="' + (note || !ok ? 'warn' : 'ok') + '">' +
+        (!ok ? 'not a real chapter' : count + (note ? ', ' + esc(note) : ' ✓')) + '</span></div>';
+    });
+    toast(parsed.length + (parsed.length === 1 ? ' chapter' : ' chapters') + ' found. Review them below.');
+    h += '</div><p class="hint">Check the verse counts against your ESV app, then add them.</p>' +
+      '<div class="actions"><button class="primary" id="iAdd">Add to my Bible</button></div><p class="status" id="iStat" aria-live="polite"></p>';
+    pv.innerHTML = h;
+    document.getElementById('iAdd').onclick = async function () {
+      var btn = this; btn.disabled = true;
+      var stat = document.getElementById('iStat');
+      stat.style.color = ''; stat.textContent = 'Saving to ' + (store.mode === 'db' ? 'your account' : 'this device') + '…';
+      var good = parsed.filter(function (c) { return c.ch <= BOOKS[c.book][1]; });
+      try {
+        for (var i = 0; i < good.length; i++) {
+          btn.textContent = 'Saving ' + (i + 1) + ' of ' + good.length + '…';
+          var c = good[i];
+          stat.textContent = 'Saving ' + BOOKS[c.book][0] + ' ' + c.ch + '…';
+          var mg = mergeChapter(chapters[c.key], c);
+          await putChapter({ key: c.key, book: c.book, ch: c.ch, verses: mg.verses, heads: mg.heads, updated: Date.now() });
+        }
+        var total = good.reduce(function (a, c) { return a + c.verses.length; }, 0);
+        var first = good[0], last = good[good.length - 1];
+        toast(BOOKS[first.book][0] + ' ' + first.ch + (last.ch !== first.ch ? '–' + last.ch : '') + ': ' + total + ' verses added');
+        txt.value = ''; lsSet('nb-draft', '');
+        pv.innerHTML = '';
+        bookSel.value = first.book; chIn.value = Math.min(last.ch + 1, BOOKS[first.book][1]);
+        prog();
+        if (!qEl.value.trim()) showChapter(has(pos.b, pos.c) && !good.some(function (g) { return g.book === pos.b && g.ch === pos.c; }) ? pos.b : first.book, has(pos.b, pos.c) && !good.some(function (g) { return g.book === pos.b && g.ch === pos.c; }) ? pos.c : first.ch);
+      } catch (e) {
+        btn.disabled = false; btn.textContent = 'Try again';
+        var saved = good.filter(function (g) { return has(g.book, g.ch); }).map(function (g) { return g.ch; });
+        stat.style.color = 'var(--name)';
+        stat.textContent = 'Not saved: ' + (e && e.code ? e.code : 'error') + (e && e.message ? ' (' + e.message + ')' : '') + '.' +
+          (saved.length ? ' Chapters ' + saved.join(', ') + ' did save.' : '') + ' If this keeps happening, copy this message into your chat with Claude.';
+      }
+    };
+  }
+}
+function segBtns(id, opts, val) {
+  return '<div class="seg" id="' + id + '">' + opts.map(function (o) { return '<button data-val="' + esc(o[0]) + '" class="' + (String(val) === String(o[0]) ? 'on' : '') + '">' + o[1] + '</button>'; }).join('') + '</div>';
+}
+function openSettings() {
+  openSheet('Settings');
+  sheetBody.innerHTML =
+    '<div class="set"><div class="set-t">Page</div>' + segBtns('sTheme', [['dark', 'White on black'], ['light', 'Black on white']], S.theme) + '</div>' +
+    '<div class="set"><div class="set-t">Text size</div>' + segBtns('sSize', [[16, 'Small'], [19, 'Medium'], [22, 'Large'], [26, 'Larger']], S.size) + '</div>' +
+    '<div class="set"><label class="check"><input type="checkbox" id="sShade"' + (S.shade ? ' checked' : '') + '> <span>Colour the restored names in gold</span></label>' +
+    '<label class="check"><input type="checkbox" id="sHide"' + (S.autohide !== false ? ' checked' : '') + '> <span>Hide the top bar while reading (scroll up to show it)</span></label></div>' +
+    '<div class="set"><div class="set-t">Names for chapters you import from now on</div>' +
+      '<p class="hint" style="margin-top:0">The Name, where the ESV prints LORD or GOD</p>' + segBtns('sName', [['heb', '<span class="heb">יהוה</span>'], ['Yahweh', 'Yahweh'], ['Yehovah', 'Yehovah']], S.name) +
+      '<p class="hint">The Messiah’s name, where the ESV prints Jesus</p>' + segBtns('sJesus', [['heb', '<span class="heb">יהושע</span>'], ['Yehoshua', 'Yehoshua'], ['Yeshua', 'Yeshua'], ['keep', 'Jesus']], S.jesus) +
+      '<p class="hint">Lord, in ordinary type</p>' + segBtns('sLord', [['keep', 'Lord'], ['Adonai', 'Adonai'], ['Master', 'Master']], S.lord) +
+      '<label class="check"><input type="checkbox" id="sGod"' + (S.god ? ' checked' : '') + '> <span>God → Elohim</span></label>' +
+      '<label class="check"><input type="checkbox" id="sChrist"' + (S.christ ? ' checked' : '') + '> <span>Christ → Messiah</span></label>' +
+      '<p class="hint">Chapters already imported keep their names. Re-import a chapter to change it.</p></div>' +
+    '<p class="status">' + esc(storageNote()) + '</p>';
+  function seg(id, k, num) {
+    document.getElementById(id).querySelectorAll('button').forEach(function (b) {
+      b.onclick = function () {
+        S[k] = num ? +b.dataset.val : b.dataset.val; saveSettings(); applyLook();
+        document.getElementById(id).querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); });
+        if (k === 'theme' || k === 'size') refreshView();
+      };
+    });
+  }
+  seg('sTheme', 'theme'); seg('sSize', 'size', true); seg('sName', 'name'); seg('sJesus', 'jesus'); seg('sLord', 'lord');
+  [['sShade', 'shade'], ['sHide', 'autohide'], ['sGod', 'god'], ['sChrist', 'christ']].forEach(function (p) {
+    document.getElementById(p[0]).onchange = function () { S[p[1]] = this.checked; saveSettings(); if (p[1] === 'shade') refreshView(); };
+  });
+}
+function refreshView() { if (qEl.value.trim()) renderSearch(); else if (has(pos.b, pos.c)) { var y = window.scrollY; showChapter(pos.b, pos.c); window.scrollTo(0, y); } }
+
+// ======================================================================
+// Notes: on verses, and on reading-plan days
+// ======================================================================
+var vnotes = {}, pnotes = {};
+function pad3(n) { return String(n).padStart(3, '0'); }
+function vnoteId(b, c, v1, v2) { return key(b, c) + '-' + pad3(v1) + (v2 > v1 ? '_' + pad3(v2) : ''); }
+function vnoteRef(n) { return bn(n.book) + ' ' + n.ch + ':' + n.v1 + (n.v2 > n.v1 ? '–' + n.v2 : ''); }
+async function loadNotes() {
+  if (store.mode === 'db') {
+    var last = '';
+    for (var g = 0; g < 10; g++) {
+      var q = last ? store.vnotes.where('id', '>', last).orderBy('id').limit(500) : store.vnotes.orderBy('id').limit(500);
+      var snap = await q.get();
+      snap.docs.forEach(function (d) { var x = d.data(); if (x && x.id) { vnotes[x.id] = x; last = x.id; } });
+      if (snap.size < 500) break;
+    }
+    var ps = await store.notes.limit(1000).get();
+    var legacy = [];
+    ps.docs.forEach(function (d) { var x = d.data() || {}; if (x.planCreated) pnotes[x.id] = x; else if (x.text) legacy.push({ docId: d.id, x: x }); });
+    // Older day notes (saved before notes were tied to a plan): move them onto the current plan
+    if (legacy.length && plan) {
+      for (var i = 0; i < legacy.length; i++) {
+        var L = legacy[i], day = +L.x.day || +String(L.docId).replace(/\D/g, '');
+        if (!day || day > totalDays()) continue;
+        var doc = { id: pnoteId(day), planCreated: plan.created, planName: plan.name, day: day, dayLabel: dayLabel(day), date: dateOf(day), refs: groupRefs(dayList(day)), text: L.x.text, updated: Date.now() };
+        try { await store.notes.doc(doc.id).set(doc); await store.notes.doc(L.docId).delete(); pnotes[doc.id] = doc; } catch (e) {}
+      }
+    }
+  } else {
+    vnotes = lsGet('nb-vnotes', {});
+    pnotes = lsGet('nb-pnotes', {});
+    var old = lsGet('nb-notes', null);
+    if (old && plan) {
+      Object.keys(old).forEach(function (d) {
+        d = +d; if (!old[d] || d > totalDays()) return;
+        pnotes[pnoteId(d)] = { id: pnoteId(d), planCreated: plan.created, planName: plan.name, day: d, dayLabel: dayLabel(d), date: dateOf(d), refs: groupRefs(dayList(d)), text: old[d], updated: Date.now() };
+      });
+      lsSet('nb-pnotes', pnotes); lsSet('nb-notes', undefined); delete big['nb-notes'];
+    }
+  }
+}
+var noteTimers = {};
+function queueNote(kind, doc, stat) {
+  var bag = kind === 'v' ? vnotes : pnotes, empty = !doc.text.trim();
+  var existed = !!bag[doc.id];
+  if (empty) delete bag[doc.id]; else bag[doc.id] = doc;
+  if (stat) stat.textContent = 'Saving…';
+  clearTimeout(noteTimers[doc.id]);
+  noteTimers[doc.id] = setTimeout(function () {
+    var done = function () { if (stat) stat.textContent = empty ? (existed ? 'Note removed' : '') : 'Saved'; };
+    var fail = function () { if (stat) stat.textContent = 'Not saved yet. Keep typing to retry.'; };
+    if (store.mode === 'db') {
+      var col = kind === 'v' ? store.vnotes : store.notes;
+      withTimeout(empty ? col.doc(doc.id).delete() : col.doc(doc.id).set(doc), 20000).then(done, fail);
+    } else { lsSet(kind === 'v' ? 'nb-vnotes' : 'nb-pnotes', bag) ? done() : fail(); }
+  }, 700);
+  if (kind === 'v' && existed !== !empty) markersChanged = true;
+}
+var markersChanged = false;
+function notesForChapter(b, c) {
+  var pre = key(b, c) + '-', out = [];
+  Object.keys(vnotes).forEach(function (id) { if (id.indexOf(pre) === 0) out.push(vnotes[id]); });
+  return out.sort(function (a, z) { return a.v1 - z.v1; });
+}
+function openNoteEditor(b, c, v1, v2, from) {
+  var id = vnoteId(b, c, v1, v2), n = vnotes[id];
+  openSheet('Note · ' + bn(b) + ' ' + c + ':' + v1 + (v2 > v1 ? '–' + v2 : ''));
+  var doc = chapters[key(b, c)];
+  var quote = doc ? doc.verses.filter(function (x) { return x.v >= v1 && x.v <= v2; }).map(function (x) { return '<span class="vn">' + x.v + '</span>' + fmtVerse(x.t); }).join(' ') : '';
+  sheetBody.innerHTML = (quote ? '<div class="quote">' + quote + '</div>' : '') +
+    '<textarea id="neText" placeholder="Your note on this passage…" style="min-height:11rem"></textarea><p class="status" id="neStat">' + (n ? 'Last edited ' + new Date(n.updated).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' }) : '') + '</p>' +
+    '<div class="actions">' + (from === 'list' || from === 'search' ? '<button class="quiet" id="neGo">Open in the Bible</button>' : '') + (n ? '<button class="danger" id="neDel">Delete note</button>' : '') + '</div>';
+  var ta = document.getElementById('neText'), st = document.getElementById('neStat');
+  ta.value = n ? n.text : '';
+  if (!n) setTimeout(function () { ta.focus(); }, 60);
+  ta.addEventListener('input', function () {
+    queueNote('v', { id: id, book: b, ch: c, v1: v1, v2: v2, text: ta.value, created: n ? n.created : Date.now(), updated: Date.now() }, st);
+  });
+  var go = document.getElementById('neGo');
+  if (go) go.onclick = function () { closeSheet(); closeSearch(); var vs = []; for (var v = v1; v <= v2; v++) vs.push(v); showChapter(b, c, vs); };
+  var del = document.getElementById('neDel');
+  if (del) del.onclick = function () {
+    if (del.dataset.armed !== '1') { del.dataset.armed = '1'; del.textContent = 'Tap again to delete'; return; }
+    ta.value = ''; queueNote('v', { id: id, text: '' }, st); closeSheet(); toast('Note deleted');
+  };
+}
+function afterSheetClosed() {
+  if (markersChanged) { markersChanged = false; if (!qEl.value.trim()) refreshView(); }
+}
+function noteSnippet(t, n) { t = t.replace(/\s+/g, ' ').trim(); return t.length > n ? t.slice(0, n - 1) + '…' : t; }
+function openNotesList() {
+  openSheet('My notes');
+  var vs = Object.keys(vnotes).sort().map(function (k) { return vnotes[k]; });
+  var ps = Object.keys(pnotes).map(function (k) { return pnotes[k]; }).sort(function (a, z) { return (a.planCreated - z.planCreated) || (a.day - z.day); });
+  var h = '';
+  if (!vs.length && !ps.length) h = '<p class="hint" style="margin-top:0">No notes yet. While reading, tap a verse (or several), then tap <b>Note</b>. Notes on reading-plan days appear here too.</p>';
+  if (vs.length) {
+    h += '<div class="nsec">On verses · ' + vs.length + '</div>';
+    vs.forEach(function (n) { h += '<button class="hit" data-v="' + esc(n.id) + '"><span class="ref">' + esc(vnoteRef(n)) + '</span><span class="t">' + esc(noteSnippet(n.text, 160)) + '</span></button>'; });
+  }
+  if (ps.length) {
+    var lastPlan = null;
+    ps.forEach(function (n) {
+      if (n.planCreated !== lastPlan) { h += '<div class="nsec">' + esc(n.planName || 'Reading plan') + (plan && plan.created === n.planCreated ? ' (current)' : '') + '</div>'; lastPlan = n.planCreated; }
+      h += '<button class="hit" data-p="' + esc(n.id) + '"><span class="ref">' + esc((n.dayLabel || 'Day ' + n.day) + ' · ' + niceDate(n.date)) + '</span><span class="hint" style="display:block;margin-bottom:.15rem">' + esc(n.refs || '') + '</span><span class="t">' + esc(noteSnippet(n.text, 160)) + '</span></button>';
+    });
+  }
+  sheetBody.innerHTML = h;
+  sheetBody.querySelectorAll('[data-v]').forEach(function (el) { el.onclick = function () { var n = vnotes[el.dataset.v]; openNoteEditor(n.book, n.ch, n.v1, n.v2, 'list'); }; });
+  sheetBody.querySelectorAll('[data-p]').forEach(function (el) { el.onclick = function () { openPlanNote(pnotes[el.dataset.p]); }; });
+}
+function openPlanNote(n) {
+  if (plan && plan.created === n.planCreated) { openDayDetail(n.day); return; }
+  openSheet((n.planName || 'Reading plan') + ' · ' + (n.dayLabel || 'Day ' + n.day));
+  sheetBody.innerHTML = '<p class="status" style="margin-top:0">' + esc(niceDate(n.date)) + ' · ' + esc(n.refs || '') + '</p>' +
+    '<textarea id="pnText" style="min-height:11rem"></textarea><p class="status" id="pnStat">From an earlier plan. You can still edit or delete it.</p>' +
+    '<div class="actions"><button class="quiet" id="pnList">‹ My notes</button><button class="danger" id="pnDel">Delete note</button></div>';
+  var ta = document.getElementById('pnText'), st = document.getElementById('pnStat');
+  ta.value = n.text;
+  ta.addEventListener('input', function () { var d = Object.assign({}, n, { text: ta.value, updated: Date.now() }); queueNote('p', d, st); n = d; });
+  document.getElementById('pnList').onclick = openNotesList;
+  var del = document.getElementById('pnDel');
+  del.onclick = function () {
+    if (del.dataset.armed !== '1') { del.dataset.armed = '1'; del.textContent = 'Tap again to delete'; return; }
+    queueNote('p', { id: n.id, text: '' }, st); openNotesList(); toast('Note deleted');
+  };
+}
+function searchNotes(ts) {
+  var res_ = ts.map(termRe), out = [];
+  Object.keys(vnotes).sort().forEach(function (k) {
+    var n = vnotes[k];
+    if (scope === 'ot' && n.book >= NT_START) return;
+    if (scope === 'nt' && n.book < NT_START) return;
+    if (scope === 'book' && n.book !== pos.b) return;
+    if (res_.every(function (r) { return r.test(n.text); })) out.push({ kind: 'v', n: n, label: 'Note · ' + vnoteRef(n) });
+  });
+  if (scope === 'all') Object.keys(pnotes).forEach(function (k) {
+    var n = pnotes[k];
+    if (res_.every(function (r) { return r.test(n.text); })) out.push({ kind: 'p', n: n, label: 'Plan note · ' + (n.dayLabel || 'Day ' + n.day) });
+  });
+  return out;
+}
+document.getElementById('selNote').onclick = function () {
+  var vs = Array.from(selected).sort(function (a, z) { return a - z; });
+  if (!vs.length) return;
+  var b = pos.b, c = pos.c, v1 = vs[0], v2 = vs[vs.length - 1];
+  document.getElementById('selClear').onclick();
+  openNoteEditor(b, c, v1, v2, 'read');
+};
+
+// ======================================================================
+// Reading plan
+// ======================================================================
+var plan = null, planCtx = null, planTimer = null;
+var STREAMS = [
+  { label: 'Tanakh', books: BOOKS.map(function (b, i) { return i; }).filter(function (i) { return i < NT_START && i !== 18 && i !== 19; }) },
+  { label: 'Psalms & Proverbs', books: [18, 19] },
+  { label: 'New Testament', books: BOOKS.map(function (b, i) { return i; }).filter(function (i) { return i >= NT_START; }) }
+];
+var PLAN_TYPES = {
+  '6m': { name: 'Whole Bible in 6 months', days: 182, passes: 1, scope: 'all' },
+  '3x': { name: 'Whole Bible three times a year', days: 122, passes: 3, scope: 'all' },
+  'trial': { name: 'Trial plan', days: 7, passes: 1, scope: 'imported' }
+};
+function ymd(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+function parseYmd(s) { var p = s.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+function addDays(s, n) { var d = parseYmd(s); d.setDate(d.getDate() + n); return ymd(d); }
+function dayDiff(a, b) { var A = parseYmd(a), B = parseYmd(b); return Math.round((Date.UTC(B.getFullYear(), B.getMonth(), B.getDate()) - Date.UTC(A.getFullYear(), A.getMonth(), A.getDate())) / 86400000); }
+function todayYmd() { return ymd(new Date()); }
+function niceDate(s) { return parseYmd(s).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' }); }
+
+function chWeight(b, c) {
+  var d = chapters[key(b, c)];
+  if (d) return d.verses.reduce(function (a, x) { return a + x.t.split(/\s+/).length; }, 0) || 1;
+  return b === 18 ? 300 : b === 19 ? 450 : 650;   // estimate until the chapter is imported
+}
+function buildSchedule(days, scope) {
+  var perDay = []; for (var i = 0; i < days; i++) perDay.push([[], [], []]);
+  STREAMS.forEach(function (st, si) {
+    var list = [];
+    st.books.forEach(function (b) { for (var c = 1; c <= BOOKS[b][1]; c++) if (scope === 'all' || has(b, c)) list.push({ b: b, c: c, w: chWeight(b, c) }); });
+    if (!list.length) return;
+    var W = list.reduce(function (a, x) { return a + x.w; }, 0), T = W / days, cum = 0;
+    list.forEach(function (x) {
+      var d = Math.min(days - 1, Math.floor((cum + x.w / 2) / T));
+      perDay[d][si].push(key(x.b, x.c)); cum += x.w;
+    });
+  });
+  return perDay.map(function (d) { return d.map(function (s) { return s.join(','); }).join('|'); });
+}
+function totalDays() { return plan.days * plan.passes; }
+function dayList(d) {
+  var out = [], row = plan.schedule[(d - 1) % plan.days] || '';
+  row.split('|').forEach(function (part, si) {
+    if (!part) return;
+    part.split(',').forEach(function (k) { var b = +k.slice(0, 2) - 1, c = +k.slice(3); out.push({ s: si, b: b, c: c, k: k }); });
+  });
+  return out;
+}
+function passOf(d) { return Math.floor((d - 1) / plan.days) + 1; }
+function dayInPass(d) { return (d - 1) % plan.days + 1; }
+function dayLabel(d) { return plan.passes > 1 ? 'Round ' + passOf(d) + ' of ' + plan.passes + ' · Day ' + dayInPass(d) + ' of ' + plan.days : 'Day ' + d + ' of ' + plan.days; }
+function shortDay(d) { return plan.passes > 1 ? 'Day ' + dayInPass(d) + ' of ' + plan.days + ' (round ' + passOf(d) + ')' : 'Day ' + d + ' of ' + plan.days; }
+function dateOf(d) { return addDays(plan.start, d - 1); }
+function expectedDay() {
+  var ref = plan.pausedFrom || todayYmd();
+  return Math.max(0, Math.min(totalDays(), dayDiff(plan.start, ref) + 1));
+}
+function isDone(d) { return !!(plan.done && plan.done[d]); }
+function firstOpen() { for (var d = 1; d <= totalDays(); d++) if (!isDone(d)) return d; return 0; }
+function doneCount() { var n = 0; for (var d = 1; d <= totalDays(); d++) if (isDone(d)) n++; return n; }
+function behindCount() { var e = expectedDay(), n = 0; for (var d = 1; d < e; d++) if (!isDone(d)) n++; return n; }
+function ticked(d, k) { return !!(plan.ticks && plan.ticks[d + '_' + k]); }
+function setTick(d, k, on) { plan.ticks = plan.ticks || {}; if (on) plan.ticks[d + '_' + k] = 1; else delete plan.ticks[d + '_' + k]; }
+function setDone(d, on) {
+  plan.done = plan.done || {};
+  if (on) { plan.done[d] = Date.now(); dayList(d).forEach(function (x) { setTick(d, x.k, true); }); }
+  else delete plan.done[d];
+}
+
+async function loadPlan() {
+  if (store.mode === 'db') {
+    try { var snap = await store.planRef.get(); plan = snap.exists ? snap.data() : null; } catch (e) { plan = null; }
+    if (plan && !plan.schedule) plan = null;
+  } else plan = lsGet('nb-plan', null);
+  updateTodayBtn();
+}
+function savePlan(now) {
+  lsSet('nb-plan', plan);
+  updateTodayBtn();
+  if (store.mode !== 'db') return;
+  clearTimeout(planTimer);
+  var go = function () {
+    var p = plan ? store.planRef.set(JSON.parse(JSON.stringify(plan))) : store.planRef.delete();
+    withTimeout(p, 20000).catch(function () { toast('Plan progress didn’t save. It will retry with your next change.'); });
+  };
+  if (now) go(); else planTimer = setTimeout(go, 700);
+}
+// Plan-day notes: saved with the plan's identity, day, date and passages
+function pnoteId(d) { return 'p' + plan.created + '_' + d; }
+async function getNote(d) { var n = pnotes[pnoteId(d)]; return n ? n.text : ''; }
+function putNote(d, text, stat) {
+  var id = pnoteId(d);
+  var doc = { id: id, planCreated: plan.created, planName: plan.name, day: d, dayLabel: dayLabel(d), date: dateOf(d), refs: groupRefs(dayList(d)), text: text, updated: Date.now() };
+  queueNote('p', doc, stat);
+}
+
+var todayBtn = document.getElementById('todayBtn');
+function updateTodayBtn() {
+  if (plan) { todayBtn.textContent = 'Today'; todayBtn.classList.remove('plain'); }
+  else { todayBtn.textContent = 'Plan'; todayBtn.classList.add('plain'); }
+}
+todayBtn.onclick = function () {
+  if (!plan) return openPlanSetup();
+  var d = firstOpen();
+  if (!d) return openTracker();
+  openPlanDay(d);
+};
+function openPlanDay(d) {
+  var list = dayList(d);
+  if (!list.length) { closeSheet(); openDayDetail(d); return; }
+  var i = 0; while (i < list.length - 1 && ticked(d, list[i].k)) i++;
+  planCtx = { d: d, list: list, i: i };
+  closeSheet(); closeSearch();
+  showChapter(list[i].b, list[i].c);
+}
+function planBanner() {
+  if (!planCtx) return '';
+  var d = planCtx.d, cur = planCtx.list[planCtx.i];
+  var chips = planCtx.list.map(function (x, i) {
+    return '<button class="daychip' + (i === planCtx.i ? ' now' : ticked(d, x.k) ? ' done' : '') + '" data-pi="' + i + '">' + (ticked(d, x.k) && i !== planCtx.i ? '✓ ' : '') + esc(bn(x.b) + ' ' + x.c) + '</button>';
+  }).join('');
+  return '<div class="planbar"><div class="pb-t"><b>' + esc(shortDay(d)) + '</b><span>' + esc(STREAMS[cur.s].label) + ' · reading ' + (planCtx.i + 1) + ' of ' + planCtx.list.length + '</span></div>' +
+    '<button id="pbTrack">Tracker</button><button id="pbExit" aria-label="Leave the plan and read freely">✕</button></div><div class="daychips">' + chips + '</div>';
+}
+function planNavHtml() {
+  var i = planCtx.i, list = planCtx.list, d = planCtx.d;
+  var prev = i > 0 ? list[i - 1] : null, next = i < list.length - 1 ? list[i + 1] : null;
+  var h = '<nav class="plannav">';
+  if (next) h += '<button class="primary big" id="pnNext">Next: ' + esc(bn(next.b) + ' ' + next.c) + ' ›</button>';
+  else h += '<button class="primary big" id="pnDone">' + (isDone(d) ? '✓ Day complete' : 'Mark ' + esc(shortDay(d).replace(/ of \d+/, '')) + ' complete') + '</button>';
+  h += '<div class="row"><button id="pnPrev"' + (prev ? '' : ' disabled') + '>‹ ' + (prev ? esc(bn(prev.b) + ' ' + prev.c) : 'Start of day') + '</button><button id="pnTrack">Tracker</button></div></nav>';
+  return h;
+}
+function bindPlanBits() {
+  if (!planCtx) return;
+  var d = planCtx.d;
+  function go(i) { planCtx.i = i; var x = planCtx.list[i]; showChapter(x.b, x.c); }
+  var ex = document.getElementById('pbExit'); if (ex) ex.onclick = function () { planCtx = null; showChapter(pos.b, pos.c); toast('Reading freely. Tap Today to return to the plan.'); };
+  ['pbTrack', 'pnTrack'].forEach(function (id) { var el = document.getElementById(id); if (el) el.onclick = openTracker; });
+  main.querySelectorAll('.daychip').forEach(function (el) { el.onclick = function () { go(+el.dataset.pi); }; });
+  var nx = document.getElementById('pnNext');
+  if (nx) nx.onclick = function () { setTick(d, planCtx.list[planCtx.i].k, true); savePlan(); go(planCtx.i + 1); };
+  var pv = document.getElementById('pnPrev');
+  if (pv && !pv.disabled) pv.onclick = function () { go(planCtx.i - 1); };
+  var dn = document.getElementById('pnDone');
+  if (dn) dn.onclick = function () {
+    if (isDone(d)) { openTracker(); return; }
+    setDone(d, true); savePlan(true);
+    dayFinished(d);
+  };
+}
+function dayFinished(d) {
+  planCtx = null;
+  var nextD = firstOpen(), all = !nextD;
+  var b = behindCount();
+  main.innerHTML = '<div class="empty"><div class="mark" style="font-size:3rem">✓</div><h2>' + esc(shortDay(d)) + ' complete</h2>' +
+    '<p>' + (all ? 'You’ve finished the whole plan. Well done.' : b > 0 ? 'You’re ' + b + (b === 1 ? ' day' : ' days') + ' behind. Read on whenever you’re ready.' : nextD > expectedDay() ? 'You’re up to date. The next reading is ' + esc(shortDay(nextD)) + '.' : 'Next up: ' + esc(shortDay(nextD)) + '.') + '</p>' +
+    '<div class="actions" style="justify-content:center">' + (!all ? '<button class="primary" id="fNext">Read ' + esc(shortDay(nextD).replace(/ of \d+/, '')) + ' now</button>' : '') +
+    '<button class="quiet" id="fTrack">Tracker</button><button class="quiet" id="fFree">Read freely</button></div></div>';
+  document.getElementById('refBtn').textContent = 'Books';
+  var n = document.getElementById('fNext'); if (n) n.onclick = function () { openPlanDay(nextD); };
+  document.getElementById('fTrack').onclick = openTracker;
+  document.getElementById('fFree').onclick = function () { showChapter(pos.b, pos.c); };
+  window.scrollTo(0, 0);
+}
+
+function openPlanSetup() {
+  openSheet('Reading plan');
+  var imported = Object.keys(chapters).length;
+  var choice = imported >= 1189 ? '6m' : 'trial', trialDays = 7, start = todayYmd();
+  function render() {
+    var t = PLAN_TYPES[choice], days = choice === 'trial' ? trialDays : t.days;
+    var sched = buildSchedule(days, t.scope);
+    var tmp = { schedule: sched, days: days, passes: t.passes };
+    var prevPlan = plan; plan = tmp;
+    var pvw = [1, 2, 3].filter(function (d) { return d <= days; }).map(function (d) {
+      var l = dayList(d);
+      return '<p><b>Day ' + d + ':</b> ' + (l.length ? esc(groupRefs(l)) : '<span class="hint">nothing to read</span>') + '</p>';
+    }).join('');
+    plan = prevPlan;
+    sheetBody.innerHTML =
+      '<p class="hint" style="margin-top:0">Each day mixes a Tanakh portion, a reading from Psalms or Proverbs, and a New Testament portion, balanced so every day is about the same length.</p>' +
+      opt('6m', 'Whole Bible in 6 months', '182 days · about 6½ chapters a day') +
+      opt('3x', 'Whole Bible three times a year', 'Three rounds of 122 days · about 10 chapters a day') +
+      opt('trial', 'Trial plan with what’s imported', imported + ' chapters so far · for trying the plan out') +
+      (choice === 'trial' ? '<div class="set"><div class="set-t">Trial length</div>' + segBtns('tLen', [[3, '3 days'], [7, '7 days'], [14, '14 days']], trialDays) + '</div>' : '') +
+      (choice !== 'trial' && imported < 1189 ? '<p class="hint" style="color:var(--name)">Only ' + imported + ' of 1,189 chapters are imported. The plan will work, but days are balanced more accurately once every book is in.</p>' : '') +
+      '<label class="field"><span>Start date</span><input type="date" id="pStart" value="' + start + '"></label>' +
+      '<div class="card"><h3>First days</h3>' + pvw + '</div>' +
+      '<div class="actions"><button class="primary" id="pGo">Start plan</button></div>';
+    sheetBody.querySelectorAll('.opt-card').forEach(function (el) { el.onclick = function () { choice = el.dataset.t; render(); }; });
+    var tl = document.getElementById('tLen');
+    if (tl) tl.querySelectorAll('button').forEach(function (b) { b.onclick = function () { trialDays = +b.dataset.val; render(); }; });
+    document.getElementById('pStart').onchange = function () { if (this.value) start = this.value; };
+    document.getElementById('pGo').onclick = function () {
+      plan = { type: choice, name: choice === 'trial' ? 'Trial plan (' + days + ' days)' : t.name, days: days, passes: t.passes, scope: t.scope,
+        start: start, schedule: sched, done: {}, ticks: {}, pausedFrom: null, created: Date.now() };
+      savePlan(true);
+      toast('Plan started. Tap Today any time.');
+      openPlanDay(firstOpen());
+    };
+  }
+  function opt(id, title, sub) { return '<button class="opt-card' + (choice === id ? ' on' : '') + '" data-t="' + id + '"><b>' + title + '</b><span>' + sub + '</span></button>'; }
+  render();
+}
+function groupRefs(list) {
+  var out = [], i = 0;
+  while (i < list.length) {
+    var j = i;
+    while (j + 1 < list.length && list[j + 1].b === list[i].b && list[j + 1].c === list[j].c + 1) j++;
+    out.push(bn(list[i].b, j === i) + ' ' + list[i].c + (j > i ? '–' + list[j].c : ''));
+    i = j + 1;
+  }
+  return out.join(' · ');
+}
+function openTracker() {
+  if (!plan) return openPlanSetup();
+  openSheet(plan.name);
+  var total = totalDays(), done = doneCount(), e = expectedDay(), b = behindCount(), nextD = firstOpen();
+  var pct = Math.round(done / total * 100);
+  var status = plan.pausedFrom ? 'Paused since ' + niceDate(plan.pausedFrom) + '.' :
+    e === 0 ? 'Starts ' + niceDate(plan.start) + '.' :
+    b === 0 ? 'You’re on track.' : 'You’re ' + b + (b === 1 ? ' day' : ' days') + ' behind.';
+  var h = '<div class="card"><p class="bigstat">' + (nextD ? esc(dayLabel(nextD)) : 'Plan complete') + '</p>' +
+    '<div class="meter"><i style="width:' + pct + '%"></i></div>' +
+    '<p class="hint" style="margin:0">' + done + ' of ' + total + ' days read (' + pct + '%) · ' + esc(status) + '</p>' +
+    '<div class="actions">' + (nextD ? '<button class="primary" id="tRead">Read ' + esc(shortDay(nextD).replace(/ of \d+/, '')) + '</button>' : '') + '</div></div>';
+  if (b > 0 && !plan.pausedFrom) {
+    h += '<div class="card"><h3>Catching up</h3><p class="hint">Read the missed days at your own pace, or move the plan back so you’re on track again. Your end date moves back by ' + b + (b === 1 ? ' day' : ' days') + '.</p>' +
+      '<div class="actions"><button class="quiet" id="tShift">Move the plan back ' + b + (b === 1 ? ' day' : ' days') + '</button></div></div>';
+  }
+  for (var p = 1; p <= plan.passes; p++) {
+    if (plan.passes > 1) h += '<div class="grp">Round ' + p + '</div>'; else h += '<div class="grp">Days</div>';
+    h += '<div class="days">';
+    for (var k = 1; k <= plan.days; k++) {
+      var d = (p - 1) * plan.days + k;
+      var cls = isDone(d) ? ' done' : d < e ? ' miss' : '';
+      if (d === e && !plan.pausedFrom) cls += ' today';
+      h += '<button class="day' + cls + '" data-d="' + d + '" aria-label="' + esc(dayLabel(d)) + '">' + k + '</button>';
+    }
+    h += '</div>';
+  }
+  h += '<div class="legend"><span><i style="background:var(--accent);border-color:var(--accent)"></i>Read</span><span><i style="border-color:var(--name)"></i>Missed</span><span><i style="box-shadow:0 0 0 2px var(--ink) inset"></i>Today</span></div>';
+  var endD = dateOf(total);
+  h += '<p class="status" style="margin-top:1rem">Started ' + niceDate(plan.start) + ' · finishes ' + niceDate(endD) + (plan.pausedFrom ? ' (plus the paused days)' : '') + '</p>';
+  h += '<div class="actions" style="margin-top:1.2rem"><button class="quiet" id="tPause">' + (plan.pausedFrom ? 'Resume plan' : 'Pause plan') + '</button><button class="danger" id="tEnd">End plan</button></div>';
+  sheetBody.innerHTML = h;
+  var r = document.getElementById('tRead'); if (r) r.onclick = function () { openPlanDay(nextD); };
+  sheetBody.querySelectorAll('.day').forEach(function (el) { el.onclick = function () { openDayDetail(+el.dataset.d); }; });
+  var sh = document.getElementById('tShift');
+  if (sh) sh.onclick = function () { plan.start = addDays(plan.start, b); savePlan(true); toast('Plan moved back ' + b + (b === 1 ? ' day' : ' days') + '.'); openTracker(); };
+  document.getElementById('tPause').onclick = function () {
+    if (plan.pausedFrom) { var gap = Math.max(0, dayDiff(plan.pausedFrom, todayYmd())); plan.start = addDays(plan.start, gap); plan.pausedFrom = null; toast('Plan resumed.'); }
+    else { plan.pausedFrom = todayYmd(); toast('Plan paused. Days won’t count as missed until you resume.'); }
+    savePlan(true); openTracker();
+  };
+  var en = document.getElementById('tEnd');
+  en.onclick = function () {
+    if (en.dataset.armed !== '1') { en.dataset.armed = '1'; en.textContent = 'Tap again to end the plan'; return; }
+    plan = null; planCtx = null; savePlan(true); closeSheet(); toast('Plan ended. Your Bible and notes are untouched.'); showChapter(pos.b, pos.c);
+  };
+}
+async function openDayDetail(d) {
+  openSheet(dayLabel(d));
+  var list = dayList(d);
+  var h = '<button class="backlink" id="ddBack">‹ Tracker</button><p class="status" style="margin:0 0 .8rem">' + niceDate(dateOf(d)) + (isDone(d) ? ' · read' : '') + '</p>';
+  if (!list.length) h += '<p class="hint">Nothing is scheduled for this day. A day to catch up, or to reflect.</p>';
+  var lastS = -1;
+  list.forEach(function (x, i) {
+    if (x.s !== lastS) { h += '<div class="grp">' + esc(STREAMS[x.s].label) + '</div>'; lastS = x.s; }
+    h += '<div class="dl-item"><input type="checkbox" data-k="' + x.k + '"' + (ticked(d, x.k) ? ' checked' : '') + ' aria-label="Read ' + esc(bn(x.b) + ' ' + x.c) + '"><span class="nm2">' + esc(bn(x.b) + ' ' + x.c) + (has(x.b, x.c) ? '' : '<small>not imported yet</small>') + '</span><button data-i="' + i + '">Read</button></div>';
+  });
+  h += '<div class="actions"><button class="' + (isDone(d) ? 'quiet' : 'primary') + '" id="ddDone">' + (isDone(d) ? 'Mark as not read' : 'Mark day as read') + '</button></div>';
+  h += '<div class="grp" style="margin-top:1.4rem">My notes for this day</div><textarea id="ddNote" placeholder="What stood out? Thoughts for teaching…" style="min-height:8rem"></textarea><p class="status" id="ddNoteStat"></p>';
+  sheetBody.innerHTML = h;
+  document.getElementById('ddBack').onclick = openTracker;
+  sheetBody.querySelectorAll('.dl-item input').forEach(function (el) {
+    el.onchange = function () {
+      setTick(d, el.dataset.k, el.checked);
+      var all = list.every(function (x) { return ticked(d, x.k); });
+      if (all && !isDone(d)) { setDone(d, true); toast(shortDay(d) + ' complete'); }
+      if (!el.checked && isDone(d)) setDone(d, false);
+      savePlan();
+      var btn = document.getElementById('ddDone'); btn.textContent = isDone(d) ? 'Mark as not read' : 'Mark day as read'; btn.className = isDone(d) ? 'quiet' : 'primary';
+    };
+  });
+  sheetBody.querySelectorAll('.dl-item button').forEach(function (el) {
+    el.onclick = function () { var i = +el.dataset.i; planCtx = { d: d, list: list, i: i }; closeSheet(); closeSearch(); showChapter(list[i].b, list[i].c); };
+  });
+  document.getElementById('ddDone').onclick = function () {
+    if (isDone(d)) { setDone(d, false); plan.ticks = plan.ticks || {}; list.forEach(function (x) { delete plan.ticks[d + '_' + x.k]; }); }
+    else setDone(d, true);
+    savePlan(true); openDayDetail(d);
+  };
+  var ta = document.getElementById('ddNote'), st = document.getElementById('ddNoteStat');
+  ta.disabled = true; ta.value = await getNote(d); ta.disabled = false;
+  ta.addEventListener('input', function () { st.textContent = 'Saving…'; putNote(d, ta.value, st); });
+}
+
+// ======================================================================
+// Back up and restore
+// ======================================================================
+var downloads = null;
+function summarise(list) {
+  var byBook = {};
+  list.forEach(function (c) { (byBook[c.book] = byBook[c.book] || []).push(c.ch); });
+  return Object.keys(byBook).map(Number).sort(function (a, z) { return a - z; }).map(function (b) {
+    var chs = byBook[b].sort(function (a, z) { return a - z; }), parts = [], st = chs[0], pv = chs[0];
+    for (var i = 1; i <= chs.length; i++) {
+      if (i < chs.length && chs[i] === pv + 1) { pv = chs[i]; continue; }
+      parts.push(st === pv ? st : st + '–' + pv);
+      if (i < chs.length) st = pv = chs[i];
+    }
+    return BOOKS[b][0] + ' ' + parts.join(', ');
+  }).join('; ');
+}
+function openBackup() {
+  openSheet('Back up and restore');
+  var list = Object.keys(chapters).sort().map(function (k) { return chapters[k]; });
+  var verses = list.reduce(function (a, c) { return a + c.verses.length; }, 0);
+  sheetBody.innerHTML =
+    '<div class="set"><div class="set-t">Export my Bible</div>' +
+    '<p class="hint" style="margin-top:0">Saves everything you’ve imported into one backup file' + (list.length ? ': ' + esc(summarise(list)) + ' (' + verses + ' verses)' : '') + ', with your ' + (Object.keys(vnotes).length + Object.keys(pnotes).length) + ' notes and your reading plan. Keep it in Files or iCloud Drive. The installable version of this app will load your Bible from this file.</p>' +
+    '<div class="actions"><button class="primary" id="bExport"' + (list.length ? '' : ' disabled') + '>Export my Bible</button></div><p class="status" id="bExStat"></p></div>' +
+    '<div class="set"><div class="set-t">Restore from a backup file</div>' +
+    '<p class="hint" style="margin-top:0">Adds the chapters from a backup file. Chapters you already have with the same number are replaced; nothing else is removed.</p>' +
+    '<input type="file" id="bFile" accept=".json,application/json" class="hidden">' +
+    '<div class="actions"><button class="quiet" id="bPick">Choose backup file</button></div><div id="bRes"></div></div>';
+  var ex = document.getElementById('bExport'), exStat = document.getElementById('bExStat');
+  if (!downloads) { ex.disabled = true; exStat.textContent = 'Saving files isn’t available in this view.'; }
+  ex.onclick = async function () {
+    var d = new Date(), stamp = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    var data = JSON.stringify({ app: 'names-restored-bible', format: 1, exported: d.toISOString(), note: 'Personal reading copy. ESV text with the Names restored.', settings: S, plan: plan, verseNotes: Object.keys(vnotes).map(function (k) { return vnotes[k]; }), planNotes: Object.keys(pnotes).map(function (k) { return pnotes[k]; }), chapters: list });
+    ex.disabled = true; exStat.style.color = ''; exStat.textContent = 'Preparing the file…';
+    try {
+      await downloads.save({ filename: 'Names Restored Bible backup ' + stamp + '.json', data: new Blob([data]) });
+      exStat.textContent = 'Saved. ' + list.length + ' chapters are in the backup.';
+    } catch (e) {
+      var c = e && e.code;
+      exStat.style.color = c === 'declined' ? '' : 'var(--name)';
+      exStat.textContent = c === 'declined' ? 'Cancelled.' : c === 'rate_limited' ? 'A save is already waiting for your answer.' : 'Couldn’t save the file (' + (c || 'error') + ').';
+      if (c === 'unavailable' || c === 'not_granted' || c === 'capability_disabled' || c === 'capability_removed') { exStat.textContent = 'Saving files isn’t available in this view.'; return; }
+    }
+    ex.disabled = false;
+  };
+  var file = document.getElementById('bFile'), res = document.getElementById('bRes');
+  document.getElementById('bPick').onclick = function () { file.value = ''; file.click(); };
+  file.onchange = function () {
+    var f = file.files && file.files[0]; if (!f) return;
+    var r = new FileReader();
+    r.onerror = function () { res.innerHTML = '<p class="hint" style="color:var(--name)">That file couldn’t be read.</p>'; };
+    r.onload = function () {
+      var obj;
+      try { obj = JSON.parse(r.result); } catch (e) { obj = null; }
+      var items = obj && obj.app === 'names-restored-bible' && Array.isArray(obj.chapters) ? obj.chapters.filter(function (c) {
+        return c && typeof c.book === 'number' && c.book >= 0 && c.book < BOOKS.length && typeof c.ch === 'number' && c.ch >= 1 && c.ch <= BOOKS[c.book][1] && Array.isArray(c.verses) && c.verses.length;
+      }) : [];
+      var vn = obj && Array.isArray(obj.verseNotes) ? obj.verseNotes.filter(function (n) { return n && n.id && typeof n.text === 'string' && n.text.trim(); }) : [];
+      var pn = obj && Array.isArray(obj.planNotes) ? obj.planNotes.filter(function (n) { return n && n.id && n.planCreated && typeof n.text === 'string' && n.text.trim(); }) : [];
+      if (!items.length && !vn.length && !pn.length) { res.innerHTML = '<p class="hint" style="color:var(--name)">This isn’t a backup from this app, or it has nothing in it.</p>'; return; }
+      var replaces = items.filter(function (c) { return has(c.book, c.ch); }).length;
+      res.innerHTML = '<p class="hint">This backup has ' + items.length + ' chapters' + (items.length ? ': ' + esc(summarise(items)) : '') + (vn.length + pn.length ? ', and ' + (vn.length + pn.length) + ' notes' : '') + '.' + (replaces ? ' ' + replaces + ' of them will replace chapters you already have.' : '') + '</p>' +
+        '<div class="actions"><button class="primary" id="bRestore">Restore</button></div><p class="status" id="bStat"></p>';
+      document.getElementById('bRestore').onclick = async function () {
+        var btn = this, st = document.getElementById('bStat'); btn.disabled = true;
+        try {
+          for (var i = 0; i < items.length; i++) {
+            var c = items[i];
+            st.textContent = 'Restoring ' + BOOKS[c.book][0] + ' ' + c.ch + ' (' + (i + 1) + ' of ' + items.length + ')…';
+            await putChapter({ key: key(c.book, c.ch), book: c.book, ch: c.ch,
+              verses: c.verses.map(function (x) { return { v: +x.v, t: String(x.t) }; }),
+              heads: (c.heads || []).map(function (x) { return { v: +x.v, t: String(x.t) }; }), updated: Date.now() });
+          }
+          for (var j = 0; j < vn.length + pn.length; j++) {
+            var isV = j < vn.length, n = isV ? vn[j] : pn[j - vn.length];
+            st.textContent = 'Restoring notes (' + (j + 1) + ' of ' + (vn.length + pn.length) + ')…';
+            var clean = JSON.parse(JSON.stringify(n));
+            if (store.mode === 'db') await withTimeout((isV ? store.vnotes : store.notes).doc(clean.id).set(clean), 20000);
+            (isV ? vnotes : pnotes)[clean.id] = clean;
+          }
+          if (store.mode !== 'db') { lsSet('nb-vnotes', vnotes); lsSet('nb-pnotes', pnotes); }
+          st.textContent = 'Done. ' + items.length + ' chapters' + (vn.length + pn.length ? ' and ' + (vn.length + pn.length) + ' notes' : '') + ' restored.';
+          btn.textContent = 'Restored';
+          if (!qEl.value.trim() && (items.length || has(pos.b, pos.c))) showChapter(has(pos.b, pos.c) ? pos.b : items[0].book, has(pos.b, pos.c) ? pos.c : items[0].ch);
+        } catch (e) {
+          btn.disabled = false; st.style.color = 'var(--name)';
+          st.textContent = 'Stopped: ' + ((e && e.code) || 'error') + '. Chapters restored so far are kept; tap Restore to finish the rest.';
+        }
+      };
+    };
+    r.readAsText(f);
+  };
+}
+
+// ======================================================================
+// Start
+// ======================================================================
+(async function start() {
+  await idbPreload();
+  if ('serviceWorker' in navigator && location.protocol === 'https:') { try { navigator.serviceWorker.register('sw.js'); } catch (e) {} }
+  Object.assign(S, lsGet('nb-settings', {}));
+  applyLook();
+  await initStore();
+  try { if (window.claude && typeof window.claude.use === 'function') downloads = await window.claude.use('downloads'); } catch (e) {}
+  if (!downloads) downloads = { save: async function (o) {
+    var file = new File([o.data], o.filename, { type: 'application/json' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try { await navigator.share({ files: [file] }); return; }
+      catch (e) { if (e && e.name === 'AbortError') throw { code: 'declined' }; }
+    }
+    var url = URL.createObjectURL(file), a = document.createElement('a');
+    a.href = url; a.download = o.filename; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+  } };
+  try { await loadAll(); } catch (e) { toast('Couldn’t load your Bible. Check your connection.'); }
+  try { await loadPlan(); } catch (e) {}
+  try { await loadNotes(); } catch (e) {}
+  applyLook();
+  var at = S.last && has(S.last.b, S.last.c) ? S.last : firstLoaded();
+  if (at) showChapter(at.b, at.c); else renderEmpty();
+})();
+
+window.__nb = { parseImport: parseImport, parseRef: parseRef, runSearch: runSearch, chapters: function () { return chapters; } };
+})();
+</script>
+</body>
+</html>
