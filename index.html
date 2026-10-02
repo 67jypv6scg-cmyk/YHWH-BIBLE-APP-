@@ -343,9 +343,93 @@ textarea { min-height: 12rem; resize: vertical; line-height: 1.5; }
 .nsec { font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--soft); margin: 1.2rem 0 .3rem; }
 .loading { text-align: center; color: var(--soft); padding: 4rem 0; }
 @media (prefers-reduced-motion: reduce) { .v, .toast { transition: none; } }
+/* ---- Your voice ---- */
+.recbig { width: 5rem; height: 5rem; border-radius: 50%; border: 3px solid rgba(255,255,255,.85); background: #c0392b; display: block; margin: 1rem auto .4rem; box-shadow: 0 0 0 0 rgba(192,57,43,.5); }
+.recbig.on { border-radius: 1.2rem; transform: scale(.82); animation: recpulse 1.4s ease-out infinite; }
+@keyframes recpulse { 0% { box-shadow: 0 0 0 0 rgba(192,57,43,.55); } 100% { box-shadow: 0 0 0 1.3rem rgba(192,57,43,0); } }
+.rectime { text-align: center; font-variant-numeric: tabular-nums; font-size: 1.1rem; color: var(--soft); }
+.prompter { font-size: calc(var(--size) * 1.12); line-height: 1.75; max-height: 46vh; overflow-y: auto; padding: .6rem .2rem; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.prompter.he { direction: rtl; text-align: right; font-family: 'Frank Ruhl Libre', 'Times New Roman', serif; font-size: calc(var(--size) * 1.4); }
+.mine { display: inline-flex; align-items: center; gap: .35rem; font-size: .78rem; opacity: .85; }
+.hrec { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); color: #fff; border-radius: 999px; padding: .3rem .8rem; font-size: .82rem; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+/* ---- Home, glass tab bar, orb, Selah ---- */
+#todayBtn, #menuBtn { display: none; }
+body.home header.bar, body.home main, body.home #selbar { display: none !important; }
+#home { position: fixed; inset: 0; z-index: 15; overflow-y: auto; -webkit-overflow-scrolling: touch; color: #fff; background: #0b0d0b; }
+#home.hidden { display: none; }
+.hbg { position: fixed; inset: 0; background: #23301f center / cover no-repeat; transition: opacity .6s; }
+.hbg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,.08) 30%, rgba(0,0,0,.35) 52%, rgba(11,13,11,.92) 78%, #0b0d0b 100%); }
+.hin { position: relative; max-width: 40rem; margin: 0 auto; min-height: 100%; box-sizing: border-box; display: flex; flex-direction: column;
+  padding: calc(env(safe-area-inset-top, 0px) + 1.4rem) 1.3rem calc(env(safe-area-inset-bottom, 0px) + 6.2rem); }
+.htop { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+.hhe { font-family: 'Frank Ruhl Libre', 'Times New Roman', serif; font-size: .95rem; letter-spacing: .04em; opacity: .9; }
+.hgr { font-size: 1.75rem; font-weight: 600; letter-spacing: -.01em; margin: .1rem 0 0; line-height: 1.15; }
+.hdt { font-size: .85rem; opacity: .75; margin-top: .2rem; }
+.hpic { flex: none; width: 2.6rem; height: 2.6rem; border-radius: 50%; border: 1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.1); color: #fff; display: grid; place-items: center; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.hword { margin-top: auto; padding-top: 18vh; }
+.hlab { font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; opacity: .85; }
+.href { font-size: .95rem; font-weight: 600; margin: .2rem 0 .5rem; }
+.hvs { font-size: 1.55rem; line-height: 1.38; text-shadow: 0 2px 16px rgba(0,0,0,.55); margin: 0; }
+.hvs .nm, .hvs .heb { color: #F4D88E; }
+.hlisten { display: inline-flex; align-items: center; gap: .65rem; background: none; border: 0; color: #fff; padding: .9rem 0 1.1rem; font-size: .92rem; }
+.htiles { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+.ht { text-align: left; border-radius: 18px; padding: .8rem .85rem; color: #fff; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3); backdrop-filter: blur(16px) saturate(1.3); min-height: 6.2rem; display: flex; flex-direction: column; gap: .15rem; }
+.ht.wide { grid-column: 1 / -1; min-height: 0; flex-direction: row; align-items: center; gap: .8rem; }
+.ht svg { width: 1.3rem; height: 1.3rem; opacity: .9; margin-bottom: .2rem; }
+.ht .k { font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; opacity: .72; }
+.ht .t { font-size: 1.02rem; font-weight: 600; }
+.ht .s { font-size: .78rem; opacity: .78; }
+.ht:active { transform: scale(.98); }
+#tabs { position: fixed; left: .7rem; right: .7rem; bottom: calc(env(safe-area-inset-bottom, 0px) + .55rem); z-index: 28; max-width: 30rem; margin: 0 auto; height: 3.7rem; border-radius: 1.85rem;
+  display: flex; justify-content: space-around; align-items: center; background: rgba(20,24,20,.82); border: 1px solid rgba(255,255,255,.13);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5); backdrop-filter: blur(20px) saturate(1.5); box-shadow: 0 8px 30px rgba(0,0,0,.35); transition: transform .25s ease; }
+html[data-theme="light"] #tabs { background: rgba(255,255,255,.72); border-color: rgba(0,0,0,.08); }
+html[data-theme="light"] #tabs button { color: rgba(30,30,30,.65); }
+html[data-theme="light"] #tabs button.on { color: #111; }
+html[data-theme="light"] #tabs button.on svg { background: rgba(0,0,0,.07); }
+body.home #tabs { background: rgba(24,28,24,.55); border-color: rgba(255,255,255,.13); }
+body.home #tabs button { color: rgba(255,255,255,.72); }
+body.home #tabs button.on { color: #fff; }
+#tabs.away { transform: translateY(calc(100% + 1.5rem + env(safe-area-inset-bottom, 0px))); }
+#tabs button { flex: 1; background: none; border: 0; color: rgba(255,255,255,.68); display: flex; flex-direction: column; align-items: center; gap: .1rem; font-size: .68rem; padding: .2rem 0; }
+#tabs button svg { width: 1.35rem; height: 1.35rem; padding: .18rem .8rem; border-radius: .9rem; box-sizing: content-box; }
+#tabs button.on { color: #fff; }
+#tabs button.on svg { background: rgba(255,255,255,.14); }
+.selbar { bottom: calc(5.1rem + env(safe-area-inset-bottom, 0px)) !important; }
+.toast { bottom: calc(5.4rem + env(safe-area-inset-bottom, 0px)) !important; }
+.orb { width: 2.6rem; height: 2.6rem; border-radius: 50%; position: relative; flex: none; display: inline-block; }
+.orb::before, .orb::after { content: ''; position: absolute; border-radius: 50%; }
+.orb::before { inset: -2px; background: conic-gradient(from 0deg, #E9C46A, #8FB996, #3D5A80, #C77D9B, #E9C46A); filter: blur(6px); animation: orbspin 7s linear infinite; }
+.orb::after { inset: 18%; background: radial-gradient(circle at 35% 30%, #fff 0%, rgba(255,255,255,.65) 22%, rgba(233,196,106,.55) 45%, rgba(61,90,128,.25) 70%, transparent 76%); filter: blur(1.5px); animation: orbbreathe 3.4s ease-in-out infinite; }
+.orb.live::before { animation-duration: 2.2s; filter: blur(8px) brightness(1.25); }
+.orb.live::after { animation-duration: 1.1s; }
+.orb.sm { width: 1.7rem; height: 1.7rem; }
+@keyframes orbspin { to { transform: rotate(360deg); } }
+@keyframes orbbreathe { 0%, 100% { transform: scale(.82); opacity: .85; } 50% { transform: scale(1.1); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .orb::before, .orb::after { animation-duration: 20s; } }
+.orbbtn { display: inline-flex !important; align-items: center; gap: .5rem; }
+#selah { position: fixed; inset: 0; z-index: 70; color: #fff; display: flex; align-items: center; background: #3f3a38 center / cover no-repeat; opacity: 0; transition: opacity .8s ease; cursor: pointer; }
+#selah.show { opacity: 1; }
+#selah::before { content: ''; position: absolute; inset: 0; background: rgba(20,16,14,.45); }
+#selah .sin { position: relative; padding: 0 1.8rem; max-width: 34rem; margin: 0 auto; }
+#selah .sk { font-size: .78rem; letter-spacing: .24em; font-weight: 600; opacity: .9; }
+#selah .st { font-size: 2.1rem; font-weight: 700; line-height: 1.18; margin: 1.2rem 0; letter-spacing: -.01em; }
+#selah .sr { font-size: 1.05rem; opacity: .9; }
+#selah .sh { font-family: 'Frank Ruhl Libre', 'Times New Roman', serif; font-size: 2.4rem; margin-top: 1.8rem; opacity: .95; }
+#selah .stap { position: absolute; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom, 0px) + 2rem); text-align: center; font-size: .85rem; opacity: .7; }
 </style>
 </head>
 <body>
+<section id="home" class="hidden" aria-label="Home"></section>
+<nav id="tabs" aria-label="Main">
+  <button data-tab="home" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 3.5l8.5 7V20a1 1 0 0 1-1 1h-4.5v-6h-6v6H4.5a1 1 0 0 1-1-1z"/></svg>Home</button>
+  <button data-tab="read"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10 5 7 4.5 3.5 5v13.5c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5V20"/></svg>Read</button>
+  <button data-tab="plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h8.5a3.5 3.5 0 0 0 0-7h-9a3.5 3.5 0 0 1 0-7H16"/></svg>Plan</button>
+  <button data-tab="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4-4"/></svg>Search</button>
+  <button data-tab="more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.6"/></svg>More</button>
+</nav>
+<div id="selah" class="hidden" role="dialog" aria-label="Selah"></div>
 <header class="bar">
   <div class="bar-in">
     <button class="refbtn" id="refBtn" aria-label="Choose book and chapter">Genesis 1</button>
@@ -366,6 +450,7 @@ textarea { min-height: 12rem; resize: vertical; line-height: 1.5; }
   <button id="selCopy">Copy</button>
   <button id="selMem">Memorise</button>
   <button id="selCom">Commentary</button>
+  <button id="selRec">Record</button>
   <button class="q" id="selClear" aria-label="Clear selection">✕</button>
 </div>
 <div class="scrim hidden" id="scrim"></div>
@@ -785,6 +870,7 @@ function neighbour(dir) {
   return null;
 }
 function showChapter(b, c, verses) {
+  leaveHome();
   cmpView = null; hebView = null;
   if (planCtx) { var pc = planCtx.list[planCtx.i]; if (!pc || pc.b !== b || pc.c !== c) planCtx = null; }
   pos = { b: b, c: c };
@@ -805,7 +891,7 @@ function showChapter(b, c, verses) {
   notesForChapter(b, c).forEach(function (n) { (noteAt[n.v1] = noteAt[n.v1] || []).push(n); for (var v = n.v1; v <= n.v2; v++) notedV[v] = 1; });
   var headAt = {};
   (doc.heads || []).forEach(function (h) { (headAt[h.v] = headAt[h.v] || []).push(h.t); });
-  var html = planBanner() + '<h1 class="ch-title">' + esc(bn(b) + ' ' + c) + '</h1><p class="ch-sub">ESV, with the Names restored</p>' + '<div style="display:flex;gap:.5rem;flex-wrap:wrap">' + (b < NT_START ? '<button class="hebbtn" id="toHeb">א Hebrew</button>' : '') + '<button class="hebbtn" id="toCmp">Compare</button></div>' + '<div class="text"><p>';
+  var html = planBanner() + '<h1 class="ch-title">' + esc(bn(b) + ' ' + c) + '</h1><p class="ch-sub">ESV, with the Names restored</p>' + '<div style="display:flex;gap:.5rem;flex-wrap:wrap">' + (b < NT_START ? '<button class="hebbtn" id="toHeb">א Hebrew</button>' : '') + '<button class="hebbtn" id="toCmp">Compare</button><button class="hebbtn" id="toVoice">🎙 Record</button></div>' + '<div class="text"><p>';
   doc.verses.forEach(function (x, i) {
     if (headAt[x.v]) {
       html += '</p>';
@@ -824,6 +910,8 @@ function showChapter(b, c, verses) {
   cmpView = null;
   var th = document.getElementById('toHeb'); if (th) th.onclick = function () { showHebrew(b, c); };
   var tc = document.getElementById('toCmp'); if (tc) tc.onclick = function () { showCompare(b, c); };
+  var tvo = document.getElementById('toVoice');
+  if (tvo) { tvo.onclick = async function () { var own = await recGet(recKey('en', b, c, null)); if (own && !memSpeaking) { playOwn(own); toast('Playing your recording · tap again for options'); tvo.onclick = function () { stopOwn(); stopMem(); openRecorder({ lang: 'en', b: b, c: c, vs: null, text: versesHtml(b, c, null) }); }; } else { stopOwn(); stopMem(); openRecorder({ lang: 'en', b: b, c: c, vs: null, text: versesHtml(b, c, null) }); } }; refreshVoiceMarks(); }
   bindPlanBits();
   if (!planCtx) {
     if (prev) document.getElementById('prevCh').onclick = function () { showChapter(prev.b, prev.c); };
@@ -851,6 +939,7 @@ function showChapter(b, c, verses) {
   } else window.scrollTo(0, 0);
 }
 function renderEmpty() {
+  leaveHome();
   document.getElementById('refBtn').textContent = 'Books';
   main.innerHTML = '<div class="empty"><div class="mark">יהוה</div><h2>Your Bible is empty</h2>' +
     '<p>Import chapters from your ESV app, a few at a time. The footnote marks are cleaned away and the Names are restored as each chapter goes in.</p>' +
@@ -875,6 +964,7 @@ function copyText(txt) {
   try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(function () { toast('Copied'); }, fallback); else fallback(); }
   catch (e) { fallback(); }
 }
+document.getElementById('selRec').onclick = function () { if (!selected.size) return; var vs = Array.from(selected).sort(function (a, z) { return a - z; }); openRecorder({ lang: 'en', b: pos.b, c: pos.c, vs: vs, text: versesHtml(pos.b, pos.c, vs) }); };
 document.getElementById('selCom').onclick = function () { if (selected.size) openCommentary(pos.b, pos.c, Math.min.apply(null, Array.from(selected))); };
 document.getElementById('selMem').onclick = function () { if (selected.size) openMemAdd(pos.b, pos.c, Array.from(selected)); };
 document.getElementById('selCopy').onclick = function () {
@@ -946,6 +1036,7 @@ function highlight(t, ts) {
   return h;
 }
 function renderSearch() {
+  leaveHome();
   var q = qEl.value.trim();
   qx.classList.toggle('hidden', !q);
   if (!q) { showChapter(pos.b, pos.c); return; }
@@ -1048,12 +1139,12 @@ function menu() {
       (items ? '<div class="msub" hidden>' + items + '</div>' : '') + '</div>';
   };
   sheetBody.innerHTML =
-    cat('read', '📖', 'Read', 'Today, reading plans, full screen', '<button id="mToday">Today</button><button id="mPlan">Reading plans</button><button id="mFull">Full screen</button>') +
+    cat('read', '📖', 'Read', 'Today, reading plans, recordings, full screen', '<button id="mToday">Today</button><button id="mPlan">Reading plans</button><button id="mRecs">My recordings</button><button id="mFull">Full screen</button>') +
     cat('study', '🔍', 'Study', 'Teaching notes, Hebrew, compare, memory, commentary', '<button id="mStudy">Hebrew study</button><button id="mCmp">Compare versions</button><button id="mTeach">Teaching notes</button><button id="mMem">Memory verses</button><button id="mCom">Commentary</button><button id="mNotes">My notes</button>') +
     cat('bible', '📚', 'My Bible', 'Import chapters, versions, backup', '<button id="mImp">Import chapters</button><button id="mVer">My versions</button><button id="mBak">Back up and restore</button>') +
     cat('set', '⚙︎', 'Settings', 'Names, text size, your name', '') +
     '<p class="status" style="margin-top:1.2rem">' + esc(storageNote()) + ' ' + Object.keys(chapters).length + ' chapters imported.</p>' +
-    '<p class="status" style="margin-top:.3rem">App version 15 · clearer restore messages</p>';
+    '<p class="status" style="margin-top:.3rem">App version 18 · record in your own voice</p>';
   sheetBody.querySelectorAll('.mcat').forEach(function (c) {
     c.querySelector('.mhead').onclick = function () {
       if (c.dataset.cat === 'set') { openSettings(); return; }
@@ -1064,6 +1155,7 @@ function menu() {
   });
   document.getElementById('mToday').onclick = function () { openToday(); };
   document.getElementById('mMem').onclick = openMemList;
+  document.getElementById('mRecs').onclick = openRecordings;
   document.getElementById('mTeach').onclick = openTeachList;
   document.getElementById('mCom').onclick = function () { openCommentary(pos.b, pos.c, 1); };
   var mSetDummy = document.createElement('button'); mSetDummy.id = 'mSet'; mSetDummy.hidden = true; sheetBody.appendChild(mSetDummy);
@@ -1101,8 +1193,9 @@ function fullFallback() {
     requestAnimationFrame(function () {
       var y = window.scrollY, dy = y - lastY;
       var busy = document.activeElement === qEl || !sheet.classList.contains('hidden');
-      if (S.autohide !== false && !busy && y > 120 && dy > 6) bar.classList.add('away');
-      else if (dy < -6 || y < 60 || busy) bar.classList.remove('away');
+      var tabs = document.getElementById('tabs');
+      if (S.autohide !== false && !busy && !homeOn && y > 120 && dy > 6) { bar.classList.add('away'); tabs.classList.add('away'); }
+      else if (dy < -6 || y < 60 || busy || homeOn) { bar.classList.remove('away'); tabs.classList.remove('away'); }
       lastY = y; ticking = false;
     });
   }, { passive: true });
@@ -1317,6 +1410,11 @@ function openSettings() {
   sheetBody.innerHTML =
     '<div class="set"><div class="set-t">Page</div>' + segBtns('sTheme', [['dark', 'White on black'], ['light', 'Black on white']], S.theme) + '</div>' +
     '<label class="field"><span>Your name, for the greeting on Today</span><input type="text" id="sGreet" value="' + esc(S.greet || '') + '" placeholder="Brad"></label>' +
+    '<div class="set"><div class="set-t">Reading voice (English)</div><select id="sVoiceEn" style="width:100%;padding:.5rem;border-radius:8px;background:var(--panel);color:var(--ink);border:1px solid var(--rule)"></select>' +
+    '<div class="actions" style="margin-top:.5rem"><button class="quiet orbbtn" id="sVoiceTry"><span class="orb sm"></span>Hear it</button></div>' +
+    '<p class="status" id="sVoiceNote" style="margin-top:.3rem">For the most natural sound, download a Premium or Enhanced voice on your device: Settings → Accessibility → Spoken Content → Voices → English. It then appears here.</p></div>' +
+    '<div class="set"><div class="set-t">Reading voice (Hebrew)</div><select id="sVoiceHe" style="width:100%;padding:.5rem;border-radius:8px;background:var(--panel);color:var(--ink);border:1px solid var(--rule)"></select></div>' +
+    '<label class="check" style="margin-bottom:1rem"><input type="checkbox" id="sSelah"' + (S.selah !== false ? ' checked' : '') + '> <span>Show the Selah pause the first time I open the app each day</span></label>' +
     '<label class="field"><span>Memory verses: the Name, said and spelled as</span><input type="text" id="sMemName" value="' + esc(memName()) + '"></label>' +
     '<label class="field"><span>Memory verses: the Messiah’s name, said and spelled as</span><input type="text" id="sMemMes" value="' + esc(memMessiah()) + '"></label>' +
     '<div class="set"><div class="set-t">Text size</div>' + segBtns('sSize', [[16, 'Small'], [19, 'Medium'], [22, 'Large'], [26, 'Larger']], S.size) + '</div>' +
@@ -1343,13 +1441,30 @@ function openSettings() {
   }
   document.getElementById('sGreet').oninput = function () { S.greet = this.value.trim(); saveSettings(); };
   document.getElementById('sMemName').oninput = function () { S.memName = this.value.trim(); saveSettings(); };
+  document.getElementById('sSelah').onchange = function () { S.selah = this.checked; saveSettings(); };
+  function fillVoices() {
+    [['sVoiceEn', 'en', 'voiceEn'], ['sVoiceHe', 'he', 'voiceHe']].forEach(function (x) {
+      var sel = document.getElementById(x[0]); if (!sel) return;
+      var vs = voicesFor(x[1]), cur = memVoice(x[1]);
+      sel.innerHTML = vs.length ? vs.map(function (v) { var id = v.voiceURI || v.name; return '<option value="' + esc(id) + '"' + (cur && (cur.voiceURI || cur.name) === id ? ' selected' : '') + '>' + esc(voiceLabel(v)) + '</option>'; }).join('')
+        : '<option value="">' + (x[1] === 'he' ? 'No Hebrew voice installed' : 'No voices found yet') + '</option>';
+      sel.onchange = function () { S[x[2]] = sel.value; saveSettings(); };
+    });
+  }
+  fillVoices();
+  try { if (window.speechSynthesis) speechSynthesis.onvoiceschanged = fillVoices; } catch (e) {}
+  document.getElementById('sVoiceTry').onclick = function () {
+    if (memSpeaking) { stopMem(); return; }
+    var line = 'יהוה is my shepherd; I shall not want. He makes me lie down in green pastures.';
+    speakMem({ mode: 'esv' }, line.split(' ').map(function (w) { return { w: w }; }), null, 'normal');
+  };
   document.getElementById('sMemMes').oninput = function () { S.memMessiah = this.value.trim(); saveSettings(); };
   seg('sTheme', 'theme'); seg('sSize', 'size', true); seg('sName', 'name'); seg('sJesus', 'jesus'); seg('sLord', 'lord');
   [['sShade', 'shade'], ['sHide', 'autohide'], ['sGod', 'god'], ['sChrist', 'christ'], ['sSpirit', 'spirit'], ['sBrackets', 'brackets']].forEach(function (p) {
     document.getElementById(p[0]).onchange = function () { S[p[1]] = this.checked; saveSettings(); if (p[1] === 'shade') refreshView(); };
   });
 }
-function refreshView() { if (qEl.value.trim()) renderSearch(); else if (cmpView) { var y1 = window.scrollY; showCompare(cmpView.b, cmpView.c).then(function () { window.scrollTo(0, y1); }); } else if (hebView) { var y0 = window.scrollY; showHebrew(hebView.b, hebView.c).then(function () { window.scrollTo(0, y0); }); } else if (has(pos.b, pos.c)) { var y = window.scrollY; showChapter(pos.b, pos.c); window.scrollTo(0, y); } }
+function refreshView() { if (homeOn) { showHome(); return; } if (qEl.value.trim()) renderSearch(); else if (cmpView) { var y1 = window.scrollY; showCompare(cmpView.b, cmpView.c).then(function () { window.scrollTo(0, y1); }); } else if (hebView) { var y0 = window.scrollY; showHebrew(hebView.b, hebView.c).then(function () { window.scrollTo(0, y0); }); } else if (has(pos.b, pos.c)) { var y = window.scrollY; showChapter(pos.b, pos.c); window.scrollTo(0, y); } }
 
 // ======================================================================
 // Notes: on verses, and on reading-plan days
@@ -1959,6 +2074,7 @@ function glossNames(g) { return g; }   // STEP Bible's English is shown exactly 
 
 // Interlinear view
 async function showHebrew(b, c, flashV) {
+  leaveHome();
   hebView = { b: b, c: c }; cmpView = null; planCtx = null; pos = { b: b, c: c };
   selected.clear(); updateSelbar();
   document.getElementById('refBtn').textContent = bn(b) + ' ' + c;
@@ -2179,6 +2295,7 @@ async function downloadKjv(stat) {
 function cmpSel() { var s = Array.isArray(S.cmp) && S.cmp.length ? S.cmp.slice(0, 3) : ['esv', 'kjv']; return s.filter(function (id) { return VERSIONS.some(function (v) { return v.id === id; }); }); }
 
 async function showCompare(b, c, flashV) {
+  leaveHome();
   hebView = null; planCtx = null; pos = { b: b, c: c }; cmpView = { b: b, c: c };
   selected.clear(); updateSelbar();
   document.getElementById('refBtn').textContent = bn(b) + ' ' + c;
@@ -2270,6 +2387,207 @@ async function openMyVersions() {
   };
 }
 var cmpView = null;
+
+// ======================================================================
+// Your voice: record passages and hear them instead of the synthetic voice
+// ======================================================================
+var recDb = null, recAudio = null, recURL = null;
+function recOpen() {
+  if (recDb) return Promise.resolve(recDb);
+  return dbTimeout(new Promise(function (res) {
+    try { var r = indexedDB.open('nrb-voice', 1); r.onupgradeneeded = function () { r.result.createObjectStore('rec', { keyPath: 'id' }); }; r.onsuccess = function () { recDb = r.result; res(recDb); }; r.onerror = function () { res(null); }; }
+    catch (e) { res(null); }
+  }));
+}
+function recKey(lang, b, c, vs) { return lang + ':' + b + ':' + c + ':' + (vs && vs.length ? vs.slice().sort(function (a, z) { return a - z; }).join(',') : 'all'); }
+async function recGet(id) { var db = await recOpen(); if (!db) return null; return new Promise(function (res) { try { var q = db.transaction('rec').objectStore('rec').get(id); q.onsuccess = function () { res(q.result || null); }; q.onerror = function () { res(null); }; } catch (e) { res(null); } }); }
+async function recAll() { var db = await recOpen(); if (!db) return []; return new Promise(function (res) { var out = []; try { var cur = db.transaction('rec').objectStore('rec').openCursor(); cur.onsuccess = function () { var c = cur.result; if (c) { out.push(c.value); c.continue(); } else res(out); }; cur.onerror = function () { res(out); }; } catch (e) { res(out); } }); }
+async function recPut(rec) { var db = await recOpen(); if (!db) throw new Error('nostore'); return new Promise(function (res, rej) { var tx = db.transaction('rec', 'readwrite'); tx.objectStore('rec').put(rec); tx.oncomplete = res; tx.onerror = tx.onabort = function () { rej(tx.error || new Error('space')); }; }); }
+async function recDel(id) { var db = await recOpen(); if (!db) return; return new Promise(function (res) { var tx = db.transaction('rec', 'readwrite'); tx.objectStore('rec').delete(id); tx.oncomplete = res; tx.onerror = res; }); }
+function recLabel(r) { return refLabel(r.b, r.c, r.vs && r.vs.length ? r.vs : null) + (r.lang === 'he' ? ' · Hebrew' : ''); }
+function fmtDur(sec) { sec = Math.round(sec || 0); return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); }
+function stopOwn() { if (recAudio) { try { recAudio.pause(); } catch (e) {} recAudio = null; } if (recURL) { URL.revokeObjectURL(recURL); recURL = null; } }
+function playOwn(rec, done) {
+  stopMem(); stopOwn();
+  recURL = URL.createObjectURL(rec.blob); recAudio = new Audio(recURL);
+  var token = {}; memSpeaking = token; orbLive(true);
+  var end = function () { if (memSpeaking === token) { memSpeaking = null; orbLive(false); } stopOwn(); if (done) done(); };
+  recAudio.onended = end; recAudio.onerror = end;
+  var pr = recAudio.play(); if (pr && pr.catch) pr.catch(end);
+}
+// Listen: your own recording if you've made one for exactly this passage, otherwise the chosen voice
+async function listenPassage(lang, b, c, vs, it, words, rk) {
+  if (memSpeaking) { stopMem(); return; }
+  var own = await recGet(recKey(lang, b, c, vs));
+  if (own) playOwn(own); else speakMem(it, words, null, rk);
+}
+function pickMime() {
+  var c = ['audio/mp4', 'audio/aac', 'audio/webm;codecs=opus', 'audio/webm'];
+  for (var i = 0; i < c.length; i++) try { if (window.MediaRecorder && MediaRecorder.isTypeSupported(c[i])) return c[i]; } catch (e) {}
+  return '';
+}
+async function openRecorder(o) {
+  // o: { lang, b, c, vs (array or null for whole chapter), text (html for the prompter), back }
+  var id = recKey(o.lang, o.b, o.c, o.vs), existing = await recGet(id), title = refLabel(o.b, o.c, o.vs && o.vs.length ? o.vs : null);
+  openSheet('Your voice · ' + title);
+  var stream = null, rec = null, chunks = [], t0 = 0, tick = null, fresh = null;
+  function stopStream() { if (stream) { stream.getTracks().forEach(function (t) { t.stop(); }); stream = null; } clearInterval(tick); }
+  function idle() {
+    var has = fresh || existing;
+    sheetBody.innerHTML = (o.back ? '<button class="backlink" id="rcBack">‹ Back</button>' : '') +
+      '<p class="hint" style="margin-top:0">' + (has ? 'Your recording of ' + esc(title) + (has.dur ? ' · ' + fmtDur(has.dur) : '') + '. It plays whenever you tap Listen here.' : 'Read the passage aloud in your own voice. Your recording then plays whenever you tap Listen for this passage, instead of the synthetic voice.') + '</p>' +
+      '<div class="prompter' + (o.lang === 'he' ? ' he' : '') + '">' + o.text + '</div>' +
+      '<button class="recbig" id="rcGo" aria-label="Start recording"></button><div class="rectime" id="rcTime">' + (has ? 'Tap to record again' : 'Tap to record') + '</div>' +
+      '<div class="actions" style="justify-content:center">' + (has ? '<button class="quiet orbbtn" id="rcPlay"><span class="orb sm"></span>Play</button>' : '') +
+      (fresh ? '<button class="primary" id="rcSave">Save</button>' : '') + (existing && !fresh ? '<button class="quiet" id="rcDel">Delete</button>' : '') + '</div>' +
+      '<p class="status" id="rcStat" style="text-align:center"></p>';
+    var bk = document.getElementById('rcBack'); if (bk) bk.onclick = function () { stopOwn(); stopMem(); o.back(); };
+    document.getElementById('rcGo').onclick = start;
+    var pl = document.getElementById('rcPlay'); if (pl) pl.onclick = function () { if (memSpeaking) { stopMem(); stopOwn(); return; } playOwn(fresh || existing); };
+    var sv = document.getElementById('rcSave');
+    if (sv) sv.onclick = async function () {
+      try { await recPut(fresh); existing = fresh; fresh = null; toast('Saved in your voice'); idle(); refreshVoiceMarks(); }
+      catch (e) { document.getElementById('rcStat').textContent = e && e.message === 'nostore' ? 'Recordings can only be saved in your installed app.' : 'Couldn’t save. The device may be short of space.'; }
+    };
+    var dl = document.getElementById('rcDel');
+    if (dl) dl.onclick = async function () {
+      if (dl.dataset.armed !== '1') { dl.dataset.armed = '1'; dl.textContent = 'Tap again to delete'; return; }
+      stopOwn(); await recDel(id); existing = null; toast('Recording deleted'); idle(); refreshVoiceMarks();
+    };
+  }
+  async function start() {
+    stopOwn(); stopMem();
+    var st = document.getElementById('rcStat');
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) { st.textContent = 'Recording isn’t available here. Use the app from your home-screen icon.'; return; }
+    try { stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } }); }
+    catch (e) { st.textContent = window.claude ? 'Recording works in your installed app, from the home-screen icon.' : 'The microphone wasn’t allowed. Allow it when asked, or in your phone’s Settings for this app.'; return; }
+    var mime = pickMime(); chunks = [];
+    try { rec = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream); } catch (e) { rec = new MediaRecorder(stream); }
+    rec.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
+    rec.onstop = function () {
+      stopStream();
+      var dur = (Date.now() - t0) / 1000, blob = new Blob(chunks, { type: (rec.mimeType || mime || 'audio/mp4').split(';')[0] });
+      if (dur < 0.8 || !blob.size) { idle(); document.getElementById('rcStat').textContent = 'That was too short. Try again.'; return; }
+      fresh = { id: id, lang: o.lang, b: o.b, c: o.c, vs: o.vs && o.vs.length ? o.vs.slice() : null, blob: blob, mime: blob.type, dur: dur, created: Date.now() };
+      idle(); document.getElementById('rcStat').textContent = 'Play it back. If you’re happy, tap Save. Or tap the red button to try again.';
+    };
+    rec.start(); t0 = Date.now();
+    var go = document.getElementById('rcGo'); go.classList.add('on'); go.setAttribute('aria-label', 'Stop recording');
+    var tm = document.getElementById('rcTime'); tm.textContent = '0:00 · tap to stop';
+    tick = setInterval(function () { tm.textContent = fmtDur((Date.now() - t0) / 1000) + ' · tap to stop'; }, 250);
+    go.onclick = function () { try { rec.stop(); } catch (e) { stopStream(); idle(); } };
+  }
+  idle();
+}
+function versesHtml(b, c, vs) {
+  var doc = chapters[key(b, c)]; if (!doc) return '';
+  return doc.verses.filter(function (x) { return !vs || !vs.length || vs.indexOf(x.v) >= 0; }).map(function (x) { return '<sup>' + x.v + '</sup>' + fmtVerse(x.t); }).join(' ');
+}
+async function refreshVoiceMarks() {
+  if (homeOn) { var r = verseOfDay(); var m = document.getElementById('hMine'); if (r && m) { var own = await recGet(recKey('en', r.b, r.c, rangeOf(r))); m.hidden = !own; } }
+  var cb = document.getElementById('toVoice');
+  if (cb && !homeOn) { var ch = await recGet(recKey('en', pos.b, pos.c, null)); cb.textContent = ch ? '▶ Your voice' : '🎙 Record'; }
+}
+function rangeOf(r) { var vs = []; for (var v = r.v1; v <= r.v2; v++) vs.push(v); return vs; }
+async function openRecordings() {
+  openSheet('My recordings');
+  var all = (await recAll()).sort(function (a, z) { return a.b - z.b || a.c - z.c || ((a.vs || [0])[0] - (z.vs || [0])[0]); });
+  var tot = all.reduce(function (n, r) { return n + (r.blob ? r.blob.size : 0); }, 0);
+  sheetBody.innerHTML = '<p class="hint" style="margin-top:0">Passages you’ve read in your own voice. Record from Today’s Word, a chapter’s 🎙 button, selected verses, or a memory verse.</p>' +
+    (all.length ? all.map(function (r, i) { return '<div class="wrow" style="align-items:center"><span>' + esc(recLabel(r)) + ' <span class="status" style="margin:0">· ' + fmtDur(r.dur) + '</span></span><span style="display:flex;gap:.8rem"><button class="backlink" data-play="' + i + '" style="margin:0">Play</button><button class="backlink" data-open="' + i + '" style="margin:0">Open</button></span></div>'; }).join('') : '<p class="hint">No recordings yet.</p>') +
+    '<p class="status" style="margin-top:1rem">' + (all.length ? all.length + (all.length === 1 ? ' recording' : ' recordings') + ' · ' + (tot / 1048576).toFixed(1) + ' MB on this device. They travel in your backups.' : '') + '</p>';
+  sheetBody.querySelectorAll('[data-play]').forEach(function (el) { el.onclick = function () { if (memSpeaking) { stopMem(); stopOwn(); return; } playOwn(all[+el.dataset.play]); }; });
+  sheetBody.querySelectorAll('[data-open]').forEach(function (el) { el.onclick = function () { var r = all[+el.dataset.open]; closeSheet(); showChapter(r.b, r.c, r.vs || []); }; });
+}
+function blobToDataURL(b) { return new Promise(function (res) { var fr = new FileReader(); fr.onload = function () { res(fr.result); }; fr.onerror = function () { res(null); }; fr.readAsDataURL(b); }); }
+async function recExport() { var all = await recAll(), out = []; for (var i = 0; i < all.length; i++) { var d = await blobToDataURL(all[i].blob); if (d) { var x = Object.assign({}, all[i]); delete x.blob; x.data = d; out.push(x); } } return out; }
+function dataURLToBlob(d) { var m = d.match(/^data:([^;,]+)?(;base64)?,(.*)$/); if (!m) return null; var bin = atob(m[3]), u = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new Blob([u], { type: m[1] || 'audio/mp4' }); }
+
+// ======================================================================
+// Home: greeting, Today's Word with the Listen orb, live tiles, glass tab bar, Selah
+// ======================================================================
+var homeOn = false;
+var ICONS = {
+  route: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h8.5a3.5 3.5 0 0 0 0-7h-9a3.5 3.5 0 0 1 0-7H16"/></svg>',
+  mark: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 3.5h11v17l-5.5-3.8-5.5 3.8z"/></svg>',
+  heart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.2a4.2 4.2 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20z"/></svg>',
+  layers: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3.5 8.5 4.7L12 13 3.5 8.2z"/><path d="m3.5 12.5 8.5 4.8 8.5-4.8"/><path d="m3.5 16.5 8.5 4.8 8.5-4.8"/></svg>',
+  book: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10 5 7 4.5 3.5 5v13.5c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5V20"/></svg>',
+  image: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="20" height="20"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="m20.5 16-5-5-9 8.5"/></svg>'
+};
+function heGreeting() {
+  var h = new Date().getHours();
+  if (h >= 5 && h < 12) return ['בֹּקֶר טוֹב', 'Boker tov', 'Good morning'];
+  if (h >= 12 && h < 18) return ['צָהֳרַיִם טוֹבִים', 'Tsohorayim tovim', 'Good afternoon'];
+  return ['עֶרֶב טוֹב', 'Erev tov', 'Good evening'];
+}
+function setTab(t) { document.querySelectorAll('#tabs button').forEach(function (b) { b.classList.toggle('on', b.dataset.tab === t); }); }
+function leaveHome() { if (!homeOn) return; homeOn = false; document.body.classList.remove('home'); document.getElementById('home').classList.add('hidden'); setTab('read'); }
+async function homeBackground() {
+  var list = await picsAll();
+  return list.length ? 'url("' + list[dayNumber() % list.length].data + '")' : paintedBg(dayNumber());
+}
+function showHome() {
+  homeOn = true; closeSearch && qEl.value && (qEl.value = '');
+  document.body.classList.add('home'); setTab('home');
+  var el = document.getElementById('home'); el.classList.remove('hidden');
+  var g = heGreeting(), r = verseOfDay();
+  usePlan('bible');
+  var nextD = plan ? firstOpen() : 0, list = nextD ? dayList(nextD) : [];
+  var planT = plan ? (nextD ? (plan.passes > 1 ? 'Round ' + passOf(nextD) + ' · day ' + dayInPass(nextD) : 'Day ' + nextD) : 'Plan complete') : 'Start a plan';
+  var planS = plan ? (nextD ? list.length + (list.length === 1 ? ' reading' : ' readings') + ' · ' + esc(groupRefs(list)) : 'Well done') : 'A year · 6 months · 3× a year';
+  var last = S.last && has(S.last.b, S.last.c) ? S.last : firstLoaded();
+  var mem = memAll(), mids = Object.keys(mem).sort(function (a, z) { return mem[a].due < mem[z].due ? -1 : 1; }), m0 = mids.length ? mem[mids[0]] : null;
+  var study = plans.study, sD = study ? (function () { usePlan('study'); var d = firstOpen(); usePlan('bible'); return d; })() : 0;
+  var h = '<div class="hbg" id="hbg" style="background-image:' + paintedBg(dayNumber()) + '"></div><div class="hin">' +
+    '<div class="htop"><div><div class="hhe"><bdi>' + g[0] + '</bdi> · ' + g[1] + '</div><div class="hgr">' + g[2] + (S.greet ? ', ' + esc(S.greet) : '') + '</div>' +
+    '<div class="hdt">' + esc(new Date().toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' })) + '</div></div>' +
+    '<button class="hpic" id="hPic" aria-label="Pictures">' + ICONS.image + '</button></div>' +
+    '<div class="hword"><div class="hlab">Today’s Word</div>' +
+    (r ? '<div class="href">' + esc(votdRef(r)) + '</div><p class="hvs" id="hVerse">' + fmtVerse(r.text) + '</p><div style="display:flex;align-items:center;gap:.8rem;flex-wrap:wrap"><button class="hlisten" id="hListen"><span class="orb" id="hOrb"></span>Listen</button><span class="mine" id="hMine" hidden>· your voice</span><button class="hrec" id="hRec">🎙 Record</button></div>'
+       : '<p class="hvs" style="font-size:1.15rem">Import a few more books and Today’s Word will appear here.</p><div style="height:1rem"></div>') + '</div>' +
+    '<div class="htiles">' +
+      '<button class="ht" id="tPlan">' + ICONS.route + '<span class="k">Walk the Plan</span><span class="t">' + esc(planT) + '</span><span class="s">' + planS + '</span></button>' +
+      '<button class="ht" id="tRead">' + ICONS.mark + '<span class="k">Continue</span><span class="t">' + (last ? esc(bn(last.b) + ' ' + last.c) : 'Import chapters') + '</span><span class="s">' + (last ? 'Pick up where you left off' : 'Add your ESV text') + '</span></button>' +
+      '<button class="ht" id="tMem">' + ICONS.heart + '<span class="k">Hide it in your heart</span><span class="t">' + (m0 ? esc(memRef(m0)) : 'Add a verse') + '</span><span class="s">' + (m0 ? esc(memDueLabel(m0)) + ' · ' + esc(MEM_MODES.filter(function (x) { return x[0] === m0.mode; })[0][1]) : 'Start memorising') + '</span></button>' +
+      '<button class="ht" id="tDeep">' + ICONS.layers + '<span class="k">Go Deeper</span><span class="t">Study</span><span class="s">Hebrew · Compare · Notes</span></button>' +
+      (study ? '<button class="ht wide" id="tStudy">' + ICONS.book + '<span><span class="k">Book study</span><br><span class="t">' + esc(bn(study.book)) + (sD ? ' · day ' + sD : ' · complete') + '</span></span></button>' : '') +
+    '</div></div>';
+  el.innerHTML = h; el.scrollTop = 0;
+  homeBackground().then(function (bg) { var b = document.getElementById('hbg'); if (b && homeOn) b.style.backgroundImage = bg; });
+  document.getElementById('hPic').onclick = openPictures;
+  var lb = document.getElementById('hListen');
+  if (lb) lb.onclick = function () {
+    var words = r.text.split(/\s+/).filter(Boolean).map(function (w) { return { w: w }; });
+    listenPassage('en', r.b, r.c, rangeOf(r), { mode: 'esv' }, words, 'normal');
+  };
+  var hr = document.getElementById('hRec');
+  if (hr) hr.onclick = function () { openRecorder({ lang: 'en', b: r.b, c: r.c, vs: rangeOf(r), text: versesHtml(r.b, r.c, rangeOf(r)) }); };
+  refreshVoiceMarks();
+  document.getElementById('tPlan').onclick = function () { usePlan('bible'); if (!plan) { openPlanSetup(); return; } var d = firstOpen(); if (d) openPlanDay(d); else openTracker(); };
+  document.getElementById('tRead').onclick = function () { if (last) { leaveHome(); showChapter(last.b, last.c); } else openImport(pos.b, nextMissing(pos.b)); };
+  document.getElementById('tMem').onclick = function () { if (m0) practiseMem(m0.id); else openMemList(); };
+  document.getElementById('tDeep').onclick = function () { menu(); var c = sheetBody.querySelector('[data-cat=study] .mhead'); if (c) c.click(); };
+  var ts = document.getElementById('tStudy'); if (ts) ts.onclick = function () { usePlan('study'); var d = firstOpen(); if (d) openPlanDay(d); else openTracker(); };
+}
+async function showSelah() {
+  var el = document.getElementById('selah');
+  el.innerHTML = '<div class="sin"><div class="sk">SELAH</div><div class="st">Pause.<br>Breathe.<br>Be still, and know.</div><div class="sr">Psalm 46:10</div><div class="sh">סֶלָה</div></div><div class="stap">Tap anywhere to begin</div>';
+  el.style.backgroundImage = await homeBackground();
+  el.classList.remove('hidden'); requestAnimationFrame(function () { requestAnimationFrame(function () { el.classList.add('show'); }); });
+  var done = false, close = function () { if (done) return; done = true; el.classList.remove('show'); setTimeout(function () { el.classList.add('hidden'); }, 800); };
+  el.onclick = close; setTimeout(close, 6000);
+}
+document.querySelectorAll('#tabs button').forEach(function (b) {
+  b.onclick = function () {
+    var t = b.dataset.tab;
+    if (t === 'home') { closeSheet(); showHome(); return; }
+    if (t === 'read') { closeSheet(); leaveHome(); if (qEl.value) { qEl.value = ''; } if (has(pos.b, pos.c)) showChapter(pos.b, pos.c); else { var a = firstLoaded(); if (a) showChapter(a.b, a.c); else renderEmpty(); } return; }
+    if (t === 'plan') { openToday(); return; }
+    if (t === 'search') { closeSheet(); leaveHome(); setTab('search'); document.querySelector('.bar').classList.remove('away'); setTimeout(function () { qEl.focus(); }, 50); return; }
+    if (t === 'more') { menu(); return; }
+  };
+});
 
 // ======================================================================
 // Teaching notes: your own titled notes, with headings, lists, tables and verse links
@@ -2542,11 +2860,24 @@ function firstLetter(w) { var m = w.match(/[\p{L}\p{N}]/u); return m ? m[0] : ''
 function isHebrewWord(w) { return /[\u05D0-\u05EA]/.test(w); }
 function memName() { return (S.memName || 'Yahowah').trim() || 'Yahowah'; }
 function memMessiah() { return (S.memMessiah || 'Yeshua').trim() || 'Yeshua'; }
-var MEM_RATES = { slow: { he: 0.42, en: 0.62 }, steady: { he: 0.58, en: 0.78 }, normal: { he: 0.78, en: 0.95 } };
+var MEM_RATES = { slow: { he: 0.42, en: 0.72 }, steady: { he: 0.58, en: 0.85 }, normal: { he: 0.78, en: 0.95 } };
 var memSpeaking = null;
+// Voices: your chosen voice first, otherwise the most natural one installed (Premium, then Enhanced)
+var NOVELTY = /^(Albert|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Good News|Jester|Organ|Superstar|Trinoids|Whisper|Wobble|Zarvox|Fred|Junior|Ralph|Kathy|Grandma|Grandpa|Eddy|Flo|Reed|Rocko|Sandy|Shelley)\b/i;
+function voiceQuality(v) { var id = (v.voiceURI || '') + ' ' + (v.name || ''); return /premium/i.test(id) ? 2 : /enhanced|neural|natural/i.test(id) ? 1 : 0; }
+function voicesFor(lang) {
+  var vs = (window.speechSynthesis ? speechSynthesis.getVoices() : []).filter(function (v) { return v.lang && v.lang.toLowerCase().replace('_', '-').indexOf(lang) === 0 && !NOVELTY.test(v.name || ''); });
+  return vs.sort(function (a, z) {
+    var q = voiceQuality(z) - voiceQuality(a); if (q) return q;
+    var g = (/GB|UK/i.test(z.lang) ? 1 : 0) - (/GB|UK/i.test(a.lang) ? 1 : 0); if (g && lang === 'en') return g;
+    return (a.name || '').localeCompare(z.name || '');
+  });
+}
+function voiceLabel(v) { var q = voiceQuality(v); return (v.name || 'Voice').replace(/\s*\((Enhanced|Premium)\)/i, '') + ' · ' + v.lang + (q === 2 ? ' · Premium' : q === 1 ? ' · Enhanced' : ''); }
 function memVoice(lang) {
-  var vs = (window.speechSynthesis ? speechSynthesis.getVoices() : []).filter(function (v) { return v.lang && v.lang.toLowerCase().indexOf(lang) === 0; });
-  return lang === 'en' ? (vs.filter(function (v) { return /GB|UK/i.test(v.lang); })[0] || vs[0] || null) : (vs[0] || null);
+  var vs = voicesFor(lang), want = lang === 'en' ? S.voiceEn : S.voiceHe;
+  if (want) { var hit = vs.filter(function (v) { return (v.voiceURI || v.name) === want; })[0]; if (hit) return hit; }
+  return vs[0] || null;
 }
 function memSegments(it, words) {
   var heb = it.mode === 'heb' || it.mode === 'snd';
@@ -2556,14 +2887,16 @@ function memSegments(it, words) {
     return { t: it.mode === 'heb' ? x.w : x.h, lang: 'he', i: i };
   });
 }
-function stopMem() { memSpeaking = null; try { speechSynthesis.cancel(); } catch (e) {} document.querySelectorAll('.memtext .speaking').forEach(function (x) { x.classList.remove('speaking'); }); }
-function speakMem(it, words, done) {
+function orbLive(on) { document.querySelectorAll('.orb').forEach(function (o) { o.classList.toggle('live', !!on); }); }
+function stopMem() { if (recAudio) stopOwn(); memSpeaking = null; orbLive(false); try { speechSynthesis.cancel(); } catch (e) {} document.querySelectorAll('.memtext .speaking').forEach(function (x) { x.classList.remove('speaking'); }); }
+function speakMem(it, words, done, rk) {
   try {
     if (!window.speechSynthesis) { toast('Reading aloud isn’t available on this device'); return; }
     stopMem();
-    var segs = memSegments(it, words), rate = MEM_RATES[S.memRate || 'slow'] || MEM_RATES.slow, wbw = !!S.memWbw;
+    var segs = memSegments(it, words), rate = MEM_RATES[rk || S.memRate || 'slow'] || MEM_RATES.slow, wbw = rk ? false : !!S.memWbw;
     if (segs.some(function (x) { return x.lang === 'he'; }) && speechSynthesis.getVoices().length && !memVoice('he')) toast('No Hebrew voice on this device. Add one in Settings → Accessibility → Spoken Content → Voices.');
-    var token = {}; memSpeaking = token;
+    var token = {}; memSpeaking = token; orbLive(true);
+    var userDone = done; done = function () { orbLive(false); if (userDone) userDone(); };
     var mark = function (i) { document.querySelectorAll('.memtext .speaking').forEach(function (x) { x.classList.remove('speaking'); }); var el = document.querySelector('.memtext [data-wi="' + i + '"]'); if (el) el.classList.add('speaking'); };
     var say = function (text, lang, onend) {
       var u = new SpeechSynthesisUtterance(text); u.lang = lang === 'he' ? 'he-IL' : 'en-GB'; u.rate = rate[lang];
@@ -2675,7 +3008,8 @@ async function practiseMem(id) {
       '<div class="actions" style="margin-top:.4rem">' + (step > 0 ? '<button class="quiet" id="mpEasier">‹ Easier step</button>' : '') + '<button class="quiet" id="mpList">All memory verses</button></div>';
     var e = document.getElementById('mpEasier'); if (e) e.onclick = function () { step--; reset(); render(); };
     document.getElementById('mpList').onclick = openMemList;
-    var l = document.getElementById('mpListen'); if (l) l.onclick = function () { speakMem(it, words); };
+    var l = document.getElementById('mpListen'); if (l) l.onclick = function () { listenPassage(it.mode === 'heb' || it.mode === 'snd' ? 'he' : 'en', it.b, it.c, it.vs, it, words); };
+    var mr = document.getElementById('mpRec'); if (mr) mr.onclick = function () { stopMem(); var heb2 = it.mode === 'heb' || it.mode === 'snd'; openRecorder({ lang: heb2 ? 'he' : 'en', b: it.b, c: it.c, vs: it.vs, text: heb2 ? words.map(function (x) { return esc(it.mode === 'heb' ? x.w : x.h); }).join(' ') : versesHtml(it.b, it.c, it.vs), back: function () { practiseMem(id); } }); };
     var nx = document.getElementById('mpNext'); if (nx) nx.onclick = function () { stopMem(); step++; reset(); render(); };
     var sd = document.getElementById('mpSnd'); if (sd) sd.onclick = function () { S.memSnd = !showSnd; showSnd = S.memSnd; saveSettings(); render(); };
   }
@@ -2688,7 +3022,7 @@ async function practiseMem(id) {
       body('<p class="hint">Read it aloud, or listen, two or three times. Your Names are used throughout.</p><div class="' + cls + '">' + words.map(function (x, i) { return '<span data-wi="' + i + '">' + wordHtml(x) + '</span>'; }).join(' ') + '</div>' +
         '<div class="ilbar" style="margin:.2rem 0 .4rem"><span class="status" style="margin:0">Speed</span>' + [['slow', 'Slow'], ['steady', 'Steady'], ['normal', 'Normal']].map(function (o) { return '<button data-rate="' + o[0] + '" class="' + (rt === o[0] ? 'on' : '') + '">' + o[1] + '</button>'; }).join('') +
         '<button id="mpWbw" class="' + (S.memWbw ? 'on' : '') + '">Word by word</button></div>',
-        '<button class="quiet" id="mpListen">🔊 Listen</button><button class="quiet" id="mpStop">■ Stop</button><button class="primary" id="mpNext">Next: fade the words</button>' + sndBtn);
+        '<button class="quiet orbbtn" id="mpListen"><span class="orb sm"></span>Listen</button><button class="quiet" id="mpStop">■ Stop</button><button class="quiet" id="mpRec">🎙 Record mine</button><button class="primary" id="mpNext">Next: fade the words</button>' + sndBtn);
       sheetBody.querySelectorAll('[data-rate]').forEach(function (el) { el.onclick = function () { stopMem(); S.memRate = el.dataset.rate; saveSettings(); render(); }; });
       document.getElementById('mpWbw').onclick = function () { stopMem(); S.memWbw = !S.memWbw; saveSettings(); render(); };
       document.getElementById('mpStop').onclick = stopMem;
@@ -3078,7 +3412,7 @@ function openBackup() {
   if (!downloads) { ex.disabled = true; exStat.textContent = 'Saving files isn’t available in this view.'; }
   ex.onclick = async function () {
     var d = new Date(), stamp = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-    var data = JSON.stringify({ app: 'names-restored-bible', format: 1, exported: d.toISOString(), note: 'Personal reading copy. ESV text with the Names restored.', settings: S, plan: plans.bible, study: plans.study, words: savedWords(), memory: memAll(), teach: teachAll(), pictures: await picsAll(), verseNotes: Object.keys(vnotes).map(function (k) { return vnotes[k]; }), planNotes: Object.keys(pnotes).map(function (k) { return pnotes[k]; }), chapters: list });
+    var data = JSON.stringify({ app: 'names-restored-bible', format: 1, exported: d.toISOString(), note: 'Personal reading copy. ESV text with the Names restored.', settings: S, plan: plans.bible, study: plans.study, words: savedWords(), memory: memAll(), teach: teachAll(), pictures: await picsAll(), recordings: await recExport(), verseNotes: Object.keys(vnotes).map(function (k) { return vnotes[k]; }), planNotes: Object.keys(pnotes).map(function (k) { return pnotes[k]; }), chapters: list });
     ex.disabled = true; exStat.style.color = ''; exStat.textContent = 'Preparing the file…';
     try {
       await downloads.save({ filename: 'Names Restored Bible backup ' + stamp + '.json', data: new Blob([data]) });
@@ -3111,11 +3445,12 @@ function openBackup() {
       var bTeach = obj && obj.teach && typeof obj.teach === 'object' ? obj.teach : {};
       var bMem = obj && obj.memory && typeof obj.memory === 'object' ? obj.memory : {};
       var bWords = obj && obj.words && typeof obj.words === 'object' ? obj.words : {};
+      var bRecs = obj && Array.isArray(obj.recordings) ? obj.recordings.filter(function (x) { return x && x.id && typeof x.data === 'string' && x.data.indexOf('data:') === 0; }) : [];
       var bPics = obj && Array.isArray(obj.pictures) ? obj.pictures.filter(function (x) { return x && x.id && typeof x.data === 'string' && x.data.indexOf('data:image/') === 0; }) : [];
       var bPlans = obj ? [['bible', obj.plan], ['study', obj.study]].filter(function (x) { return x[1] && Array.isArray(x[1].schedule) && x[1].created; }) : [];
-      if (!items.length && !vn.length && !pn.length && !bPlans.length && !bPics.length && !Object.keys(bTeach).length) { res.innerHTML = '<p class="hint" style="color:var(--name)">This isn’t a backup from this app, or it has nothing in it.</p>'; return; }
+      if (!items.length && !vn.length && !pn.length && !bPlans.length && !bPics.length && !bRecs.length && !Object.keys(bTeach).length) { res.innerHTML = '<p class="hint" style="color:var(--name)">This isn’t a backup from this app, or it has nothing in it.</p>'; return; }
       var replaces = items.filter(function (c) { return has(c.book, c.ch); }).length;
-      res.innerHTML = '<p class="hint">This backup has ' + items.length + ' chapters' + (items.length ? ': ' + esc(summarise(items)) : '') + (vn.length + pn.length ? ', and ' + (vn.length + pn.length) + ' notes' : '') + '.' + (bPlans.length ? ' It includes your reading plan progress.' : '') + (bPics.length ? ' It has ' + bPics.length + (bPics.length === 1 ? ' picture.' : ' pictures.') : '') + (Object.keys(bTeach).length ? ' Teaching notes: ' + Object.keys(bTeach).map(function (k) { return '“' + (bTeach[k].title || 'Untitled') + '”'; }).join(', ') + '.' : '') + (replaces ? ' ' + replaces + ' of them will replace chapters you already have.' : '') + '</p>' +
+      res.innerHTML = '<p class="hint">This backup has ' + items.length + ' chapters' + (items.length ? ': ' + esc(summarise(items)) : '') + (vn.length + pn.length ? ', and ' + (vn.length + pn.length) + ' notes' : '') + '.' + (bPlans.length ? ' It includes your reading plan progress.' : '') + (bPics.length ? ' It has ' + bPics.length + (bPics.length === 1 ? ' picture.' : ' pictures.') : '') + (bRecs.length ? ' Recordings in your voice: ' + bRecs.length + '.' : '') + (Object.keys(bTeach).length ? ' Teaching notes: ' + Object.keys(bTeach).map(function (k) { return '“' + (bTeach[k].title || 'Untitled') + '”'; }).join(', ') + '.' : '') + (replaces ? ' ' + replaces + ' of them will replace chapters you already have.' : '') + '</p>' +
         '<div class="actions"><button class="primary" id="bRestore">Restore</button></div><p class="status" id="bStat"></p>';
       document.getElementById('bRestore').onclick = async function () {
         var btn = this, st = document.getElementById('bStat'); btn.disabled = true;
@@ -3149,6 +3484,7 @@ function openBackup() {
           if (Object.keys(bTeach).length) { var tt = teachAll(); Object.keys(bTeach).forEach(function (k) { var x = bTeach[k]; if (x && typeof x.html === 'string' && (!tt[k] || (x.updated || 0) >= (tt[k].updated || 0))) tt[k] = { id: k, title: String(x.title || 'Untitled'), html: cleanTeachHtml(x.html), created: x.created || Date.now(), updated: x.updated || Date.now() }; }); teachSave(tt); }
           if (Object.keys(bMem).length) { var mm = memAll(); Object.keys(bMem).forEach(function (k) { var x = bMem[k]; if (x && x.id && Array.isArray(x.vs) && (!mm[k] || (x.updated || 0) > (mm[k].updated || 0))) mm[k] = x; }); memSave(mm); }
           if (Object.keys(bWords).length) { var mw = savedWords(); Object.keys(bWords).forEach(function (k) { if (!mw[k] || (bWords[k].updated || 0) > (mw[k].updated || 0)) mw[k] = bWords[k]; }); saveWords(mw); }
+          for (var ri = 0; ri < bRecs.length; ri++) { var rx = bRecs[ri], bl = dataURLToBlob(rx.data); if (!bl) continue; var have = await recGet(rx.id); if (!have || (rx.created || 0) > (have.created || 0)) { var nr = Object.assign({}, rx); delete nr.data; nr.blob = bl; try { await recPut(nr); } catch (e) {} } }
           if (bPics.length) {
             var have = {}; (await picsAll()).forEach(function (x) { have[x.id] = 1; });
             for (var pi = 0; pi < bPics.length; pi++) if (!have[bPics[pi].id]) { st.textContent = 'Restoring pictures (' + (pi + 1) + ' of ' + bPics.length + ')…'; try { await picPut({ id: bPics[pi].id, data: bPics[pi].data, added: bPics[pi].added || Date.now() + pi }); } catch (e) {} }
@@ -3192,7 +3528,10 @@ function openBackup() {
   applyLook();
   var at = S.last && has(S.last.b, S.last.c) ? S.last : firstLoaded();
   if (at) showChapter(at.b, at.c); else renderEmpty();
-  if (at && S.todaySeen !== todayYmd()) { S.todaySeen = todayYmd(); saveSettings(); openToday(); }
+  if (at) {
+    showHome();
+    if (S.todaySeen !== todayYmd()) { S.todaySeen = todayYmd(); saveSettings(); if (S.selah !== false) showSelah(); }
+  }
 })();
 
 window.__nb = { parseImport: parseImport, parseRef: parseRef, runSearch: runSearch, chapters: function () { return chapters; } };

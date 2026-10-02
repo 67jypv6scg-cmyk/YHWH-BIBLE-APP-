@@ -1,6 +1,6 @@
 // Offline helper for The Scriptures, Names Restored.
 // Change VERSION whenever you upload a new index.html.
-var VERSION = 'v15';
+var VERSION = 'v18';
 var CORE = ['./', 'index.html', 'manifest.json', 'lora.ttf', 'lora-italic.ttf', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', function (e) {
