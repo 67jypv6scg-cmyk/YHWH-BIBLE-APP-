@@ -1053,7 +1053,7 @@ function menu() {
     cat('bible', '📚', 'My Bible', 'Import chapters, versions, backup', '<button id="mImp">Import chapters</button><button id="mVer">My versions</button><button id="mBak">Back up and restore</button>') +
     cat('set', '⚙︎', 'Settings', 'Names, text size, your name', '') +
     '<p class="status" style="margin-top:1.2rem">' + esc(storageNote()) + ' ' + Object.keys(chapters).length + ' chapters imported.</p>' +
-    '<p class="status" style="margin-top:.3rem">App version 14 · teaching notes</p>';
+    '<p class="status" style="margin-top:.3rem">App version 15 · clearer restore messages</p>';
   sheetBody.querySelectorAll('.mcat').forEach(function (c) {
     c.querySelector('.mhead').onclick = function () {
       if (c.dataset.cat === 'set') { openSettings(); return; }
@@ -3072,7 +3072,7 @@ function openBackup() {
     '<div class="actions"><button class="primary" id="bExport"' + (list.length ? '' : ' disabled') + '>Export my Bible</button></div><p class="status" id="bExStat"></p></div>' +
     '<div class="set"><div class="set-t">Restore from a backup file</div>' +
     '<p class="hint" style="margin-top:0">Adds the chapters from a backup file. Chapters you already have with the same number are replaced; nothing else is removed.</p>' +
-    '<input type="file" id="bFile" accept=".json,application/json" class="hidden">' +
+    '<input type="file" id="bFile" accept=".json,.txt,application/json,text/plain" class="hidden">' +
     '<div class="actions"><button class="quiet" id="bPick">Choose backup file</button></div><div id="bRes"></div></div>';
   var ex = document.getElementById('bExport'), exStat = document.getElementById('bExStat');
   if (!downloads) { ex.disabled = true; exStat.textContent = 'Saving files isn’t available in this view.'; }
@@ -3099,7 +3099,10 @@ function openBackup() {
     r.onerror = function () { res.innerHTML = '<p class="hint" style="color:var(--name)">That file couldn’t be read.</p>'; };
     r.onload = function () {
       var obj;
-      try { obj = JSON.parse(r.result); } catch (e) { obj = null; }
+      var raw = String(r.result || '').replace(/^\uFEFF/, '').trim();
+      if (/^%PDF/.test(raw)) { res.innerHTML = '<p class="hint" style="color:var(--name)">That’s a PDF. The app can only read its own backup files, which end in <b>.json</b>. Choose the .json file instead.</p>'; return; }
+      try { obj = JSON.parse(raw); } catch (e) { obj = null; }
+      if (!obj) { res.innerHTML = '<p class="hint" style="color:var(--name)">That file isn’t one the app can read' + (f.name ? ' (' + esc(f.name) + ')' : '') + '. Choose the backup or teaching-notes file that ends in <b>.json</b>.</p>'; return; }
       var items = obj && obj.app === 'names-restored-bible' && Array.isArray(obj.chapters) ? obj.chapters.filter(function (c) {
         return c && typeof c.book === 'number' && c.book >= 0 && c.book < BOOKS.length && typeof c.ch === 'number' && c.ch >= 1 && c.ch <= BOOKS[c.book][1] && Array.isArray(c.verses) && c.verses.length;
       }) : [];
