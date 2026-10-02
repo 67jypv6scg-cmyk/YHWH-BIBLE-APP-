@@ -169,6 +169,7 @@ textarea { min-height: 12rem; resize: vertical; line-height: 1.5; }
 .selbar .lbl { font-size: .9rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .selbar button { background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 999px; padding: .4rem .9rem; font-size: .9rem; white-space: nowrap; }
 .selbar button.q { background: none; color: var(--soft); padding: .4rem .6rem; }
+@media (max-width: 560px) { .selbar { flex-wrap: wrap; justify-content: center; row-gap: .4rem; border-radius: 18px; width: calc(100% - 2rem); padding: .45rem .5rem; } .selbar .lbl { flex: 1 0 100%; text-align: center; } .selbar button { padding: .4rem .75rem; font-size: .86rem; } }
 .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(5rem + env(safe-area-inset-bottom, 0px)); z-index: 60; background: var(--ink); color: var(--bg); padding: .5rem 1rem; border-radius: 8px; font-size: .9rem; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: calc(100% - 2rem); text-align: center; }
 .toast.show { opacity: 1; }
 .todaybtn { flex: none; background: var(--accent); color: var(--accent-ink); border: 1px solid var(--accent); border-radius: 999px; padding: .4rem .8rem; font-weight: 500; font-size: .92rem; white-space: nowrap; }
@@ -257,6 +258,7 @@ textarea { min-height: 12rem; resize: vertical; line-height: 1.5; }
 .memw.ok { color: var(--accent); }
 .memw.bad { color: var(--name); text-decoration: underline; }
 .memw.todo { color: var(--soft); opacity: .45; }
+.memtext .speaking .memw, .memtext .speaking.memw { background: var(--sel); border-radius: 4px; }
 .memhw { display: inline-flex; flex-direction: column; align-items: center; margin: 0 .25rem .4rem; vertical-align: top; }
 .memhw .s { font-family: 'Lora', serif; font-size: .78rem; color: var(--accent); }
 .memslot { display: inline-block; min-width: 3.4rem; height: 2.2rem; border-bottom: 2px dashed var(--soft); margin: 0 .25rem; vertical-align: top; }
@@ -264,6 +266,17 @@ textarea { min-height: 12rem; resize: vertical; line-height: 1.5; }
 .memtiles button { direction: rtl; font-family: 'Frank Ruhl Libre', 'Times New Roman', serif; font-size: calc(var(--size) * 1.35); background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: .35rem 1rem; color: var(--ink); }
 .memtiles button.wrong { border-color: var(--name); opacity: .5; }
 .memtype { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.cmnav { display: flex; justify-content: space-between; align-items: center; margin: -.2rem 0 .7rem; }
+.cmnav button { background: none; border: 1px solid var(--rule); border-radius: 999px; padding: .2rem .7rem; color: var(--ink); font-size: .85rem; }
+.cmbody p { margin: 0 0 .8rem; line-height: 1.6; }
+.cmbody .heb { font-family: 'Frank Ruhl Libre', 'Times New Roman', serif; }
+.cmlinks a { display: flex; justify-content: space-between; gap: 1rem; padding: .6rem 0; border-bottom: 1px solid var(--rule); color: var(--ink); text-decoration: none; font-size: .95rem; }
+.cmlinks a span:last-child { color: var(--soft); font-size: .82rem; text-align: right; }
+.cmtog { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .6rem 0; border-bottom: 1px solid var(--rule); }
+.cmtog small { display: block; color: var(--soft); font-size: .8rem; }
+.cmtog input { width: 1.3rem; height: 1.3rem; accent-color: var(--accent); flex: none; }
+.cvhead { display: flex; justify-content: space-between; align-items: baseline; }
+.cvhead button { background: none; border: 0; color: var(--accent); font-size: .82rem; padding: 0; }
 .greet { font-size: 1.35rem; margin: 0 0 .15rem; }
 .greet-d { color: var(--soft); font-size: .85rem; margin: 0 0 1rem; }
 .votd { position: relative; border-radius: 16px; overflow: hidden; min-height: 19rem; margin: 0 0 1rem; background: #23301f center / cover no-repeat; color: #fff; display: flex; flex-direction: column; }
@@ -329,6 +342,7 @@ textarea { min-height: 12rem; resize: vertical; line-height: 1.5; }
   <button id="selNote">Note</button>
   <button id="selCopy">Copy</button>
   <button id="selMem">Memorise</button>
+  <button id="selCom">Commentary</button>
   <button class="q" id="selClear" aria-label="Clear selection">✕</button>
 </div>
 <div class="scrim hidden" id="scrim"></div>
@@ -838,6 +852,7 @@ function copyText(txt) {
   try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(function () { toast('Copied'); }, fallback); else fallback(); }
   catch (e) { fallback(); }
 }
+document.getElementById('selCom').onclick = function () { if (selected.size) openCommentary(pos.b, pos.c, Math.min.apply(null, Array.from(selected))); };
 document.getElementById('selMem').onclick = function () { if (selected.size) openMemAdd(pos.b, pos.c, Array.from(selected)); };
 document.getElementById('selCopy').onclick = function () {
   var doc = chapters[key(pos.b, pos.c)]; if (!doc) return;
@@ -1011,11 +1026,11 @@ function menu() {
   };
   sheetBody.innerHTML =
     cat('read', '📖', 'Read', 'Today, reading plans, full screen', '<button id="mToday">Today</button><button id="mPlan">Reading plans</button><button id="mFull">Full screen</button>') +
-    cat('study', '🔍', 'Study', 'Hebrew, compare, memory, notes', '<button id="mStudy">Hebrew study</button><button id="mCmp">Compare versions</button><button id="mMem">Memory verses</button><button id="mNotes">My notes</button>') +
+    cat('study', '🔍', 'Study', 'Hebrew, compare, memory, commentary, notes', '<button id="mStudy">Hebrew study</button><button id="mCmp">Compare versions</button><button id="mMem">Memory verses</button><button id="mCom">Commentary</button><button id="mNotes">My notes</button>') +
     cat('bible', '📚', 'My Bible', 'Import chapters, versions, backup', '<button id="mImp">Import chapters</button><button id="mVer">My versions</button><button id="mBak">Back up and restore</button>') +
     cat('set', '⚙︎', 'Settings', 'Names, text size, your name', '') +
     '<p class="status" style="margin-top:1.2rem">' + esc(storageNote()) + ' ' + Object.keys(chapters).length + ' chapters imported.</p>' +
-    '<p class="status" style="margin-top:.3rem">App version 11 · memory verses fix</p>';
+    '<p class="status" style="margin-top:.3rem">App version 13 · memory: your Names, slower voice</p>';
   sheetBody.querySelectorAll('.mcat').forEach(function (c) {
     c.querySelector('.mhead').onclick = function () {
       if (c.dataset.cat === 'set') { openSettings(); return; }
@@ -1026,6 +1041,7 @@ function menu() {
   });
   document.getElementById('mToday').onclick = function () { openToday(); };
   document.getElementById('mMem').onclick = openMemList;
+  document.getElementById('mCom').onclick = function () { openCommentary(pos.b, pos.c, 1); };
   var mSetDummy = document.createElement('button'); mSetDummy.id = 'mSet'; mSetDummy.hidden = true; sheetBody.appendChild(mSetDummy);
   document.getElementById('mImp').onclick = function () { openImport(pos.b, nextMissing(pos.b)); };
   document.getElementById('mSet').onclick = openSettings;
@@ -1277,6 +1293,8 @@ function openSettings() {
   sheetBody.innerHTML =
     '<div class="set"><div class="set-t">Page</div>' + segBtns('sTheme', [['dark', 'White on black'], ['light', 'Black on white']], S.theme) + '</div>' +
     '<label class="field"><span>Your name, for the greeting on Today</span><input type="text" id="sGreet" value="' + esc(S.greet || '') + '" placeholder="Brad"></label>' +
+    '<label class="field"><span>Memory verses: the Name, said and spelled as</span><input type="text" id="sMemName" value="' + esc(memName()) + '"></label>' +
+    '<label class="field"><span>Memory verses: the Messiah’s name, said and spelled as</span><input type="text" id="sMemMes" value="' + esc(memMessiah()) + '"></label>' +
     '<div class="set"><div class="set-t">Text size</div>' + segBtns('sSize', [[16, 'Small'], [19, 'Medium'], [22, 'Large'], [26, 'Larger']], S.size) + '</div>' +
     '<div class="set"><label class="check"><input type="checkbox" id="sShade"' + (S.shade ? ' checked' : '') + '> <span>Colour the restored names in gold</span></label>' +
     '<label class="check"><input type="checkbox" id="sHide"' + (S.autohide !== false ? ' checked' : '') + '> <span>Hide the top bar while reading (scroll up to show it)</span></label></div>' +
@@ -1300,6 +1318,8 @@ function openSettings() {
     });
   }
   document.getElementById('sGreet').oninput = function () { S.greet = this.value.trim(); saveSettings(); };
+  document.getElementById('sMemName').oninput = function () { S.memName = this.value.trim(); saveSettings(); };
+  document.getElementById('sMemMes').oninput = function () { S.memMessiah = this.value.trim(); saveSettings(); };
   seg('sTheme', 'theme'); seg('sSize', 'size', true); seg('sName', 'name'); seg('sJesus', 'jesus'); seg('sLord', 'lord');
   [['sShade', 'shade'], ['sHide', 'autohide'], ['sGod', 'god'], ['sChrist', 'christ'], ['sSpirit', 'spirit'], ['sBrackets', 'brackets']].forEach(function (p) {
     document.getElementById(p[0]).onchange = function () { S[p[1]] = this.checked; saveSettings(); if (p[1] === 'shade') refreshView(); };
@@ -2008,9 +2028,11 @@ async function openWordStudy(at, keyOnly) {
     (w && w[4] ? '<div class="wrow"><span>Grammar</span><span>' + esc(morphPlain(w[4], true)) + '</span></div>' : '') + '</div>';
   if (L && L.d) h += '<p class="wdef" id="wDef">' + esc(L.d.length > 420 ? L.d.slice(0, 420) + '…' : L.d) + '</p>' + (L.d.length > 420 ? '<button class="backlink" id="wMore">Read the full entry</button>' : '');
   h += '<div class="grp" style="margin-top:1rem">Every place this word appears</div><div id="wOcc"><p class="hint">Searching…</p></div>';
+  if (at) h += '<div class="actions" style="margin-top:.2rem"><button class="quiet" id="wCom">Commentary on ' + esc(bn(at.b) + ' ' + at.c + ':' + at.v) + '</button></div>';
   h += '<div class="actions"><button class="' + (saved ? 'quiet' : 'primary') + '" id="wSave">' + (saved ? '✓ In my word studies' : 'Save to my word studies') + '</button></div>';
   h += '<div id="wNoteBox"' + (saved ? '' : ' hidden') + '><div class="grp">My notes on this word</div><textarea id="wNote" placeholder="What does this word show? Notes for teaching…" style="min-height:6rem"></textarea><p class="status" id="wNoteStat"></p></div>';
   sheetBody.innerHTML = h;
+  var wc = document.getElementById('wCom'); if (wc) wc.onclick = function () { openCommentary(at.b, at.c, at.v); };
   var more = document.getElementById('wMore'); if (more) more.onclick = function () { document.getElementById('wDef').textContent = L.d; more.remove(); };
   var note = document.getElementById('wNote'); if (saved) note.value = saved.note || '';
   note.oninput = function () { var x = savedWords(); if (x[key]) { x[key].note = note.value; x[key].updated = Date.now(); saveWords(x); document.getElementById('wNoteStat').textContent = 'Saved'; } };
@@ -2149,7 +2171,7 @@ async function showCompare(b, c, flashV) {
   var vs = Object.keys(vset).map(Number).sort(function (a, z) { return a - z; });
   if (!vs.length) html += '<p class="hint">Nothing to compare yet for this chapter. Import it in the ESV, or download the King James Version.</p>';
   vs.forEach(function (v) {
-    html += '<div class="cmpv" id="cv' + v + '"><div class="vno">Verse ' + v + '</div>';
+    html += '<div class="cmpv" id="cv' + v + '"><div class="cvhead"><div class="vno">Verse ' + v + '</div><button data-cmv="' + v + '">Commentary</button></div>';
     sel.forEach(function (id) {
       var ver = VERSIONS.filter(function (x) { return x.id === id; })[0], t = texts[id] && texts[id][v];
       html += '<div class="cmpr"><span class="lbl">' + ver.label + '</span><span class="txt' + (t ? '' : ' miss') + '">' +
@@ -2182,6 +2204,7 @@ async function showCompare(b, c, flashV) {
     };
   });
   main.querySelectorAll('[data-hv]').forEach(function (el) { el.onclick = function () { cmpView = null; showHebrew(b, c, +el.dataset.hv); }; });
+  main.querySelectorAll('[data-cmv]').forEach(function (el) { el.onclick = function () { openCommentary(b, c, +el.dataset.cmv); }; });
   var kg = document.getElementById('kjvGet');
   if (kg) kg.onclick = async function () {
     var st = document.getElementById('kjvStat'); kg.disabled = true;
@@ -2221,6 +2244,123 @@ async function openMyVersions() {
 var cmpView = null;
 
 // ======================================================================
+// Commentaries (Free Use Bible API, bible.helloao.org). Shown exactly as written.
+// ======================================================================
+var COMMS = [
+  { id: 'tyndale', label: 'Tyndale', name: 'Tyndale Open Study Notes', desc: 'Modern, balanced overview', lic: 'CC BY-SA 4.0, Tyndale House Publishers' },
+  { id: 'keil-delitzsch', label: 'Keil & Delitzsch', name: 'Keil & Delitzsch Old Testament Commentary', desc: 'Hebrew scholarship · Old Testament only', lic: 'public domain', ot: true },
+  { id: 'john-gill', label: 'Gill', name: 'John Gill’s Exposition', desc: 'Draws on Jewish and rabbinic sources', lic: 'public domain' },
+  { id: 'jamieson-fausset-brown', label: 'JFB', name: 'Jamieson-Fausset-Brown', desc: 'Short and verse by verse', lic: 'public domain' },
+  { id: 'matthew-henry', label: 'Matthew Henry', name: 'Matthew Henry’s Commentary', desc: 'Devotional and practical', lic: 'public domain' },
+  { id: 'adam-clarke', label: 'Clarke', name: 'Adam Clarke’s Commentary', desc: 'Thorough, with Hebrew notes', lic: 'public domain' },
+  { id: 'john-calvin', label: 'Calvin', name: 'John Calvin’s Commentaries', desc: 'Reformation classic · not every book', lic: 'public domain' }
+];
+var USFM = ['GEN','EXO','LEV','NUM','DEU','JOS','JDG','RUT','1SA','2SA','1KI','2KI','1CH','2CH','EZR','NEH','EST','JOB','PSA','PRO','ECC','SNG','ISA','JER','LAM','EZK','DAN','HOS','JOL','AMO','OBA','JON','MIC','NAM','HAB','ZEP','HAG','ZEC','MAL','MAT','MRK','LUK','JHN','ACT','ROM','1CO','2CO','GAL','EPH','PHP','COL','1TH','2TH','1TI','2TI','TIT','PHM','HEB','JAS','1PE','2PE','1JN','2JN','3JN','JUD','REV'];
+var SEFARIA = ['Genesis','Exodus','Leviticus','Numbers','Deuteronomy','Joshua','Judges','Ruth','I_Samuel','II_Samuel','I_Kings','II_Kings','I_Chronicles','II_Chronicles','Ezra','Nehemiah','Esther','Job','Psalms','Proverbs','Ecclesiastes','Song_of_Songs','Isaiah','Jeremiah','Lamentations','Ezekiel','Daniel','Hosea','Joel','Amos','Obadiah','Jonah','Micah','Nahum','Habakkuk','Zephaniah','Haggai','Zechariah','Malachi'];
+var BIBLEHUB = ['genesis','exodus','leviticus','numbers','deuteronomy','joshua','judges','ruth','1_samuel','2_samuel','1_kings','2_kings','1_chronicles','2_chronicles','ezra','nehemiah','esther','job','psalms','proverbs','ecclesiastes','songs','isaiah','jeremiah','lamentations','ezekiel','daniel','hosea','joel','amos','obadiah','jonah','micah','nahum','habakkuk','zephaniah','haggai','zechariah','malachi','matthew','mark','luke','john','acts','romans','1_corinthians','2_corinthians','galatians','ephesians','philippians','colossians','1_thessalonians','2_thessalonians','1_timothy','2_timothy','titus','philemon','hebrews','james','1_peter','2_peter','1_john','2_john','3_john','jude','revelation'];
+var commDb = null, commCache = {};
+function commOpen() {
+  if (commDb) return Promise.resolve(commDb);
+  return dbTimeout(new Promise(function (res) {
+    try { var r = indexedDB.open('nrb-comm', 1); r.onupgradeneeded = function () { r.result.createObjectStore('kv'); }; r.onsuccess = function () { commDb = r.result; res(commDb); }; r.onerror = function () { res(null); }; }
+    catch (e) { res(null); }
+  }));
+}
+async function commGet(k) { var db = await commOpen(); if (!db) return null; return new Promise(function (res) { try { var q = db.transaction('kv').objectStore('kv').get(k); q.onsuccess = function () { res(q.result || null); }; q.onerror = function () { res(null); }; } catch (e) { res(null); } }); }
+async function commPut(k, v) { var db = await commOpen(); if (!db) return; return new Promise(function (res) { try { var tx = db.transaction('kv', 'readwrite'); tx.objectStore('kv').put(v, k); tx.oncomplete = res; tx.onerror = tx.onabort = res; } catch (e) { res(); } }); }
+function commText(x) {
+  if (x == null) return '';
+  if (typeof x === 'string') return x;
+  if (Array.isArray(x)) return x.map(commText).join('\n');
+  if (typeof x === 'object') return commText(x.text != null ? x.text : x.content != null ? x.content : '');
+  return String(x);
+}
+function commClean(t) { return t.replace(/<br\s*\/?>/gi, '\n').replace(/<\/p>/gi, '\n').replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, '’').replace(/\n{3,}/g, '\n\n').trim(); }
+// One chapter of one commentary: { intro, v: { verse: text } }, or { none: true } when it doesn't cover that chapter
+async function commChapter(id, b, c) {
+  var k = id + ':' + b + ':' + c;
+  if (commCache[k]) return commCache[k];
+  var saved = await commGet(k); if (saved) { commCache[k] = saved; return saved; }
+  var r = await fetch('https://bible.helloao.org/api/c/' + id + '/' + USFM[b] + '/' + c + '.json');
+  if (r.status === 404) { var none = { none: true }; commCache[k] = none; return none; }
+  if (!r.ok) throw new Error('download ' + r.status);
+  var j = await r.json(), out = { intro: commClean(commText(j.chapter && j.chapter.introduction)), bookIntro: c === 1 ? commClean(commText(j.book && j.book.introduction)) : '', v: {} };
+  ((j.chapter && j.chapter.content) || []).forEach(function (it) { if (it && it.type === 'verse' && it.number) out.v[it.number] = commClean(commText(it.content)); });
+  commCache[k] = out; commPut(k, out);
+  return out;
+}
+function commOn() { var on = Array.isArray(S.commOn) && S.commOn.length ? S.commOn : ['tyndale', 'keil-delitzsch', 'john-gill']; return COMMS.filter(function (x) { return on.indexOf(x.id) >= 0; }); }
+function paras(t) { return t.split(/\n+/).map(function (x) { return x.trim(); }).filter(Boolean).map(function (x) { return '<p>' + esc(x).replace(/([\u0590-\u05FF][\u0590-\u05FF\s\u05BE]*[\u0590-\u05FF])/g, '<bdi class="heb">$1</bdi>') + '</p>'; }).join(''); }
+function commLinks(b, c, v) {
+  var h = '<div class="grp" style="margin-top:1.2rem">More on this verse</div><div class="cmlinks">';
+  if (b < NT_START) h += '<a href="https://www.sefaria.org/' + SEFARIA[b] + '.' + c + '.' + v + '?with=Commentary&lang=bi" target="_blank" rel="noopener"><span>Jewish commentators on Sefaria</span><span>Rashi, Ramban, Ibn Ezra and more ↗</span></a>';
+  h += '<a href="https://biblehub.com/commentaries/' + BIBLEHUB[b] + '/' + c + '-' + v + '.htm" target="_blank" rel="noopener"><span>All commentaries on Bible Hub</span><span>dozens side by side ↗</span></a>' +
+    '<a href="https://ref.ly/' + encodeURIComponent(BOOKS[b][0].replace(/\s+/g, '') + c + '.' + v) + '" target="_blank" rel="noopener"><span>Open in Logos</span><span>if you use Logos ↗</span></a></div>';
+  return h;
+}
+async function openCommentary(b, c, v, pick) {
+  var list = commOn().filter(function (x) { return !(x.ot && b >= NT_START); });
+  if (!list.length) list = COMMS.filter(function (x) { return x.id === 'tyndale'; });
+  var cur = list.filter(function (x) { return x.id === (pick || S.commPick); })[0] || list[0];
+  openSheet('Commentary · ' + bn(b) + ' ' + c + ':' + v);
+  var head = '<div class="cmnav"><button id="cmPrev"' + (v > 1 ? '' : ' disabled') + '>‹ Verse ' + (v - 1 || '') + '</button><span class="status" style="margin:0">Shown exactly as written</span><button id="cmNext">Verse ' + (v + 1) + ' ›</button></div>' +
+    '<div class="ilbar" style="margin-bottom:.8rem">' + list.map(function (x) { return '<button data-cm="' + x.id + '" class="' + (x.id === cur.id ? 'on' : '') + '">' + esc(x.label) + '</button>'; }).join('') + '<button id="cmMore">More ›</button></div>';
+  sheetBody.innerHTML = head + '<p class="hint">Loading ' + esc(cur.name) + '…</p>';
+  var bindHead = function () {
+    sheetBody.querySelectorAll('[data-cm]').forEach(function (el) { el.onclick = function () { S.commPick = el.dataset.cm; saveSettings(); openCommentary(b, c, v, el.dataset.cm); }; });
+    document.getElementById('cmMore').onclick = function () { openCommSettings(b, c, v); };
+    var pv = document.getElementById('cmPrev'); if (v > 1) pv.onclick = function () { openCommentary(b, c, v - 1, cur.id); };
+    document.getElementById('cmNext').onclick = function () { openCommentary(b, c, v + 1, cur.id); };
+  };
+  bindHead();
+  var body = '';
+  if (window.claude) body = '<p class="hint">Commentaries download in your installed app. Open the Scriptures app from your home-screen icon to read them. The links below work here too.</p>';
+  else {
+    try {
+      var ch = await commChapter(cur.id, b, c);
+      if (ch.none) body = '<p class="hint">' + esc(cur.name) + ' doesn’t cover ' + esc(bn(b)) + (b >= NT_START || cur.id !== 'keil-delitzsch' ? '' : ' ' + c) + '. Try another commentary above.</p>';
+      else {
+        var t = ch.v[v], from = v;
+        if (!t) { var ks = Object.keys(ch.v).map(Number).filter(function (n) { return n < v; }).sort(function (a, z) { return z - a; }); if (ks.length) { from = ks[0]; t = ch.v[from]; } }
+        body = '<div class="who" style="font-weight:600">' + esc(cur.name) + '</div><p class="status" style="margin:.1rem 0 .8rem">' + esc(cur.desc) + '</p>';
+        if (t) {
+          if (from !== v) body += '<p class="status" style="margin:-.4rem 0 .8rem">No separate note on verse ' + v + '. This note, on verse ' + from + ', covers it.</p>';
+          var full = paras(t), short = t.length > 1600 ? paras(t.slice(0, 1600).replace(/\s+\S*$/, '') + ' …') : '';
+          body += '<div class="cmbody" id="cmText">' + (short || full) + '</div>' + (short ? '<button class="backlink" id="cmFull">Read the full note</button>' : '');
+          commCache.__full = full;
+        } else body += '<p class="hint">No note on this verse.</p>';
+        if (ch.intro || ch.bookIntro) body += '<div class="actions"><button class="quiet" id="cmIntro">' + (ch.bookIntro ? 'Introduction to ' + esc(bn(b)) : 'Chapter introduction') + '</button></div>';
+        commCache.__intro = paras((ch.bookIntro ? ch.bookIntro + '\n\n' : '') + (ch.intro || ''));
+      }
+    } catch (e) {
+      body = '<p class="hint" style="color:var(--name)">Couldn’t load ' + esc(cur.name) + ' (' + esc((e && e.message) || 'error') + '). Check your connection: each chapter downloads once, then works offline.</p>';
+    }
+  }
+  if (!document.getElementById('cmMore')) return;
+  sheetBody.innerHTML = head + body + commLinks(b, c, v) +
+    '<p class="status" style="margin-top:1.2rem">' + esc(cur.name) + ': ' + esc(cur.lic) + ', via the Free Use Bible API (bible.helloao.org).</p>';
+  bindHead();
+  var fb = document.getElementById('cmFull'); if (fb) fb.onclick = function () { document.getElementById('cmText').innerHTML = commCache.__full; fb.remove(); };
+  var ib = document.getElementById('cmIntro'); if (ib) ib.onclick = function () { document.getElementById('cmText') ? (document.getElementById('cmText').innerHTML = commCache.__intro) : null; ib.remove(); var fb2 = document.getElementById('cmFull'); if (fb2) fb2.remove(); };
+}
+function openCommSettings(b, c, v) {
+  openSheet('Commentaries');
+  var on = commOn().map(function (x) { return x.id; });
+  sheetBody.innerHTML = '<button class="backlink" id="csBack">‹ Back to the commentary</button><p class="hint" style="margin-top:0">Choose which commentaries appear as quick buttons. Each chapter downloads the first time you open it, then works offline.</p>' +
+    COMMS.map(function (x) { return '<label class="cmtog"><span>' + esc(x.name) + '<small>' + esc(x.desc) + '</small></span><input type="checkbox" data-ct="' + x.id + '"' + (on.indexOf(x.id) >= 0 ? ' checked' : '') + '></label>'; }).join('') +
+    '<p class="status" style="margin-top:1rem">All are public domain except Tyndale Open Study Notes (CC BY-SA 4.0). All via the Free Use Bible API.</p>';
+  sheetBody.querySelectorAll('[data-ct]').forEach(function (el) {
+    el.onchange = function () {
+      var cur = commOn().map(function (x) { return x.id; });
+      if (el.checked) { if (cur.indexOf(el.dataset.ct) < 0) cur.push(el.dataset.ct); }
+      else { cur = cur.filter(function (x) { return x !== el.dataset.ct; }); if (!cur.length) { el.checked = true; toast('Keep at least one'); return; } }
+      S.commOn = COMMS.map(function (x) { return x.id; }).filter(function (x) { return cur.indexOf(x) >= 0; }); saveSettings();
+    };
+  });
+  document.getElementById('csBack').onclick = function () { openCommentary(b, c, v); };
+}
+
+// ======================================================================
 // Memory verses: listen, fade, first letters, type (or pick, in Hebrew), recite; spaced reviews
 // ======================================================================
 var MEM_MODES = [['esv', 'ESV'], ['kjv', 'KJV'], ['snd', 'Hebrew sounds'], ['heb', 'Hebrew']];
@@ -2240,31 +2380,69 @@ async function memWords(it) {
       var t = it.mode === 'esv' ? (chapters[key(it.b, it.c)] || { verses: [] }).verses.filter(function (x) { return x.v === it.vs[i]; }).map(function (x) { return x.t; })[0]
         : ((await verChapter('kjv', it.b, it.c)) || {})[it.vs[i]];
       if (!t) return null;
-      t.split(/\s+/).filter(Boolean).forEach(function (w) { out.push({ w: w }); });
+      if (it.mode === 'kjv') t = restore(t);   // memorising uses your Names; the KJV itself stays unchanged elsewhere
+      t.split(/\s+/).filter(Boolean).forEach(function (w) { out.push({ w: w, name: /יהוה|יהושע/.test(w) }); });
     }
     return out;
   }
   var d = await hebBook(it.b); if (!d || !d[it.c]) return null;
   for (var j = 0; j < it.vs.length; j++) {
     var ws = d[it.c][it.vs[j]]; if (!ws) return null;
-    ws.forEach(function (w) { var h = plainHeb(w[0]); if (!h.replace(/[־׀]/g, '')) return; out.push(it.mode === 'heb' ? { w: h, s: w[1] } : { w: w[1], h: h }); });
+    ws.forEach(function (w) {
+      var h = plainHeb(w[0]); if (!h.replace(/[־׀]/g, '')) return;
+      var sk = h.replace(/[^\u05D0-\u05EA]/g, ''), at = sk.indexOf('יהוה');
+      if (at >= 0) {   // the Name: plain יהוה, said and spelled your way
+        var pre = sk.slice(0, at), snd = pre.split('').map(function (ch) { return ({ 'ו': 've·', 'ל': 'la·', 'ב': 'ba·', 'כ': 'ka·', 'מ': 'me·', 'ה': 'ha·', 'ש': 'she·' })[ch] || ''; }).join('') + memName();
+        out.push(it.mode === 'heb' ? { w: pre + 'יהוה', s: snd, name: true, say: memName() } : { w: snd, h: pre + 'יהוה', name: true, say: memName() });
+        return;
+      }
+      out.push(it.mode === 'heb' ? { w: h, s: w[1] } : { w: w[1], h: h });
+    });
   }
   return out;
 }
 function firstLetter(w) { var m = w.match(/[\p{L}\p{N}]/u); return m ? m[0] : ''; }
 function isHebrewWord(w) { return /[\u05D0-\u05EA]/.test(w); }
-function speakMem(it, words) {
+function memName() { return (S.memName || 'Yahowah').trim() || 'Yahowah'; }
+function memMessiah() { return (S.memMessiah || 'Yeshua').trim() || 'Yeshua'; }
+var MEM_RATES = { slow: { he: 0.42, en: 0.62 }, steady: { he: 0.58, en: 0.78 }, normal: { he: 0.78, en: 0.95 } };
+var memSpeaking = null;
+function memVoice(lang) {
+  var vs = (window.speechSynthesis ? speechSynthesis.getVoices() : []).filter(function (v) { return v.lang && v.lang.toLowerCase().indexOf(lang) === 0; });
+  return lang === 'en' ? (vs.filter(function (v) { return /GB|UK/i.test(v.lang); })[0] || vs[0] || null) : (vs[0] || null);
+}
+function memSegments(it, words) {
+  var heb = it.mode === 'heb' || it.mode === 'snd';
+  return words.map(function (x, i) {
+    if (!heb) return { t: x.w.replace(/יהוה/g, memName()).replace(/יהושע/g, memMessiah()), lang: 'en', i: i };
+    if (x.name) return { t: x.say || memName(), lang: 'en', i: i };
+    return { t: it.mode === 'heb' ? x.w : x.h, lang: 'he', i: i };
+  });
+}
+function stopMem() { memSpeaking = null; try { speechSynthesis.cancel(); } catch (e) {} document.querySelectorAll('.memtext .speaking').forEach(function (x) { x.classList.remove('speaking'); }); }
+function speakMem(it, words, done) {
   try {
     if (!window.speechSynthesis) { toast('Reading aloud isn’t available on this device'); return; }
-    speechSynthesis.cancel();
-    var heb = it.mode === 'heb' || it.mode === 'snd';
-    var txt = heb ? words.map(function (x) { return it.mode === 'heb' ? x.w : x.h; }).join(' ')
-      : words.map(function (x) { return x.w; }).join(' ').replace(/יהוה/g, 'Yahweh').replace(/יהושע/g, 'Yehoshua');
-    var u = new SpeechSynthesisUtterance(txt); u.lang = heb ? 'he-IL' : 'en-GB'; u.rate = heb ? 0.75 : 0.9;
-    var vs = speechSynthesis.getVoices().filter(function (v) { return v.lang && v.lang.toLowerCase().indexOf(heb ? 'he' : 'en') === 0; });
-    if (heb && speechSynthesis.getVoices().length && !vs.length) toast('No Hebrew voice on this device. Add one in Settings → Accessibility → Spoken Content → Voices.');
-    if (vs.length) u.voice = vs.filter(function (v) { return /GB|UK/i.test(v.lang); })[0] || vs[0];
-    speechSynthesis.speak(u);
+    stopMem();
+    var segs = memSegments(it, words), rate = MEM_RATES[S.memRate || 'slow'] || MEM_RATES.slow, wbw = !!S.memWbw;
+    if (segs.some(function (x) { return x.lang === 'he'; }) && speechSynthesis.getVoices().length && !memVoice('he')) toast('No Hebrew voice on this device. Add one in Settings → Accessibility → Spoken Content → Voices.');
+    var token = {}; memSpeaking = token;
+    var mark = function (i) { document.querySelectorAll('.memtext .speaking').forEach(function (x) { x.classList.remove('speaking'); }); var el = document.querySelector('.memtext [data-wi="' + i + '"]'); if (el) el.classList.add('speaking'); };
+    var say = function (text, lang, onend) {
+      var u = new SpeechSynthesisUtterance(text); u.lang = lang === 'he' ? 'he-IL' : 'en-GB'; u.rate = rate[lang];
+      var v = memVoice(lang); if (v) u.voice = v;
+      u.onend = u.onerror = function () { if (memSpeaking === token && onend) onend(); };
+      speechSynthesis.speak(u);
+    };
+    if (wbw) {
+      var k = 0, gap = S.memRate === 'normal' ? 250 : S.memRate === 'steady' ? 450 : 700;
+      var next = function () { if (memSpeaking !== token) return; if (k >= segs.length) { mark(-1); memSpeaking = null; if (done) done(); return; } var sg = segs[k++]; mark(sg.i); say(sg.t, sg.lang, function () { setTimeout(next, gap); }); };
+      next();
+    } else {
+      var runs = []; segs.forEach(function (sg) { var last = runs[runs.length - 1]; if (last && last.lang === sg.lang) last.t += ' ' + sg.t; else runs.push({ t: sg.t, lang: sg.lang }); });
+      var r = 0, go = function () { if (memSpeaking !== token) return; if (r >= runs.length) { memSpeaking = null; if (done) done(); return; } var x = runs[r++]; say(x.t, x.lang, go); };
+      go();
+    }
   } catch (e) { toast('Couldn’t read aloud here'); }
 }
 function memPreviewHtml(it, words) {
@@ -2278,7 +2456,7 @@ function memCardHtml() {
   var it = all[ids[0]], due = ids.filter(function (k) { return memDaysTo(all[k]) <= 0; }).length, stg = Math.min(it.stage || 0, 4);
   var steps = MEM_STEPS.map(function (x, i) { return '<i class="' + (i < stg ? 'dn' : '') + '"></i>'; }).join('');
   return '<div class="card"><div class="tc-l"><span>Memory verse · ' + esc(memDueLabel(it)) + (due > 1 ? ' · ' + (due - 1) + ' more due' : '') + '</span><button id="tdMemAll">All</button></div>' +
-    '<h3>' + esc(memRef(it)) + '</h3><p class="hint" style="margin:0">' + esc(MEM_MODES.filter(function (m) { return m[0] === it.mode; })[0][1]) + '</p>' +
+    '<h3>' + esc(memRef(it)) + '</h3><p class="hint" style="margin:0">' + esc(MEM_MODES.filter(function (m) { return m[0] === it.mode; })[0][1]) + ' · with your Names</p>' +
     '<div class="memsteps">' + steps + '</div><div class="memsl">' + MEM_STEPS.map(function (x) { return '<span>' + x + '</span>'; }).join('') + '</div>' +
     '<div class="actions"><button class="primary" id="tdMemGo" data-id="' + esc(it.id) + '">Practise</button></div></div>';
 }
@@ -2297,7 +2475,7 @@ async function openMemAdd(b, c, vs) {
       var ok = m[0] === 'esv' || (m[0] === 'kjv' ? kjvOk : hebOk);
       return '<button data-val="' + m[0] + '" class="' + (m[0] === mode ? 'on' : '') + '"' + (ok ? '' : ' disabled') + '>' + m[1] + '</button>';
     }).join('');
-    sheetBody.innerHTML = '<p class="hint" style="margin-top:0">How would you like to learn it?</p><div class="seg" id="mmMode">' + chips + '</div>' +
+    sheetBody.innerHTML = '<p class="hint" style="margin-top:0">How would you like to learn it? Memory verses always use your Names: the Name said and spelled ' + esc(memName()) + ', the Messiah ' + esc(memMessiah()) + '.</p><div class="seg" id="mmMode">' + chips + '</div>' +
       (window.claude ? '<p class="status">KJV and the Hebrew options work in your installed app, from the home-screen icon.</p>' : b >= NT_START ? '<p class="status">Hebrew is for the Tanakh.</p>' : !hebOk ? '<p class="status">For Hebrew, first open this chapter and tap א Hebrew to download it.</p>' : '') +
       (it.mode === 'snd' && words ? '<div class="memtext">' + esc(words.map(function (x) { return x.w; }).join(' ')) + '</div>' : memPreviewHtml(it, words)) +
       '<div class="actions"><button class="primary" id="mmGo"' + (words ? '' : ' disabled') + '>Start memorising</button></div>';
@@ -2361,7 +2539,7 @@ async function practiseMem(id) {
     var e = document.getElementById('mpEasier'); if (e) e.onclick = function () { step--; reset(); render(); };
     document.getElementById('mpList').onclick = openMemList;
     var l = document.getElementById('mpListen'); if (l) l.onclick = function () { speakMem(it, words); };
-    var nx = document.getElementById('mpNext'); if (nx) nx.onclick = function () { step++; reset(); render(); };
+    var nx = document.getElementById('mpNext'); if (nx) nx.onclick = function () { stopMem(); step++; reset(); render(); };
     var sd = document.getElementById('mpSnd'); if (sd) sd.onclick = function () { S.memSnd = !showSnd; showSnd = S.memSnd; saveSettings(); render(); };
   }
   function reset() { hidden.clear(); pos2 = 0; errors = 0; wrongTiles.clear(); }
@@ -2369,8 +2547,14 @@ async function practiseMem(id) {
   var cls = 'memtext' + (heb ? ' he' : '');
   function render() {
     if (step === 0) {
-      body('<p class="hint">Read it aloud, or listen, two or three times.</p><div class="' + cls + '">' + words.map(function (x) { return wordHtml(x); }).join(' ') + '</div>',
-        '<button class="primary" id="mpNext">Next: fade the words</button><button class="quiet" id="mpListen">🔊 Listen</button>' + sndBtn);
+      var rt = S.memRate || 'slow';
+      body('<p class="hint">Read it aloud, or listen, two or three times. Your Names are used throughout.</p><div class="' + cls + '">' + words.map(function (x, i) { return '<span data-wi="' + i + '">' + wordHtml(x) + '</span>'; }).join(' ') + '</div>' +
+        '<div class="ilbar" style="margin:.2rem 0 .4rem"><span class="status" style="margin:0">Speed</span>' + [['slow', 'Slow'], ['steady', 'Steady'], ['normal', 'Normal']].map(function (o) { return '<button data-rate="' + o[0] + '" class="' + (rt === o[0] ? 'on' : '') + '">' + o[1] + '</button>'; }).join('') +
+        '<button id="mpWbw" class="' + (S.memWbw ? 'on' : '') + '">Word by word</button></div>',
+        '<button class="quiet" id="mpListen">🔊 Listen</button><button class="quiet" id="mpStop">■ Stop</button><button class="primary" id="mpNext">Next: fade the words</button>' + sndBtn);
+      sheetBody.querySelectorAll('[data-rate]').forEach(function (el) { el.onclick = function () { stopMem(); S.memRate = el.dataset.rate; saveSettings(); render(); }; });
+      document.getElementById('mpWbw').onclick = function () { stopMem(); S.memWbw = !S.memWbw; saveSettings(); render(); };
+      document.getElementById('mpStop').onclick = stopMem;
     } else if (step === 1) {
       var allGone = hidden.size >= lettered.length;
       body('<p class="hint">Say the whole passage, filling the gaps. Tap a gap to peek.</p><div class="' + cls + '">' + words.map(function (x, i) { return '<span data-i="' + i + '">' + wordHtml(x, hidden.has(i) ? 'gap' : '') + '</span>'; }).join(' ') + '</div>',
