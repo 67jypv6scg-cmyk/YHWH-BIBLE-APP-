@@ -1161,7 +1161,7 @@ function menu() {
     cat('bible', '📚', 'My Bible', 'Import chapters, versions, backup', '<button id="mImp">Import chapters</button><button id="mVer">My versions</button><button id="mBak">Back up and restore</button>') +
     cat('set', '⚙︎', 'Settings', 'Names, text size, your name', '') +
     '<p class="status" style="margin-top:1.2rem">' + esc(storageNote()) + ' ' + Object.keys(chapters).length + ' chapters imported.</p>' +
-    '<p class="status" style="margin-top:.3rem">App version 20 · resume where you left off, Selah, changing pictures</p>';
+    '<p class="status" style="margin-top:.3rem">App version 21 · Spotify dock restored</p>';
   sheetBody.querySelectorAll('.mcat').forEach(function (c) {
     c.querySelector('.mhead').onclick = function () {
       if (c.dataset.cat === 'set') { openSettings(); return; }
@@ -3687,5 +3687,6 @@ function openBackup() {
 window.__nb = { parseImport: parseImport, parseRef: parseRef, runSearch: runSearch, chapters: function () { return chapters; } };
 })();
 </script>
+<script src="spotify-dock.js"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 // Offline helper for The Scriptures, Names Restored.
 // Change VERSION whenever you upload a new index.html.
-var VERSION = 'v20';
-var CORE = ['./', 'index.html', 'manifest.json', 'lora.ttf', 'lora-italic.ttf', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
+var VERSION = 'v21';
+var CORE = ['./', 'index.html', 'spotify-dock.js', 'manifest.json', 'lora.ttf', 'lora-italic.ttf', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', function (e) {
   // cache: 'reload' skips the browser's own short-term cache, so a new upload is always picked up
