@@ -277,6 +277,29 @@ textarea { min-height: 12rem; resize: vertical; line-height: 1.5; }
 .cmtog input { width: 1.3rem; height: 1.3rem; accent-color: var(--accent); flex: none; }
 .cvhead { display: flex; justify-content: space-between; align-items: baseline; }
 .cvhead button { background: none; border: 0; color: var(--accent); font-size: .82rem; padding: 0; }
+.tn { line-height: 1.65; }
+.tn h2 { font-size: 1.2rem; margin: 1.6rem 0 .5rem; }
+.tn h3 { font-size: 1.02rem; margin: 1.3rem 0 .4rem; }
+.tn p { margin: 0 0 .8rem; }
+.tn ul, .tn ol { margin: 0 0 .9rem; padding-left: 1.3rem; }
+.tn li { margin-bottom: .4rem; }
+.tn table { width: 100%; border-collapse: collapse; margin: .4rem 0 1rem; font-size: .92rem; }
+.tn th, .tn td { border-bottom: 1px solid var(--rule); padding: .45rem .4rem; text-align: left; vertical-align: top; }
+.tn th { color: var(--soft); font-weight: 600; font-size: .8rem; }
+.tn .heb, .tn td:nth-child(2) { font-family: 'Frank Ruhl Libre', 'Times New Roman', serif; }
+.tn a.vref { color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--accent); cursor: pointer; }
+.tn[contenteditable="true"] { outline: 1px dashed var(--rule); border-radius: 8px; padding: .6rem; min-height: 40vh; }
+@media (max-width: 640px) {
+  .tn table, .tn tbody, .tn tr, .tn td { display: block; width: 100%; }
+  .tn thead { display: none; }
+  .tn tr { background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: .5rem .7rem; margin-bottom: .55rem; }
+  .tn td { border: 0; padding: .12rem 0; }
+  .tn td:empty { display: none; }
+  .tn td[data-l]::before { content: attr(data-l); display: block; font-size: .7rem; color: var(--soft); letter-spacing: .03em; }
+  .tn td:nth-child(2) { font-size: 1.35rem; }
+}
+.tnbar { display: flex; flex-wrap: wrap; gap: .35rem; margin: 0 0 .7rem; position: sticky; top: 0; background: var(--bg); padding: .3rem 0; z-index: 2; }
+.tnbar button { background: var(--panel); border: 1px solid var(--rule); border-radius: 8px; padding: .3rem .7rem; color: var(--ink); font-size: .85rem; }
 .greet { font-size: 1.35rem; margin: 0 0 .15rem; }
 .greet-d { color: var(--soft); font-size: .85rem; margin: 0 0 1rem; }
 .votd { position: relative; border-radius: 16px; overflow: hidden; min-height: 19rem; margin: 0 0 1rem; background: #23301f center / cover no-repeat; color: #fff; display: flex; flex-direction: column; }
@@ -417,7 +440,7 @@ var chapters = {};          // key -> {book, ch, verses:[{v,t}], heads:[{v,t}]}
 var S = { autohide: true, theme: 'dark', size: 19, name: 'heb', jesus: 'heb', god: true, christ: true, spirit: false, brackets: false, lord: 'keep', shade: true, last: null };
 
 // Offline copy: big items (chapters, notes, plan) are kept in IndexedDB, which has room for the whole Bible.
-var BIG = { 'nb-chapters': 1, 'nb-vnotes': 1, 'nb-pnotes': 1, 'nb-plan': 1, 'nb-study': 1, 'nb-words': 1, 'nb-mem': 1, 'nb-notes': 1 };
+var BIG = { 'nb-chapters': 1, 'nb-vnotes': 1, 'nb-pnotes': 1, 'nb-plan': 1, 'nb-study': 1, 'nb-words': 1, 'nb-mem': 1, 'nb-teach': 1, 'nb-notes': 1 };
 var big = {}, idb = null;
 function idbOpen() {
   return new Promise(function (res) {
@@ -959,7 +982,7 @@ function renderSearch() {
     b.onclick = function () { var x = r.list[+b.dataset.i]; closeSearch(); showChapter(x.b, x.c, [x.v]); };
   });
   main.querySelectorAll('.hit[data-nh]').forEach(function (b) {
-    b.onclick = function () { var x = nh[+b.dataset.nh]; if (x.kind === 'v') openNoteEditor(x.n.book, x.n.ch, x.n.v1, x.n.v2, 'search'); else openPlanNote(x.n); };
+    b.onclick = function () { var x = nh[+b.dataset.nh]; if (x.kind === 'v') openNoteEditor(x.n.book, x.n.ch, x.n.v1, x.n.v2, 'search'); else if (x.kind === 't') openTeach(x.id); else openPlanNote(x.n); };
   });
   var more = document.getElementById('more'); if (more) more.onclick = function () { shown += 150; renderSearch(); };
   window.scrollTo(0, 0);
@@ -1026,11 +1049,11 @@ function menu() {
   };
   sheetBody.innerHTML =
     cat('read', '📖', 'Read', 'Today, reading plans, full screen', '<button id="mToday">Today</button><button id="mPlan">Reading plans</button><button id="mFull">Full screen</button>') +
-    cat('study', '🔍', 'Study', 'Hebrew, compare, memory, commentary, notes', '<button id="mStudy">Hebrew study</button><button id="mCmp">Compare versions</button><button id="mMem">Memory verses</button><button id="mCom">Commentary</button><button id="mNotes">My notes</button>') +
+    cat('study', '🔍', 'Study', 'Teaching notes, Hebrew, compare, memory, commentary', '<button id="mStudy">Hebrew study</button><button id="mCmp">Compare versions</button><button id="mTeach">Teaching notes</button><button id="mMem">Memory verses</button><button id="mCom">Commentary</button><button id="mNotes">My notes</button>') +
     cat('bible', '📚', 'My Bible', 'Import chapters, versions, backup', '<button id="mImp">Import chapters</button><button id="mVer">My versions</button><button id="mBak">Back up and restore</button>') +
     cat('set', '⚙︎', 'Settings', 'Names, text size, your name', '') +
     '<p class="status" style="margin-top:1.2rem">' + esc(storageNote()) + ' ' + Object.keys(chapters).length + ' chapters imported.</p>' +
-    '<p class="status" style="margin-top:.3rem">App version 13 · memory: your Names, slower voice</p>';
+    '<p class="status" style="margin-top:.3rem">App version 14 · teaching notes</p>';
   sheetBody.querySelectorAll('.mcat').forEach(function (c) {
     c.querySelector('.mhead').onclick = function () {
       if (c.dataset.cat === 'set') { openSettings(); return; }
@@ -1041,6 +1064,7 @@ function menu() {
   });
   document.getElementById('mToday').onclick = function () { openToday(); };
   document.getElementById('mMem').onclick = openMemList;
+  document.getElementById('mTeach').onclick = openTeachList;
   document.getElementById('mCom').onclick = function () { openCommentary(pos.b, pos.c, 1); };
   var mSetDummy = document.createElement('button'); mSetDummy.id = 'mSet'; mSetDummy.hidden = true; sheetBody.appendChild(mSetDummy);
   document.getElementById('mImp').onclick = function () { openImport(pos.b, nextMissing(pos.b)); };
@@ -1464,6 +1488,10 @@ function searchNotes(ts) {
     if (scope === 'book' && n.book !== pos.b) return;
     if (res_.every(function (r) { return r.test(n.text); })) out.push({ kind: 'v', n: n, label: 'Note · ' + vnoteRef(n) });
   });
+  if (scope === 'all') { var ta = teachAll(); Object.keys(ta).forEach(function (k) {
+    var t = ta[k], txt = (t.title || '') + ' — ' + teachText(t.html);
+    if (res_.every(function (r) { return r.test(txt); })) out.push({ kind: 't', id: k, n: { text: txt }, label: 'Teaching · ' + (t.title || 'Untitled') });
+  }); }
   if (scope === 'all') Object.keys(pnotes).forEach(function (k) {
     var n = pnotes[k];
     if (res_.every(function (r) { return r.test(n.text); })) out.push({ kind: 'p', n: n, label: 'Plan note · ' + (n.dayLabel || 'Day ' + n.day) });
@@ -2244,6 +2272,115 @@ async function openMyVersions() {
 var cmpView = null;
 
 // ======================================================================
+// Teaching notes: your own titled notes, with headings, lists, tables and verse links
+// ======================================================================
+function teachAll() { return lsGet('nb-teach', {}) || {}; }
+function teachSave(t) { lsSet('nb-teach', t); }
+function teachText(html) { var d = document.createElement('div'); d.innerHTML = html || ''; return (d.textContent || '').replace(/\s+/g, ' ').trim(); }
+function cleanTeachHtml(html) {
+  var d = document.createElement('div'); d.innerHTML = html || '';
+  d.querySelectorAll('script,style,iframe,object,embed,link,meta').forEach(function (x) { x.remove(); });
+  d.querySelectorAll('*').forEach(function (el) { Array.from(el.attributes).forEach(function (a) { if (/^on/i.test(a.name) || (a.name === 'href' && /^\s*javascript:/i.test(a.value))) el.removeAttribute(a.name); }); });
+  d.querySelectorAll('a.vref').forEach(function (a) { a.replaceWith(document.createTextNode(a.textContent)); });
+  d.querySelectorAll('td[data-l]').forEach(function (td) { td.removeAttribute('data-l'); });
+  return d.innerHTML;
+}
+var REF_RE = /\b((?:[1-3]\s?)?[A-Z][a-z]+\.?)\s(\d{1,3}):(\d{1,3})(?:\s?[–-]\s?(\d{1,3}))?/g;
+function linkRefs(root) {
+  var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), nodes = [], n;
+  while ((n = walker.nextNode())) if (!n.parentNode.closest('a') && REF_RE.test(n.nodeValue)) nodes.push(n);
+  nodes.forEach(function (node) {
+    var t = node.nodeValue, frag = document.createDocumentFragment(), last = 0, m;
+    REF_RE.lastIndex = 0;
+    while ((m = REF_RE.exec(t))) {
+      var b = findBook(m[1].replace(/\.$/, ''));
+      if (b < 0 || +m[2] > BOOKS[b][1]) continue;
+      frag.appendChild(document.createTextNode(t.slice(last, m.index)));
+      var a = document.createElement('a'); a.className = 'vref'; a.textContent = m[0];
+      a.dataset.b = b; a.dataset.c = m[2]; a.dataset.v1 = m[3]; a.dataset.v2 = m[4] || m[3];
+      frag.appendChild(a); last = m.index + m[0].length;
+    }
+    if (!last) return;
+    frag.appendChild(document.createTextNode(t.slice(last)));
+    node.parentNode.replaceChild(frag, node);
+  });
+  root.querySelectorAll('a.vref').forEach(function (a) {
+    a.onclick = function (e) {
+      e.preventDefault();
+      var vs = []; for (var v = +a.dataset.v1; v <= +a.dataset.v2 && vs.length < 200; v++) vs.push(v);
+      closeSheet(); closeSearch(); showChapter(+a.dataset.b, +a.dataset.c, vs);
+    };
+  });
+}
+function labelTables(root) {
+  root.querySelectorAll('table').forEach(function (tb) {
+    var hs = Array.from(tb.querySelectorAll('thead th')).map(function (th) { return th.textContent.trim(); });
+    if (!hs.length) return;
+    tb.querySelectorAll('tbody tr').forEach(function (tr) { Array.from(tr.children).forEach(function (td, i) { if (hs[i] && i !== 1) td.setAttribute('data-l', hs[i]); }); });
+  });
+}
+function openTeachList() {
+  openSheet('Teaching notes');
+  var all = teachAll(), ids = Object.keys(all).sort(function (a, z) { return (all[z].updated || 0) - (all[a].updated || 0); });
+  var h = '<label class="field"><span>Search your teaching notes</span><input type="text" id="tlQ" placeholder="A word or phrase"></label><div id="tlList"></div>' +
+    '<div class="actions"><button class="primary" id="tlNew">+ New teaching note</button></div>' +
+    '<p class="status">Teaching notes are included in your backups, and they show up when you search the Bible from the top bar.</p>';
+  sheetBody.innerHTML = h;
+  function list(q) {
+    var ws = q.toLowerCase().split(/\s+/).filter(Boolean);
+    var shown = ids.filter(function (k) { var t = (all[k].title + ' ' + teachText(all[k].html)).toLowerCase(); return ws.every(function (w) { return t.indexOf(w) >= 0; }); });
+    document.getElementById('tlList').innerHTML = shown.length ? shown.map(function (k) {
+      var t = all[k], d = new Date(t.updated || t.created || Date.now());
+      return '<button class="dl-item" data-t="' + esc(k) + '" style="width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--rule);padding:.7rem 0;color:var(--ink);display:flex;justify-content:space-between;gap:1rem"><span style="font-weight:600">' + esc(t.title || 'Untitled') + '</span><span class="status" style="margin:0">' + esc(d.toLocaleDateString(undefined, { day: 'numeric', month: 'short' })) + '</span></button>';
+    }).join('') : '<p class="hint">' + (ids.length ? 'No teaching notes match.' : 'No teaching notes yet. Start one below, or restore a teaching-notes file from Back up and restore.') + '</p>';
+    sheetBody.querySelectorAll('[data-t]').forEach(function (el) { el.onclick = function () { openTeach(el.dataset.t); }; });
+  }
+  list('');
+  document.getElementById('tlQ').oninput = function () { list(this.value.trim()); };
+  document.getElementById('tlNew').onclick = function () {
+    var a = teachAll(), id = 't' + Date.now();
+    a[id] = { id: id, title: 'New teaching note', html: '<p></p>', created: Date.now(), updated: Date.now() };
+    teachSave(a); openTeach(id, true);
+  };
+}
+function openTeach(id, edit) {
+  var all = teachAll(), t = all[id]; if (!t) return openTeachList();
+  openSheet(edit ? 'Editing' : 'Teaching note');
+  if (!edit) {
+    sheetBody.innerHTML = '<button class="backlink" id="tvBack">‹ Teaching notes</button><h1 class="ch-title" style="font-size:1.6rem;margin:.2rem 0 .8rem">' + esc(t.title || 'Untitled') + '</h1>' +
+      '<div class="tn" id="tvBody">' + cleanTeachHtml(t.html) + '</div>' +
+      '<div class="actions" style="margin-top:1.2rem"><button class="primary" id="tvEdit">Edit</button><button class="quiet" id="tvBack2">‹ Teaching notes</button></div>';
+    var body = document.getElementById('tvBody'); labelTables(body); linkRefs(body);
+    document.getElementById('tvBack').onclick = openTeachList; document.getElementById('tvBack2').onclick = openTeachList;
+    document.getElementById('tvEdit').onclick = function () { openTeach(id, true); };
+    return;
+  }
+  sheetBody.innerHTML = '<label class="field"><span>Title</span><input type="text" id="teTitle" value="' + esc(t.title || '') + '"></label>' +
+    '<div class="tnbar"><button data-cmd="h2">Heading</button><button data-cmd="h3">Subheading</button><button data-cmd="p">Text</button><button data-cmd="bold"><b>B</b></button><button data-cmd="italic"><i>I</i></button><button data-cmd="insertUnorderedList">• List</button><button data-cmd="insertOrderedList">1. List</button><button id="teDone" style="margin-left:auto;background:var(--accent);color:var(--accent-ink);border-color:var(--accent)">Done</button></div>' +
+    '<div class="tn" id="teBody" contenteditable="true">' + cleanTeachHtml(t.html) + '</div>' +
+    '<p class="status" id="teStat">Type a reference such as Isaiah 9:6 and it becomes a link when you finish editing.</p>' +
+    '<div class="actions"><button class="quiet" id="teDel">Delete this note</button></div>';
+  var tb = document.getElementById('teBody'), ti = document.getElementById('teTitle'), timer = null;
+  function save() { var a = teachAll(); if (!a[id]) return; a[id].title = ti.value.trim() || 'Untitled'; a[id].html = cleanTeachHtml(tb.innerHTML); a[id].updated = Date.now(); teachSave(a); document.getElementById('teStat').textContent = 'Saved'; }
+  function later() { clearTimeout(timer); timer = setTimeout(save, 600); }
+  tb.oninput = later; ti.oninput = later;
+  sheetBody.querySelectorAll('[data-cmd]').forEach(function (b) {
+    b.onmousedown = function (e) { e.preventDefault(); };
+    b.onclick = function () {
+      var c = b.dataset.cmd; tb.focus();
+      try { if (c === 'h2' || c === 'h3' || c === 'p') document.execCommand('formatBlock', false, c.toUpperCase()); else document.execCommand(c, false, null); } catch (e) {}
+      later();
+    };
+  });
+  document.getElementById('teDone').onclick = function () { clearTimeout(timer); save(); openTeach(id); };
+  var del = document.getElementById('teDel');
+  del.onclick = function () {
+    if (del.dataset.armed !== '1') { del.dataset.armed = '1'; del.textContent = 'Tap again to delete'; return; }
+    var a = teachAll(); delete a[id]; teachSave(a); toast('Teaching note deleted'); openTeachList();
+  };
+}
+
+// ======================================================================
 // Commentaries (Free Use Bible API, bible.helloao.org). Shown exactly as written.
 // ======================================================================
 var COMMS = [
@@ -2941,7 +3078,7 @@ function openBackup() {
   if (!downloads) { ex.disabled = true; exStat.textContent = 'Saving files isn’t available in this view.'; }
   ex.onclick = async function () {
     var d = new Date(), stamp = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-    var data = JSON.stringify({ app: 'names-restored-bible', format: 1, exported: d.toISOString(), note: 'Personal reading copy. ESV text with the Names restored.', settings: S, plan: plans.bible, study: plans.study, words: savedWords(), memory: memAll(), pictures: await picsAll(), verseNotes: Object.keys(vnotes).map(function (k) { return vnotes[k]; }), planNotes: Object.keys(pnotes).map(function (k) { return pnotes[k]; }), chapters: list });
+    var data = JSON.stringify({ app: 'names-restored-bible', format: 1, exported: d.toISOString(), note: 'Personal reading copy. ESV text with the Names restored.', settings: S, plan: plans.bible, study: plans.study, words: savedWords(), memory: memAll(), teach: teachAll(), pictures: await picsAll(), verseNotes: Object.keys(vnotes).map(function (k) { return vnotes[k]; }), planNotes: Object.keys(pnotes).map(function (k) { return pnotes[k]; }), chapters: list });
     ex.disabled = true; exStat.style.color = ''; exStat.textContent = 'Preparing the file…';
     try {
       await downloads.save({ filename: 'Names Restored Bible backup ' + stamp + '.json', data: new Blob([data]) });
@@ -2968,13 +3105,14 @@ function openBackup() {
       }) : [];
       var vn = obj && Array.isArray(obj.verseNotes) ? obj.verseNotes.filter(function (n) { return n && n.id && typeof n.text === 'string' && n.text.trim(); }) : [];
       var pn = obj && Array.isArray(obj.planNotes) ? obj.planNotes.filter(function (n) { return n && n.id && n.planCreated && typeof n.text === 'string' && n.text.trim(); }) : [];
+      var bTeach = obj && obj.teach && typeof obj.teach === 'object' ? obj.teach : {};
       var bMem = obj && obj.memory && typeof obj.memory === 'object' ? obj.memory : {};
       var bWords = obj && obj.words && typeof obj.words === 'object' ? obj.words : {};
       var bPics = obj && Array.isArray(obj.pictures) ? obj.pictures.filter(function (x) { return x && x.id && typeof x.data === 'string' && x.data.indexOf('data:image/') === 0; }) : [];
       var bPlans = obj ? [['bible', obj.plan], ['study', obj.study]].filter(function (x) { return x[1] && Array.isArray(x[1].schedule) && x[1].created; }) : [];
-      if (!items.length && !vn.length && !pn.length && !bPlans.length && !bPics.length) { res.innerHTML = '<p class="hint" style="color:var(--name)">This isn’t a backup from this app, or it has nothing in it.</p>'; return; }
+      if (!items.length && !vn.length && !pn.length && !bPlans.length && !bPics.length && !Object.keys(bTeach).length) { res.innerHTML = '<p class="hint" style="color:var(--name)">This isn’t a backup from this app, or it has nothing in it.</p>'; return; }
       var replaces = items.filter(function (c) { return has(c.book, c.ch); }).length;
-      res.innerHTML = '<p class="hint">This backup has ' + items.length + ' chapters' + (items.length ? ': ' + esc(summarise(items)) : '') + (vn.length + pn.length ? ', and ' + (vn.length + pn.length) + ' notes' : '') + '.' + (bPlans.length ? ' It includes your reading plan progress.' : '') + (bPics.length ? ' It has ' + bPics.length + (bPics.length === 1 ? ' picture.' : ' pictures.') : '') + (replaces ? ' ' + replaces + ' of them will replace chapters you already have.' : '') + '</p>' +
+      res.innerHTML = '<p class="hint">This backup has ' + items.length + ' chapters' + (items.length ? ': ' + esc(summarise(items)) : '') + (vn.length + pn.length ? ', and ' + (vn.length + pn.length) + ' notes' : '') + '.' + (bPlans.length ? ' It includes your reading plan progress.' : '') + (bPics.length ? ' It has ' + bPics.length + (bPics.length === 1 ? ' picture.' : ' pictures.') : '') + (Object.keys(bTeach).length ? ' Teaching notes: ' + Object.keys(bTeach).map(function (k) { return '“' + (bTeach[k].title || 'Untitled') + '”'; }).join(', ') + '.' : '') + (replaces ? ' ' + replaces + ' of them will replace chapters you already have.' : '') + '</p>' +
         '<div class="actions"><button class="primary" id="bRestore">Restore</button></div><p class="status" id="bStat"></p>';
       document.getElementById('bRestore').onclick = async function () {
         var btn = this, st = document.getElementById('bStat'); btn.disabled = true;
@@ -3005,6 +3143,7 @@ function openBackup() {
             }
           });
           usePlan('bible');
+          if (Object.keys(bTeach).length) { var tt = teachAll(); Object.keys(bTeach).forEach(function (k) { var x = bTeach[k]; if (x && typeof x.html === 'string' && (!tt[k] || (x.updated || 0) >= (tt[k].updated || 0))) tt[k] = { id: k, title: String(x.title || 'Untitled'), html: cleanTeachHtml(x.html), created: x.created || Date.now(), updated: x.updated || Date.now() }; }); teachSave(tt); }
           if (Object.keys(bMem).length) { var mm = memAll(); Object.keys(bMem).forEach(function (k) { var x = bMem[k]; if (x && x.id && Array.isArray(x.vs) && (!mm[k] || (x.updated || 0) > (mm[k].updated || 0))) mm[k] = x; }); memSave(mm); }
           if (Object.keys(bWords).length) { var mw = savedWords(); Object.keys(bWords).forEach(function (k) { if (!mw[k] || (bWords[k].updated || 0) > (mw[k].updated || 0)) mw[k] = bWords[k]; }); saveWords(mw); }
           if (bPics.length) {
