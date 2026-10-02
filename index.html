@@ -6,8 +6,18 @@
 <title>The Scriptures, Names Restored</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Frank+Ruhl+Libre:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Scriptures">
+<meta name="theme-color" content="#0B0D0B">
 <style>
+@font-face { font-family: 'Lora'; src: url('lora.ttf') format('truetype'); font-weight: 400 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Lora'; src: url('lora-italic.ttf') format('truetype'); font-weight: 400 700; font-style: italic; font-display: swap; }
 :root {
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
@@ -347,7 +357,10 @@ textarea { min-height: 12rem; resize: vertical; line-height: 1.5; }
 body.home header.bar, body.home main, body.home #selbar { display: none !important; }
 #home { position: fixed; inset: 0; z-index: 15; overflow-y: auto; -webkit-overflow-scrolling: touch; color: #fff; background: #0b0d0b; }
 #home.hidden { display: none; }
-.hbg { position: fixed; inset: 0; background: #23301f center / cover no-repeat; transition: opacity .6s; }
+.hbg { position: fixed; inset: 0; background: #23301f center / cover no-repeat; transition: opacity 1.6s ease; }
+.hbg.drift { animation: hdrift 12s ease-in-out infinite alternate; }
+@keyframes hdrift { from { transform: scale(1); } to { transform: scale(1.06); } }
+@media (prefers-reduced-motion: reduce) { .hbg.drift { animation: none; } }
 .hbg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,.08) 30%, rgba(0,0,0,.35) 52%, rgba(11,13,11,.92) 78%, #0b0d0b 100%); }
 .hin { position: relative; max-width: 40rem; margin: 0 auto; min-height: 100%; box-sizing: border-box; display: flex; flex-direction: column;
   padding: calc(env(safe-area-inset-top, 0px) + 1.4rem) 1.3rem calc(env(safe-area-inset-bottom, 0px) + 6.2rem); }
@@ -528,8 +541,56 @@ var store = { mode: 'local', col: null, settingsRef: null };
 var chapters = {};          // key -> {book, ch, verses:[{v,t}], heads:[{v,t}]}
 var S = { autohide: true, theme: 'dark', size: 19, name: 'heb', jesus: 'heb', god: true, christ: true, spirit: false, brackets: false, lord: 'keep', shade: true, last: null };
 
-function lsGet(k, d) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } }
-function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
+// Offline copy: big items (chapters, notes, plan) are kept in IndexedDB, which has room for the whole Bible.
+var BIG = { 'nb-chapters': 1, 'nb-vnotes': 1, 'nb-pnotes': 1, 'nb-plan': 1, 'nb-study': 1, 'nb-words': 1, 'nb-mem': 1, 'nb-teach': 1, 'nb-notes': 1 };
+var big = {}, idb = null;
+function idbOpen() {
+  return new Promise(function (res) {
+    try {
+      var r = indexedDB.open('names-restored-bible', 1);
+      r.onupgradeneeded = function () { r.result.createObjectStore('kv'); };
+      r.onsuccess = function () { res(r.result); };
+      r.onerror = function () { res(null); };
+    } catch (e) { res(null); }
+  });
+}
+async function idbPreload() {
+  idb = await idbOpen();
+  if (!idb) return;
+  await new Promise(function (res) {
+    var tx = idb.transaction('kv', 'readonly'), st = tx.objectStore('kv'), cur = st.openCursor();
+    cur.onsuccess = function () { var c = cur.result; if (c) { big[c.key] = c.value; c.continue(); } else res(); };
+    cur.onerror = function () { res(); };
+  });
+  // Move anything an earlier version left in localStorage
+  Object.keys(BIG).forEach(function (k) {
+    try { var v = localStorage.getItem(k); if (v != null) { if (!(k in big)) { big[k] = JSON.parse(v); idbPut(k, big[k]); } localStorage.removeItem(k); } } catch (e) {}
+  });
+  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
+}
+var idbQueue = Promise.resolve();
+function idbPut(k, v) {
+  if (!idb) return;
+  var copy = v === undefined ? undefined : JSON.parse(JSON.stringify(v));
+  idbQueue = idbQueue.then(function () {
+    return new Promise(function (res) {
+      try {
+        var tx = idb.transaction('kv', 'readwrite'), st = tx.objectStore('kv');
+        if (copy === undefined) st.delete(k); else st.put(copy, k);
+        tx.oncomplete = function () { res(); };
+        tx.onerror = tx.onabort = function () { toast('This device is out of storage space. The last change wasn’t kept.'); res(); };
+      } catch (e) { res(); }
+    });
+  });
+}
+function lsGet(k, d) {
+  if (BIG[k] && idb) return k in big ? JSON.parse(JSON.stringify(big[k])) : d;
+  try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; }
+}
+function lsSet(k, v) {
+  if (BIG[k] && idb) { big[k] = v; idbPut(k, v); return true; }
+  try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; }
+}
 
 async function initStore() {
   var db = null, user = null;
@@ -564,7 +625,15 @@ async function loadAll() {
       if (snap.size < 500) break;
     }
   } else {
-    chapters = lsGet('nb-chapters', {});
+    chapters = {};
+    if (idb) {
+      Object.keys(big).forEach(function (k) { if (k.indexOf('ch:') === 0) chapters[k.slice(3)] = big[k]; });
+      var legacy = big['nb-chapters'];
+      if (legacy) {
+        Object.keys(legacy).forEach(function (k) { if (!chapters[k]) { chapters[k] = legacy[k]; idbPut('ch:' + k, legacy[k]); } });
+        idbPut('nb-chapters', undefined); delete big['nb-chapters'];
+      }
+    } else chapters = lsGet('nb-chapters', {});
   }
 }
 var settingsTimer = null;
@@ -592,12 +661,15 @@ async function putChapter(doc) {
     }
   }
   chapters[doc.key] = doc;
-  if (store.mode !== 'db' && !lsSet('nb-chapters', chapters)) throw { code: 'quota_exceeded', message: 'This device is out of storage space.' };
+  if (store.mode !== 'db') {
+    if (idb) idbPut('ch:' + doc.key, doc);
+    else if (!lsSet('nb-chapters', chapters)) throw { code: 'quota_exceeded', message: 'This device is out of storage space.' };
+  }
 }
 async function removeChapter(k) {
   if (store.mode === 'db') await store.col.doc(k).delete();
   delete chapters[k];
-  if (store.mode !== 'db') lsSet('nb-chapters', chapters);
+  if (store.mode !== 'db') { if (idb) idbPut('ch:' + k, undefined); else lsSet('nb-chapters', chapters); }
 }
 function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 // Combine a new paste with a chapter already saved: new verses win, existing verses the paste doesn't cover are kept.
@@ -892,7 +964,7 @@ function renderEmpty() {
   document.getElementById('impFirst').onclick = function () { openImport(0, 1); };
 }
 function storageNote() {
-  return store.mode === 'db' ? 'Saved to your account, so it’s the same on your iPad and phone.' : 'Saved on this device only.';
+  return store.mode === 'db' ? 'Saved to your account, so it’s the same on your iPad and phone.' : 'Saved on this device. Use Backup to move it to your other device.';
 }
 function updateSelbar() {
   var bar = document.getElementById('selbar');
@@ -1044,7 +1116,7 @@ qx.onclick = function () { closeSearch(); showChapter(pos.b, pos.c); };
 // ======================================================================
 var sheet = document.getElementById('sheet'), scrim = document.getElementById('scrim'), sheetBody = document.getElementById('sheetBody');
 function openSheet(title) { document.getElementById('sheetTitle').textContent = title; sheet.classList.remove('hidden'); scrim.classList.remove('hidden'); sheet.scrollTop = 0; }
-function closeSheet() { sheet.classList.add('hidden'); scrim.classList.add('hidden'); sheetBody.innerHTML = ''; if (typeof afterSheetClosed === 'function') afterSheetClosed(); }
+function closeSheet() { setResume(null); sheet.classList.add('hidden'); scrim.classList.add('hidden'); sheetBody.innerHTML = ''; if (typeof afterSheetClosed === 'function') afterSheetClosed(); }
 scrim.onclick = closeSheet;
 document.getElementById('sheetClose').onclick = closeSheet;
 document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !sheet.classList.contains('hidden')) closeSheet(); });
@@ -1089,7 +1161,7 @@ function menu() {
     cat('bible', '📚', 'My Bible', 'Import chapters, versions, backup', '<button id="mImp">Import chapters</button><button id="mVer">My versions</button><button id="mBak">Back up and restore</button>') +
     cat('set', '⚙︎', 'Settings', 'Names, text size, your name', '') +
     '<p class="status" style="margin-top:1.2rem">' + esc(storageNote()) + ' ' + Object.keys(chapters).length + ' chapters imported.</p>' +
-    '<p class="status" style="margin-top:.3rem">App version 19 · appointed times on Home</p>';
+    '<p class="status" style="margin-top:.3rem">App version 20 · resume where you left off, Selah, changing pictures</p>';
   sheetBody.querySelectorAll('.mcat').forEach(function (c) {
     c.querySelector('.mhead').onclick = function () {
       if (c.dataset.cat === 'set') { openSettings(); return; }
@@ -1157,6 +1229,7 @@ function bookOptions(sel) {
   return h;
 }
 function openImport(b, c) {
+  setResume({ k: 'import', b: b, c: c });
   openSheet('Import chapters');
   sheetBody.innerHTML =
     '<p class="hint" style="margin-top:0">Copy as many chapters as you like from your ESV app, with their headings such as “Genesis 4”, and paste them below. The book and chapters are picked up automatically.</p>' +
@@ -1359,7 +1432,8 @@ function openSettings() {
     '<div class="actions" style="margin-top:.5rem"><button class="quiet orbbtn" id="sVoiceTry"><span class="orb sm"></span>Hear it</button></div>' +
     '<p class="status" id="sVoiceNote" style="margin-top:.3rem">For the most natural sound, download a Premium or Enhanced voice on your device: Settings → Accessibility → Spoken Content → Voices → English. It then appears here.</p></div>' +
     '<div class="set"><div class="set-t">Reading voice (Hebrew)</div><select id="sVoiceHe" style="width:100%;padding:.5rem;border-radius:8px;background:var(--panel);color:var(--ink);border:1px solid var(--rule)"></select></div>' +
-    '<label class="check" style="margin-bottom:1rem"><input type="checkbox" id="sSelah"' + (S.selah !== false ? ' checked' : '') + '> <span>Show the Selah pause the first time I open the app each day</span></label>' +
+    '<div class="set"><div class="set-t">Selah pause</div>' + segBtns('sSelahM', [['away', 'After a break'], ['daily', 'Once a day'], ['off', 'Off']], selahMode()) + '<p class="status" style="margin-top:.3rem">“After a break” shows it whenever you come back after 30 minutes or more away.</p></div>' +
+    '<label class="check" style="margin-bottom:1rem"><input type="checkbox" id="sSlide"' + (S.homeSlide !== false ? ' checked' : '') + '> <span>Home pictures change every 10 seconds</span></label>' +
     '<label class="field"><span>Memory verses: the Name, said and spelled as</span><input type="text" id="sMemName" value="' + esc(memName()) + '"></label>' +
     '<label class="field"><span>Memory verses: the Messiah’s name, said and spelled as</span><input type="text" id="sMemMes" value="' + esc(memMessiah()) + '"></label>' +
     '<div class="set"><div class="set-t">Text size</div>' + segBtns('sSize', [[16, 'Small'], [19, 'Medium'], [22, 'Large'], [26, 'Larger']], S.size) + '</div>' +
@@ -1386,7 +1460,8 @@ function openSettings() {
   }
   document.getElementById('sGreet').oninput = function () { S.greet = this.value.trim(); saveSettings(); };
   document.getElementById('sMemName').oninput = function () { S.memName = this.value.trim(); saveSettings(); };
-  document.getElementById('sSelah').onchange = function () { S.selah = this.checked; saveSettings(); };
+  document.querySelectorAll('#sSelahM button').forEach(function (bt) { bt.onclick = function () { S.selahMode = bt.dataset.val; S.selah = bt.dataset.val !== 'off'; saveSettings(); document.querySelectorAll('#sSelahM button').forEach(function (x) { x.classList.toggle('on', x === bt); }); }; });
+  document.getElementById('sSlide').onchange = function () { S.homeSlide = this.checked; saveSettings(); };
   function fillVoices() {
     [['sVoiceEn', 'en', 'voiceEn'], ['sVoiceHe', 'he', 'voiceHe']].forEach(function (x) {
       var sel = document.getElementById(x[0]); if (!sel) return;
@@ -1448,7 +1523,7 @@ async function loadNotes() {
         d = +d; if (!old[d] || d > totalDays()) return;
         pnotes[pnoteId(d)] = { id: pnoteId(d), planCreated: plan.created, planName: plan.name, day: d, dayLabel: dayLabel(d), date: dateOf(d), refs: groupRefs(dayList(d)), text: old[d], updated: Date.now() };
       });
-      lsSet('nb-pnotes', pnotes); try { localStorage.removeItem('nb-notes'); } catch (e) {}
+      lsSet('nb-pnotes', pnotes); lsSet('nb-notes', undefined); delete big['nb-notes'];
     }
   }
 }
@@ -2467,7 +2542,23 @@ function heGreeting() {
   return ['עֶרֶב טוֹב', 'Erev tov', 'Good evening'];
 }
 function setTab(t) { document.querySelectorAll('#tabs button').forEach(function (b) { b.classList.toggle('on', b.dataset.tab === t); }); }
-function leaveHome() { if (!homeOn) return; homeOn = false; document.body.classList.remove('home'); document.getElementById('home').classList.add('hidden'); setTab('read'); }
+function leaveHome() { stopSlides(); if (!homeOn) return; try { localStorage.setItem('nb-view', 'read'); } catch (e) {} homeOn = false; document.body.classList.remove('home'); document.getElementById('home').classList.add('hidden'); setTab('read'); }
+var slideTimer = null, slideIdx = 0, slideFront = 1;
+function stopSlides() { clearInterval(slideTimer); slideTimer = null; }
+async function startSlides() {
+  stopSlides();
+  if (S.homeSlide === false || !homeOn) return;
+  var pics = await picsAll(), n = pics.length >= 2 ? pics.length : SCENES.length;
+  slideIdx = pics.length >= 2 ? dayNumber() % pics.length : dayNumber() % SCENES.length;
+  slideTimer = setInterval(function () {
+    if (!homeOn || document.hidden) return;
+    slideIdx = (slideIdx + 1) % n;
+    var bg = pics.length >= 2 ? 'url("' + pics[slideIdx].data + '")' : paintedBg(dayNumber() - (dayNumber() % SCENES.length) + slideIdx);
+    var a = document.getElementById('hbg'), b = document.getElementById('hbg2'); if (!a || !b) return stopSlides();
+    var show = slideFront === 1 ? b : a, hide = slideFront === 1 ? a : b;
+    show.style.backgroundImage = bg; show.style.opacity = 1; hide.style.opacity = 0; slideFront = slideFront === 1 ? 2 : 1;
+  }, 10000);
+}
 async function homeBackground() {
   var list = await picsAll();
   return list.length ? 'url("' + list[dayNumber() % list.length].data + '")' : paintedBg(dayNumber());
@@ -2505,11 +2596,11 @@ function hebOf(dt) {
 }
 function ordinal(n) { var s = ['th', 'st', 'nd', 'rd'], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); }
 function hebDateLine(dt) { var h = hebOf(dt); return h ? ordinal(h.d) + ' day of the ' + ordinal(h.m) + ' month' : ''; }
-function addDays(dt, n) { var x = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()); x.setDate(x.getDate() + n); return x; }
+function addDaysDt(dt, n) { var x = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()); x.setDate(x.getDate() + n); return x; }
 function feastsAhead(days) {
-  var out = [], t0 = addDays(new Date(), 0);
+  var out = [], t0 = addDaysDt(new Date(), 0);
   for (var i = -8; i <= days; i++) {
-    var dt = addDays(t0, i), h = hebOf(dt); if (!h) { if (i === -8) return null; continue; }
+    var dt = addDaysDt(t0, i), h = hebOf(dt); if (!h) { if (i === -8) return null; continue; }
     FEASTS.forEach(function (f) { if (f.m === h.m && f.d === h.d) out.push({ f: f, date: dt, off: i }); });
   }
   return out;
@@ -2528,7 +2619,7 @@ function feastStatus(e) {
   return e.off > 1 ? {} : null;
 }
 function feastWhen(e) {
-  var start = e.f.same ? e.date : addDays(e.date, -1);
+  var start = e.f.same ? e.date : addDaysDt(e.date, -1);
   return 'From sunset ' + start.toLocaleDateString(undefined, { day: 'numeric', month: 'short' }) + (start.getFullYear() !== new Date().getFullYear() ? ' ' + start.getFullYear() : '');
 }
 function feastHtml() {
@@ -2560,6 +2651,7 @@ function wireFeasts(root) {
   });
 }
 function showHome() {
+  try { localStorage.setItem('nb-view', 'home'); } catch (e) {}
   homeOn = true; closeSearch && qEl.value && (qEl.value = '');
   document.body.classList.add('home'); setTab('home');
   var el = document.getElementById('home'); el.classList.remove('hidden');
@@ -2571,7 +2663,7 @@ function showHome() {
   var last = S.last && has(S.last.b, S.last.c) ? S.last : firstLoaded();
   var mem = memAll(), mids = Object.keys(mem).sort(function (a, z) { return mem[a].due < mem[z].due ? -1 : 1; }), m0 = mids.length ? mem[mids[0]] : null;
   var study = plans.study, sD = study ? (function () { usePlan('study'); var d = firstOpen(); usePlan('bible'); return d; })() : 0;
-  var h = '<div class="hbg" id="hbg" style="background-image:' + paintedBg(dayNumber()) + '"></div><div class="hin">' +
+  var h = '<div class="hbg drift" id="hbg" style="background-image:' + paintedBg(dayNumber()) + '"></div><div class="hbg drift" id="hbg2" style="opacity:0"></div><div class="hin">' +
     '<div class="htop"><div><div class="hhe"><bdi>' + g[0] + '</bdi> · ' + g[1] + '</div><div class="hgr">' + g[2] + (S.greet ? ', ' + esc(S.greet) : '') + '</div>' +
     '<div class="hdt">' + esc(new Date().toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' })) + '</div>' +
     (hebDateLine(new Date()) ? '<div class="hdt" style="margin-top:.05rem">' + esc(hebDateLine(new Date())) + '</div>' : '') + '</div>' +
@@ -2587,7 +2679,7 @@ function showHome() {
       (study ? '<button class="ht wide" id="tStudy">' + ICONS.book + '<span><span class="k">Book study</span><br><span class="t">' + esc(bn(study.book)) + (sD ? ' · day ' + sD : ' · complete') + '</span></span></button>' : '') +
     '</div></div>';
   el.innerHTML = h; el.scrollTop = 0;
-  homeBackground().then(function (bg) { var b = document.getElementById('hbg'); if (b && homeOn) b.style.backgroundImage = bg; });
+  homeBackground().then(function (bg) { var b = document.getElementById('hbg'); if (b && homeOn) b.style.backgroundImage = bg; startSlides(); });
   document.getElementById('hPic').onclick = openPictures;
   wireFeasts(el);
   var lb = document.getElementById('hListen');
@@ -2604,6 +2696,19 @@ function showHome() {
   document.getElementById('tDeep').onclick = function () { menu(); var c = sheetBody.querySelector('[data-cat=study] .mhead'); if (c) c.click(); };
   var ts = document.getElementById('tStudy'); if (ts) ts.onclick = function () { usePlan('study'); var d = firstOpen(); if (d) openPlanDay(d); else openTracker(); };
 }
+function selahMode() { return S.selahMode || (S.selah === false ? 'off' : 'away'); }
+var AWAY_MS = 30 * 60 * 1000;
+function markActive() { try { localStorage.setItem('nb-active', String(Date.now())); } catch (e) {} }
+function lastActive() { try { return +localStorage.getItem('nb-active') || 0; } catch (e) { return 0; } }
+function setResume(r) { try { if (r) localStorage.setItem('nb-resume', JSON.stringify(r)); else localStorage.removeItem('nb-resume'); } catch (e) {} }
+function getResume() { try { return JSON.parse(localStorage.getItem('nb-resume') || 'null'); } catch (e) { return null; } }
+document.addEventListener('visibilitychange', function () {
+  if (document.hidden) { markActive(); return; }
+  var away = Date.now() - lastActive(); markActive();
+  if (away >= AWAY_MS && selahMode() === 'away' && document.getElementById('sheet').classList.contains('hidden')) showSelah();
+});
+window.addEventListener('pagehide', markActive);
+setInterval(function () { if (!document.hidden) markActive(); }, 60000);
 async function showSelah() {
   var el = document.getElementById('selah');
   el.innerHTML = '<div class="sin"><div class="sk">SELAH</div><div class="st">Pause.<br>Breathe.<br>Be still, and know.</div><div class="sr">Psalm 46:10</div><div class="sh">סֶלָה</div></div><div class="stap">Tap anywhere to begin</div>';
@@ -3540,10 +3645,22 @@ function openBackup() {
 // Start
 // ======================================================================
 (async function start() {
+  await idbPreload();
+  if ('serviceWorker' in navigator && location.protocol === 'https:') { try { navigator.serviceWorker.register('sw.js'); } catch (e) {} }
   Object.assign(S, lsGet('nb-settings', {}));
   applyLook();
   await initStore();
   try { if (window.claude && typeof window.claude.use === 'function') downloads = await window.claude.use('downloads'); } catch (e) {}
+  if (!downloads) downloads = { save: async function (o) {
+    var file = new File([o.data], o.filename, { type: 'application/json' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try { await navigator.share({ files: [file] }); return; }
+      catch (e) { if (e && e.name === 'AbortError') throw { code: 'declined' }; }
+    }
+    var url = URL.createObjectURL(file), a = document.createElement('a');
+    a.href = url; a.download = o.filename; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+  } };
   try { await loadAll(); } catch (e) { toast('Couldn’t load your Bible. Check your connection.'); }
   try { await loadPlan(); } catch (e) {}
   try { await loadNotes(); } catch (e) {}
@@ -3551,14 +3668,24 @@ function openBackup() {
   var at = S.last && has(S.last.b, S.last.c) ? S.last : firstLoaded();
   if (at) showChapter(at.b, at.c); else renderEmpty();
   if (at) {
-    showHome();
-    if (S.todaySeen !== todayYmd()) { S.todaySeen = todayYmd(); saveSettings(); if (S.selah !== false) showSelah(); }
+    var away = Date.now() - lastActive(), rs = getResume(), view = (function () { try { return localStorage.getItem('nb-view'); } catch (e) { return null; } })();
+    var firstToday = S.todaySeen !== todayYmd();
+    if (firstToday) { S.todaySeen = todayYmd(); saveSettings(); }
+    if (lastActive() && away < AWAY_MS) {
+      // a short trip away: pick up exactly where you were
+      if (rs && rs.k === 'import') openImport(rs.b, rs.c);
+      else if (view !== 'read') showHome();
+    } else {
+      showHome();
+      var mode = selahMode();
+      if (mode === 'away' || (mode === 'daily' && firstToday)) showSelah();
+    }
   }
+  markActive();
 })();
 
 window.__nb = { parseImport: parseImport, parseRef: parseRef, runSearch: runSearch, chapters: function () { return chapters; } };
 })();
 </script>
-  <script src="spotify-dock.js"></script>
 </body>
 </html>
