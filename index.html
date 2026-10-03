@@ -918,7 +918,9 @@ function restore(t) {
   if (S.jesus !== 'keep') rules.push([/\bJesus\b/g, JESUSF[S.jesus]]);
   if (S.christ) rules.push([/\bChrist\b/g, 'Messiah']);
   if (S.god) rules.push([/\bGod\b/g, 'Elohim']);
+  if (S.spirit) rules.push([/\b[Tt]he Holy Spirit\b/g, 'Ruach ha-Qodesh']);
   if (S.spirit) rules.push([/\bHoly Spirit\b/g, 'Ruach ha-Qodesh']);
+  if (S.lord === 'Adonai') rules.push([/\b[Tt]he Lord\b/g, 'Adonai']);
   if (S.lord !== 'keep') rules.push([/\bLord\b/g, S.lord]);
   // Protect replaced text from later rules using placeholders
   var bag = [];
@@ -988,7 +990,7 @@ function showChapter(b, c, verses) {
   notesForChapter(b, c).forEach(function (n) { (noteAt[n.v1] = noteAt[n.v1] || []).push(n); for (var v = n.v1; v <= n.v2; v++) notedV[v] = 1; });
   var headAt = {};
   (doc.heads || []).forEach(function (h) { (headAt[h.v] = headAt[h.v] || []).push(h.t); });
-  var html = planBanner() + '<h1 class="ch-title">' + esc(bn(b) + ' ' + c) + '</h1><p class="ch-sub">' + esc(S.bibleName ? S.bibleName : 'ESV, with the Names restored') + '</p>' + '<div style="display:flex;gap:.5rem;flex-wrap:wrap">' + (b < NT_START ? '<button class="hebbtn" id="toHeb">א Hebrew</button>' : '') + '<button class="hebbtn" id="toCmp">Compare</button><button class="hebbtn" id="toVoice">🎙 Record</button></div>' + '<div class="text"><p>';
+  var html = planBanner() + '<h1 class="ch-title">' + esc(bn(b) + ' ' + c) + '</h1><p class="ch-sub">' + esc(S.bibleName ? S.bibleName : 'Restored Names Bible') + '</p>' + '<div style="display:flex;gap:.5rem;flex-wrap:wrap">' + (b < NT_START ? '<button class="hebbtn" id="toHeb">א Hebrew</button>' : '') + '<button class="hebbtn" id="toCmp">Compare</button><button class="hebbtn" id="toVoice">🎙 Record</button></div>' + '<div class="text"><p>';
   doc.verses.forEach(function (x, i) {
     if (headAt[x.v]) {
       html += '</p>';
@@ -1039,7 +1041,7 @@ function renderEmpty() {
   leaveHome();
   document.getElementById('refBtn').textContent = 'Books';
   main.innerHTML = '<div class="empty"><div class="mark">יהוה</div><h2>Your Bible is empty</h2>' +
-    '<p>Import chapters from your ESV app, a few at a time. The footnote marks are cleaned away and the Names are restored as each chapter goes in.</p>' +
+    '<p>Import your Bible text: a whole Bible file at once, or a few chapters at a time. The footnote marks are cleaned away and the Names are restored as each chapter goes in.</p>' +
     '<button class="primary" id="impFirst">Import chapters</button> <button class="quiet" id="impWhole">Import a whole Bible file</button><p class="status" style="margin-top:1.4rem">' + esc(storageNote()) + '</p></div>';
   document.getElementById('impFirst').onclick = function () { openImport(0, 1); };
   var iw = document.getElementById('impWhole'); if (iw) iw.onclick = openWholeImport;
@@ -1242,7 +1244,7 @@ function menu() {
     cat('bible', '📚', 'My Bible', 'Import chapters, versions, backup', '<button id="mImp">Import chapters</button><button id="mWhole">Import a whole Bible file</button><button id="mVer">My versions</button><button id="mBak">Back up and restore</button>') +
     cat('set', '⚙︎', 'Settings', 'Names, text size, your name', '') +
     '<p class="status" style="margin-top:1.2rem">' + esc(storageNote()) + ' ' + Object.keys(chapters).length + ' chapters imported.</p>' +
-    '<p class="status" style="margin-top:.3rem">App version 24 · whole-Bible import, Yahowah, Compare links</p>';
+    '<p class="status" style="margin-top:.3rem">App version 28 · RNB throughout</p>';
   sheetBody.querySelectorAll('.mcat').forEach(function (c) {
     c.querySelector('.mhead').onclick = function () {
       if (c.dataset.cat === 'set') { openSettings(); return; }
@@ -1315,23 +1317,23 @@ function openImport(b, c) {
   setResume({ k: 'import', b: b, c: c });
   openSheet('Import chapters');
   sheetBody.innerHTML =
-    '<p class="hint" style="margin-top:0">Copy as many chapters as you like from your ESV app, with their headings such as “Genesis 4”, and paste them below. The book and chapters are picked up automatically.</p>' +
+    '<p class="hint" style="margin-top:0">Copy as many chapters as you like from your Bible app, with their headings such as “Genesis 4”, and paste them below. The book and chapters are picked up automatically.</p>' +
     '<div class="row3"><label class="field"><span>Book</span><select id="iBook">' + bookOptions(b) + '</select></label>' +
     '<label class="field"><span>Chapter</span><input id="iCh" type="number" inputmode="numeric" min="1" value="' + (c || 1) + '"></label>' +
     '<label class="field"><span>to</span><input id="iTo" type="number" inputmode="numeric" min="1" placeholder="…"></label></div>' +
     '<details class="card" id="iOpts" style="padding:.2rem .9rem"><summary style="cursor:pointer;padding:.6rem 0;font-weight:500">Names and page style <span class="hint" id="iSum" style="font-weight:400"></span></summary>' +
       '<div style="padding:.2rem 0 .8rem">' +
-      '<p class="hint" style="margin-top:0">The Name, where the ESV prints LORD or GOD</p>' + segBtns('oName', [['heb', '<span class="heb">יהוה</span>'], ['Yahowah', 'Yahowah'], ['Yehovah', 'Yehovah']], S.name) +
-      '<p class="hint">The Messiah’s name, where the ESV prints Jesus</p>' + segBtns('oJesus', [['heb', '<span class="heb">יהושע</span>'], ['Yehoshua', 'Yehoshua'], ['Yeshua', 'Yeshua'], ['keep', 'Jesus']], S.jesus) +
+      '<p class="hint" style="margin-top:0">The Name, where the English text prints LORD or GOD</p>' + segBtns('oName', [['heb', '<span class="heb">יהוה</span>'], ['Yahowah', 'Yahowah'], ['Yehovah', 'Yehovah']], S.name) +
+      '<p class="hint">The Messiah’s name, where the English text prints Jesus</p>' + segBtns('oJesus', [['heb', '<span class="heb">יהושע</span>'], ['Yehoshua', 'Yehoshua'], ['Yeshua', 'Yeshua'], ['keep', 'Jesus']], S.jesus) +
       '<p class="hint">Lord, in ordinary type</p>' + segBtns('oLord', [['keep', 'Lord'], ['Adonai', 'Adonai'], ['Master', 'Master']], S.lord) +
       '<label class="check"><input type="checkbox" id="oGod"' + (S.god ? ' checked' : '') + '> <span>God → Elohim</span></label>' +
       '<label class="check"><input type="checkbox" id="oChrist"' + (S.christ ? ' checked' : '') + '> <span>Christ → Messiah</span></label>' +
       '<label class="check"><input type="checkbox" id="oSpirit"' + (S.spirit ? ' checked' : '') + '> <span>Holy Spirit → Ruach ha-Qodesh</span></label>' +
-      '<label class="check"><input type="checkbox" id="oBrackets"' + (S.brackets ? ' checked' : '') + '> <span>Keep the original ESV word and add the name in brackets, e.g. the LORD [<span class="heb">יהוה</span>]</span></label>' +
+      '<label class="check"><input type="checkbox" id="oBrackets"' + (S.brackets ? ' checked' : '') + '> <span>Keep the original English word and add the name in brackets, e.g. the LORD [<span class="heb">יהוה</span>]</span></label>' +
       '<p class="hint" style="margin-top:.8rem">Page</p>' + segBtns('oTheme', [['dark', 'White on black'], ['light', 'Black on white']], S.theme) +
       '<p class="hint" style="margin-top:.8rem">Footnote numbers and cross-reference letters are always removed.</p>' +
       '</div></details>' +
-    '<label class="field"><span>ESV text</span><textarea id="iText" placeholder="Genesis 1&#10;&#10;The Creation of the World&#10;1 In the beginning, God created the heavens and the earth…"></textarea></label>' +
+    '<label class="field"><span>Bible text</span><textarea id="iText" placeholder="Genesis 1&#10;&#10;The Creation of the World&#10;1 In the beginning, God created the heavens and the earth…"></textarea></label>' +
     '<p class="detect" id="iDetect" aria-live="polite"></p>' +
     '<div class="actions"><button class="primary" id="iCheck">Check</button><button class="quiet" id="iClear">Clear</button></div>' +
     '<div id="iPrev"></div>' +
@@ -1469,7 +1471,7 @@ function openImport(b, c) {
         (!ok ? 'not a real chapter' : count + (note ? ', ' + esc(note) : ' ✓')) + '</span></div>';
     });
     toast(parsed.length + (parsed.length === 1 ? ' chapter' : ' chapters') + ' found. Review them below.');
-    h += '</div><p class="hint">Check the verse counts against your ESV app, then add them.</p>' +
+    h += '</div><p class="hint">Check the verse counts against your source, then add them.</p>' +
       '<div class="actions"><button class="primary" id="iAdd">Add to my Bible</button></div><p class="status" id="iStat" aria-live="polite"></p>';
     pv.innerHTML = h;
     document.getElementById('iAdd').onclick = async function () {
@@ -1523,13 +1525,13 @@ function openSettings() {
     '<div class="set"><label class="check"><input type="checkbox" id="sShade"' + (S.shade ? ' checked' : '') + '> <span>Colour the restored names in gold</span></label>' +
     '<label class="check"><input type="checkbox" id="sHide"' + (S.autohide !== false ? ' checked' : '') + '> <span>Hide the top bar while reading (scroll up to show it)</span></label></div>' +
     '<div class="set"><div class="set-t">Names for chapters you import from now on</div>' +
-      '<p class="hint" style="margin-top:0">The Name, where the ESV prints LORD or GOD</p>' + segBtns('sName', [['heb', '<span class="heb">יהוה</span>'], ['Yahowah', 'Yahowah'], ['Yehovah', 'Yehovah']], S.name) +
-      '<p class="hint">The Messiah’s name, where the ESV prints Jesus</p>' + segBtns('sJesus', [['heb', '<span class="heb">יהושע</span>'], ['Yehoshua', 'Yehoshua'], ['Yeshua', 'Yeshua'], ['keep', 'Jesus']], S.jesus) +
+      '<p class="hint" style="margin-top:0">The Name, where the English text prints LORD or GOD</p>' + segBtns('sName', [['heb', '<span class="heb">יהוה</span>'], ['Yahowah', 'Yahowah'], ['Yehovah', 'Yehovah']], S.name) +
+      '<p class="hint">The Messiah’s name, where the English text prints Jesus</p>' + segBtns('sJesus', [['heb', '<span class="heb">יהושע</span>'], ['Yehoshua', 'Yehoshua'], ['Yeshua', 'Yeshua'], ['keep', 'Jesus']], S.jesus) +
       '<p class="hint">Lord, in ordinary type</p>' + segBtns('sLord', [['keep', 'Lord'], ['Adonai', 'Adonai'], ['Master', 'Master']], S.lord) +
       '<label class="check"><input type="checkbox" id="sGod"' + (S.god ? ' checked' : '') + '> <span>God → Elohim</span></label>' +
       '<label class="check"><input type="checkbox" id="sChrist"' + (S.christ ? ' checked' : '') + '> <span>Christ → Messiah</span></label>' +
       '<label class="check"><input type="checkbox" id="sSpirit"' + (S.spirit ? ' checked' : '') + '> <span>Holy Spirit → Ruach ha-Qodesh</span></label>' +
-      '<label class="check"><input type="checkbox" id="sBrackets"' + (S.brackets ? ' checked' : '') + '> <span>Keep the original ESV word and add the name in brackets</span></label>' +
+      '<label class="check"><input type="checkbox" id="sBrackets"' + (S.brackets ? ' checked' : '') + '> <span>Keep the original English word and add the name in brackets</span></label>' +
       '<p class="hint">Chapters already imported keep their names. Re-import a chapter to change it.</p></div>' +
     '<p class="status">' + esc(storageNote()) + '</p>';
   function seg(id, k, num) {
@@ -2343,8 +2345,9 @@ async function openStudySection() {
 // Compare versions. Other versions are kept exactly as published: no Names changes, no highlighting.
 // ======================================================================
 var VERSIONS = [
-  { id: 'esv', get label() { return bibleShort(); }, name: 'ESV, with the Names restored' },
-  { id: 'kjv', label: 'KJV', name: 'King James Version', download: true, credit: 'King James Version (public domain), via getBible.net' }
+  { id: 'esv', get label() { return bibleShort(); }, get name() { return bibleName(); } },
+  { id: 'web', label: 'WEB', name: 'World English Bible', download: true },
+  { id: 'asv', label: 'ASV', name: 'American Standard Version (1901)', download: true }
 ];
 var verDb = null, verCache = {}, verMeta = null;
 function verOpen() {
@@ -2396,7 +2399,7 @@ async function downloadKjv(stat) {
   var meta = await verLoadMeta(); meta.kjv = { when: Date.now(), books: 66 }; await verPut('meta', meta);
   try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
 }
-function cmpSel() { var s = Array.isArray(S.cmp) && S.cmp.length ? S.cmp.slice(0, 3) : ['esv', 'kjv']; return s.filter(function (id) { return VERSIONS.some(function (v) { return v.id === id; }); }); }
+function cmpSel() { var s = Array.isArray(S.cmp) && S.cmp.length ? S.cmp.slice(0, 3) : ['esv', 'web', 'asv']; return s.filter(function (id) { return VERSIONS.some(function (v) { return v.id === id; }); }); }
 
 async function showCompare(b, c, flashV) {
   leaveHome();
@@ -2409,16 +2412,17 @@ async function showCompare(b, c, flashV) {
     (b < NT_START ? '<button data-ver="heb" class="' + (heb ? 'on' : '') + '">א Hebrew</button>' : '');
   var html = '<div class="ilbar"><button id="cmBack">‹ Reading</button><span class="sp"></span>' + chips + '</div>' +
     '<h1 class="ch-title">' + esc(bn(b) + ' ' + c) + '</h1><p class="ch-sub">Compare versions. Only your ' + esc(bibleName()) + ' has the Names restored; the others are shown exactly as published.</p>';
-  if (sel.indexOf('kjv') >= 0 && !meta.kjv) {
-    html += window.claude ? '<div class="card"><p class="hint" style="margin:0">The King James Version downloads in your installed app. Open the Scriptures app from your home-screen icon to compare with it.</p></div>' :
-      '<div class="card"><h3>Download the King James Version</h3><p class="hint">A one-time download of the whole KJV, about 5 MB. After that it works offline. The text is kept exactly as published.</p><div class="actions"><button class="primary" id="kjvGet">Download now</button></div><p class="status" id="kjvStat"></p></div>';
+  var missV = sel.filter(function (id) { return id !== 'esv' && !meta[id]; })[0];
+  if (missV) {
+    html += window.claude ? '<div class="card"><p class="hint" style="margin:0">Public-domain versions download in your installed app. Open the Scriptures app from your home-screen icon to compare with them.</p></div>' :
+      '<div class="card"><h3>Download the ' + esc(verLabel(missV, true)) + '</h3><p class="hint">A one-time download of the whole Bible, about 5 MB. After that it works offline. The text is kept exactly as published.</p><div class="actions"><button class="primary" id="kjvGet" data-v="' + missV + '">Download now</button></div><p class="status" id="kjvStat"></p></div>';
   }
   var texts = {}, vset = {};
   for (var i = 0; i < sel.length; i++) { var t = await verChapter(sel[i], b, c); texts[sel[i]] = t; if (t) Object.keys(t).forEach(function (v) { vset[v] = 1; }); }
   var hd = heb ? await hebBook(b) : null, hch = hd && hd[c] ? hd[c] : null;
   if (hch) Object.keys(hch).forEach(function (v) { vset[v] = 1; });
   var vs = Object.keys(vset).map(Number).sort(function (a, z) { return a - z; });
-  if (!vs.length) html += '<p class="hint">Nothing to compare yet for this chapter. Import it in ' + esc(bibleName()) + ', or download the King James Version.</p>';
+  if (!vs.length) html += '<p class="hint">Nothing to compare yet for this chapter. Import it in ' + esc(bibleName()) + ', or download the WEB or ASV.</p>';
   vs.forEach(function (v) {
     html += '<div class="cmpv" id="cv' + v + '"><div class="cvhead"><div class="vno">Verse ' + v + '</div><button data-cmv="' + v + '">Commentary</button></div>';
     sel.forEach(function (id) {
@@ -2438,7 +2442,7 @@ async function showCompare(b, c, flashV) {
   var nb = c < BOOKS[b][1] ? c + 1 : 0, pb = c > 1 ? c - 1 : 0;
   html += '<nav class="chnav"><button id="cPrev"' + (pb ? '' : ' disabled') + '>‹ ' + (pb ? esc(bn(b) + ' ' + pb) : 'Start') + '</button><button id="cNext"' + (nb ? '' : ' disabled') + '>' + (nb ? esc(bn(b) + ' ' + nb) : 'End') + ' ›</button></nav>' +
     '<div class="grp" style="margin-top:1.4rem">Other translations (links only, nothing stored)</div><div class="cmlinks">' + gwLink(b, c, 'ESV;NKJV;KJV', 'ESV, NKJV and KJV side by side') + gwLink(b, c, 'ESV', 'ESV') + gwLink(b, c, 'NKJV', 'NKJV') + '</div>' +
-    '<p class="status" style="margin-top:1.5rem">King James Version: public domain, via getBible.net. Hebrew text and word-for-word English: STEP Bible (stepbible.org), Tyndale House, Cambridge, CC BY 4.0.</p>';
+    '<p class="status" style="margin-top:1.5rem">World English Bible and American Standard Version: public domain, via getBible.net. Hebrew text and word-for-word English: STEP Bible (stepbible.org), Tyndale House, Cambridge, CC BY 4.0.</p>';
   main.innerHTML = html;
   document.getElementById('cmBack').onclick = function () { cmpView = null; showChapter(b, c); };
   if (pb) document.getElementById('cPrev').onclick = function () { showCompare(b, pb); };
@@ -2458,7 +2462,7 @@ async function showCompare(b, c, flashV) {
   var kg = document.getElementById('kjvGet');
   if (kg) kg.onclick = async function () {
     var st = document.getElementById('kjvStat'); kg.disabled = true;
-    try { await downloadKjv(function (m) { st.textContent = m; }); toast('King James Version downloaded'); showCompare(b, c, flashV); }
+    try { await downloadVer(kg.dataset.v, function (m) { st.textContent = m; }); toast(verLabel(kg.dataset.v, true) + ' downloaded'); showCompare(b, c, flashV); }
     catch (e) { kg.disabled = false; st.style.color = 'var(--name)'; st.textContent = (e && e.message === 'nostore') ? 'This view can’t store it. Use the app from your home-screen icon.' : 'The download didn’t work (' + ((e && e.message) || 'error') + '). Check your connection and try again. If it keeps failing, send Claude a screenshot.'; }
   };
   if (flashV && document.getElementById('cv' + flashV)) { var fv = document.getElementById('cv' + flashV); fv.scrollIntoView({ block: 'center' }); fv.classList.add('flash'); setTimeout(function () { fv.classList.remove('flash'); }, 2200); }
@@ -2469,15 +2473,16 @@ async function openMyVersions() {
   var meta = await verLoadMeta(), n = Object.keys(chapters).length;
   var h = '<p class="hint" style="margin-top:0">Only your ' + esc(bibleName()) + ' has the Names restored. Every other version is kept exactly as published, for side-by-side teaching.</p>' +
     '<div class="wrow"><span>' + esc(bibleName()) + '</span><span>' + n + (n === 1 ? ' chapter' : ' chapters') + ' imported</span></div>' +
-    '<div class="wrow"><span>KJV</span><span>' + (meta.kjv ? 'Whole Bible, downloaded' : window.claude ? 'Downloads in your installed app' : '<button class="backlink" id="mvKjv" style="margin:0">Download (about 5 MB)</button>') + '</span></div>' +
-    '<div class="wrow"><span>NKJV</span><span class="status" style="margin:0">Coming next</span></div>' +
-    '<div class="wrow"><span>LSB</span><span class="status" style="margin:0">Coming next</span></div>' +
-    '<div class="wrow"><span>ISR 2009</span><span class="status" style="margin:0">Coming next</span></div>' +
+    mvRow(meta, 'web') + mvRow(meta, 'asv') + (meta.kjv ? '<div class="wrow"><span>KJV</span><span>Downloaded earlier · not shown in Compare</span></div>' : '') +
+    '<div class="wrow"><span>ESV · NKJV</span><span class="status" style="margin:0">Links in Compare (copyrighted)</span></div>' +
+    
+    
     '<p class="status" id="mvStat"></p>' +
     '<div class="actions"><button class="primary" id="mvCmp">Compare ' + esc(bn(pos.b) + ' ' + pos.c) + '</button>' + (meta.kjv ? '<button class="quiet" id="mvDel">Remove the KJV</button>' : '') + '</div>' +
-    '<p class="status">King James Version: public domain, via getBible.net.</p>';
+    '<p class="status">World English Bible and American Standard Version: public domain, via getBible.net.</p>';
   sheetBody.innerHTML = h;
   document.getElementById('mvCmp').onclick = function () { closeSheet(); closeSearch(); showCompare(pos.b, pos.c); };
+  sheetBody.querySelectorAll('[data-mvdl]').forEach(function (bt) { bt.onclick = async function () { var st = document.getElementById('mvStat'); bt.disabled = true; try { await downloadVer(bt.dataset.mvdl, function (m) { st.textContent = m; }); toast(verLabel(bt.dataset.mvdl, true) + ' downloaded'); openMyVersions(); } catch (e) { bt.disabled = false; st.style.color = 'var(--name)'; st.textContent = 'The download didn’t work (' + ((e && e.message) || 'error') + '). Try again on Wi-Fi.'; } }; });
   var dl = document.getElementById('mvKjv');
   if (dl) dl.onclick = async function () {
     var st = document.getElementById('mvStat'); dl.disabled = true;
@@ -3204,7 +3209,7 @@ function openCommSettings(b, c, v) {
 // ======================================================================
 // Memory verses: listen, fade, first letters, type (or pick, in Hebrew), recite; spaced reviews
 // ======================================================================
-var MEM_MODES = [['esv', 'ESV'], ['kjv', 'KJV'], ['snd', 'Hebrew sounds'], ['heb', 'Hebrew']];
+var MEM_MODES = [['esv', 'RNB'], ['web', 'WEB'], ['snd', 'Hebrew sounds'], ['heb', 'Hebrew'], ['kjv', 'KJV']];
 var MEM_STEPS = ['Listen', 'Fade', 'Letters', 'Type', 'Recite'];
 var MEM_GAPS = [1, 3, 7, 14, 30, 60, 120];
 function memAll() { return lsGet('nb-mem', {}) || {}; }
@@ -3216,12 +3221,12 @@ function plainHeb(h) { return h.replace(/[\u0591-\u05AF\u05BD\u05C0\u05C3\u05C6]
 // Words of a passage in the chosen way of learning: [{ w: shown word, s: sound (Hebrew only) }]
 async function memWords(it) {
   var out = [];
-  if (it.mode === 'esv' || it.mode === 'kjv') {
+  if (it.mode === 'esv' || it.mode === 'kjv' || it.mode === 'web') {
     for (var i = 0; i < it.vs.length; i++) {
       var t = it.mode === 'esv' ? (chapters[key(it.b, it.c)] || { verses: [] }).verses.filter(function (x) { return x.v === it.vs[i]; }).map(function (x) { return x.t; })[0]
-        : ((await verChapter('kjv', it.b, it.c)) || {})[it.vs[i]];
+        : ((await verChapter(it.mode, it.b, it.c)) || {})[it.vs[i]];
       if (!t) return null;
-      if (it.mode === 'kjv') t = restore(t);   // memorising uses your Names; the KJV itself stays unchanged elsewhere
+      if (it.mode !== 'esv') t = restore(t);   // memorising uses your Names; the KJV itself stays unchanged elsewhere
       t.split(/\s+/).filter(Boolean).forEach(function (w) { out.push({ w: w, name: /יהוה|יהושע/.test(w) }); });
     }
     return out;
@@ -3302,7 +3307,7 @@ function speakMem(it, words, done, rk) {
   } catch (e) { toast('Couldn’t read aloud here'); }
 }
 function memPreviewHtml(it, words) {
-  if (!words) return '<p class="hint">' + (it.mode === 'kjv' ? 'Download the King James Version first (Study → Compare versions).' : it.mode === 'esv' ? 'Import this chapter first.' : 'Download the Hebrew for this book first: open the chapter and tap א Hebrew.') + '</p>';
+  if (!words) return '<p class="hint">' + (it.mode === 'web' || it.mode === 'kjv' ? 'Download the World English Bible first (Study → Compare versions).' : it.mode === 'esv' ? 'Import this chapter first.' : 'Download the Hebrew for this book first: open the chapter and tap א Hebrew.') + '</p>';
   if (it.mode === 'heb') return '<div class="memtext he">' + words.map(function (x) { return esc(x.w); }).join(' ') + '</div>';
   return '<div class="memtext">' + (it.mode === 'esv' ? fmtVerse(words.map(function (x) { return x.w; }).join(' ')) : esc(words.map(function (x) { return x.w; }).join(' '))) + '</div>';
 }
@@ -3324,15 +3329,15 @@ async function openMemAdd(b, c, vs) {
   vs = vs.slice().sort(function (a, z) { return a - z; });
   openSheet('Memorise ' + refLabel(b, c, vs));
   sheetBody.innerHTML = '<p class="hint">Getting the passage ready…</p>';
-  var hebOk = b < NT_START && !!(await hebBook(b)), kjvOk = !!(await verBook('kjv', b)), mode = 'esv';
+  var hebOk = b < NT_START && !!(await hebBook(b)), kjvOk = !!(await verBook('web', b)), mode = 'esv';
   async function render() {
     var it = { b: b, c: c, vs: vs, mode: mode }, words = await memWords(it);
-    var chips = MEM_MODES.map(function (m) {
-      var ok = m[0] === 'esv' || (m[0] === 'kjv' ? kjvOk : hebOk);
+    var chips = MEM_MODES.filter(function (m) { return m[0] !== 'kjv'; }).map(function (m) {
+      var ok = m[0] === 'esv' || (m[0] === 'web' ? kjvOk : hebOk);
       return '<button data-val="' + m[0] + '" class="' + (m[0] === mode ? 'on' : '') + '"' + (ok ? '' : ' disabled') + '>' + m[1] + '</button>';
     }).join('');
     sheetBody.innerHTML = '<p class="hint" style="margin-top:0">How would you like to learn it? Memory verses always use your Names: the Name said and spelled ' + esc(memName()) + ', the Messiah ' + esc(memMessiah()) + '.</p><div class="seg" id="mmMode">' + chips + '</div>' +
-      (window.claude ? '<p class="status">KJV and the Hebrew options work in your installed app, from the home-screen icon.</p>' : b >= NT_START ? '<p class="status">Hebrew is for the Tanakh.</p>' : !hebOk ? '<p class="status">For Hebrew, first open this chapter and tap א Hebrew to download it.</p>' : '') +
+      (window.claude ? '<p class="status">WEB and the Hebrew options work in your installed app, from the home-screen icon.</p>' : b >= NT_START ? '<p class="status">Hebrew is for the Tanakh.</p>' : !hebOk ? '<p class="status">For Hebrew, first open this chapter and tap א Hebrew to download it.</p>' : '') +
       (it.mode === 'snd' && words ? '<div class="memtext">' + esc(words.map(function (x) { return x.w; }).join(' ')) + '</div>' : memPreviewHtml(it, words)) +
       '<div class="actions"><button class="primary" id="mmGo"' + (words ? '' : ' disabled') + '>Start memorising</button></div>';
     sheetBody.querySelectorAll('#mmMode button').forEach(function (el) { el.onclick = function () { mode = el.dataset.val; render(); }; });
@@ -3768,8 +3773,8 @@ async function openDayDetail(d) {
 // ======================================================================
 // Back up and restore
 // ======================================================================
-function bibleName() { return S.bibleName || 'ESV'; }
-function bibleShort() { var n = S.bibleName; if (!n) return 'ESV'; var w = n.split(/\s+/).filter(Boolean); return w.length > 1 ? w.map(function (x) { return x.charAt(0).toUpperCase(); }).join('').slice(0, 4) : n.slice(0, 6); }
+function bibleName() { return S.bibleName || 'Restored Names Bible'; }
+function bibleShort() { var n = S.bibleName; if (!n) return 'RNB'; var w = n.split(/\s+/).filter(Boolean); return w.length > 1 ? w.map(function (x) { return x.charAt(0).toUpperCase(); }).join('').slice(0, 4) : n.slice(0, 6); }
 function gwLink(b, c, v, t) {
   return '<a href="https://www.biblegateway.com/passage/?search=' + encodeURIComponent(BOOKS[b][0] + ' ' + c).replace(/%20/g, '+') + '&version=' + v + '" target="_blank" rel="noopener"><span>' + t + '</span><span>Bible Gateway ↗</span></a>';
 }
@@ -3808,7 +3813,7 @@ function openWholeImport() {
         '<div class="set"><div class="set-t">The Name, where the text prints LORD or GOD</div>' + segBtns('wNm', [['heb', '<span class="heb">יהוה</span>'], ['Yahowah', 'Yahowah'], ['Yehovah', 'Yehovah']], S.name) +
         '<div class="set-t" style="margin-top:.8rem">Lord, in ordinary type (Adonai in the Hebrew)</div>' + segBtns('wLd', [['keep', 'Lord'], ['Adonai', 'Adonai'], ['Master', 'Master']], S.lord) +
         '<p class="hint">The Messiah’s name, Elohim and the other choices follow your Settings.</p></div>' +
-        (have ? '<label class="check"><input type="checkbox" id="wRep" checked> <span>Replace everything now in my Bible (' + have + ' chapters, such as your ESV). Notes, plans, memory verses and recordings are kept.</span></label>' : '') +
+        (have ? '<label class="check"><input type="checkbox" id="wRep" checked> <span>Replace everything now in my Bible (' + have + ' chapters). Notes, plans, memory verses and recordings are kept.</span></label>' : '') +
         '<div class="actions"><button class="primary" id="wGo">Import ' + p.list.length.toLocaleString() + ' chapters</button></div>' +
         '<div class="meter" id="wMeter" style="display:none"><i style="width:0%"></i></div><p class="status" id="wStat" aria-live="polite"></p>';
       [['wNm', 'name'], ['wLd', 'lord']].forEach(function (x) {
@@ -3855,6 +3860,56 @@ function openWholeImport() {
   };
 }
 
+// One-time tidy: "the Adonai" reads awkwardly in English, so drop the article ("an angel of Adonai", "Adonai said")
+function fixAdonaiArticles() {
+  var n = 0, re = /\b[Tt]he Adonai\b/g;
+  Object.keys(chapters).forEach(function (k) {
+    var d = chapters[k], ch = false;
+    d.verses.forEach(function (x) { var t = x.t.replace(re, 'Adonai'); if (t !== x.t) { x.t = t; ch = true; n++; } });
+    (d.heads || []).forEach(function (x) { var t = x.t.replace(re, 'Adonai'); if (t !== x.t) { x.t = t; ch = true; } });
+    if (ch) putChapter(d).catch(function () {});
+  });
+  return n;
+}
+// One-time tidy: "ha-" already means "the", so "the Ruach ha-Qodesh" becomes "Ruach ha-Qodesh"
+function fixRuachArticles() {
+  var n = 0, re = /\b[Tt]he Ruach ha-Qodesh\b/g;
+  Object.keys(chapters).forEach(function (k) {
+    var d = chapters[k], ch = false;
+    d.verses.forEach(function (x) { var t = x.t.replace(re, 'Ruach ha-Qodesh'); if (t !== x.t) { x.t = t; ch = true; n++; } });
+    (d.heads || []).forEach(function (x) { var t = x.t.replace(re, 'Ruach ha-Qodesh'); if (t !== x.t) { x.t = t; ch = true; } });
+    if (ch) putChapter(d).catch(function () {});
+  });
+  return n;
+}
+// Public-domain comparison versions (WEB, ASV), downloaded once from getBible.net and kept exactly as published
+function verLabel(id, long) { var v = VERSIONS.filter(function (x) { return x.id === id; })[0]; return v ? (long ? v.name : v.label) : String(id).toUpperCase(); }
+async function downloadVer(id, stat) {
+  var all = {}, nm = verLabel(id, true);
+  stat('Downloading the ' + nm + '…');
+  try {
+    var txt = await fetchText('https://api.getbible.net/v2/' + id + '.json', function (g, t) { stat('Downloading the ' + nm + '… ' + (g / 1048576).toFixed(1) + ' MB' + (t ? ' of ' + (t / 1048576).toFixed(1) + ' MB' : '')); });
+    var j = JSON.parse(txt); (j.books || []).forEach(function (bk) { getbibleBook(bk, all); });
+  } catch (e) { all = {}; }
+  if (Object.keys(all).length < 66) {
+    for (var n = 1; n <= 66; n++) {
+      if (all[n - 1]) continue;
+      stat('Downloading the ' + nm + '… book ' + n + ' of 66');
+      var r = await fetch('https://api.getbible.net/v2/' + id + '/' + n + '.json');
+      if (!r.ok) throw new Error('download ' + r.status);
+      var bj = await r.json(); if (!bj.nr && !bj.book_nr) bj.nr = n; getbibleBook(bj, all);
+    }
+  }
+  var bks = Object.keys(all).map(Number);
+  if (bks.length < 66) throw new Error('format');
+  stat('Saving to this device…');
+  for (var i = 0; i < bks.length; i++) { await verPut(id + ':' + bks[i], all[bks[i]]); verCache[id + ':' + bks[i]] = all[bks[i]]; }
+  var meta = await verLoadMeta(); meta[id] = { when: Date.now(), books: 66 }; await verPut('meta', meta);
+  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
+}
+function mvRow(meta, id) {
+  return '<div class="wrow"><span>' + verLabel(id) + '</span><span>' + (meta[id] ? 'Whole Bible, downloaded' : window.claude ? 'Downloads in your installed app' : '<button class="backlink" data-mvdl="' + id + '" style="margin:0">Download (about 5 MB)</button>') + '</span></div>';
+}
 var downloads = null;
 function summarise(list) {
   var byBook = {};
@@ -3885,7 +3940,7 @@ function openBackup() {
   if (!downloads) { ex.disabled = true; exStat.textContent = 'Saving files isn’t available in this view.'; }
   ex.onclick = async function () {
     var d = new Date(), stamp = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-    var data = JSON.stringify({ app: 'names-restored-bible', format: 1, exported: d.toISOString(), note: 'Personal reading copy. ESV text with the Names restored.', settings: S, plan: plans.bible, study: plans.study, words: savedWords(), memory: memAll(), teach: teachAll(), pictures: await picsAll(), recordings: await recExport(), verseNotes: Object.keys(vnotes).map(function (k) { return vnotes[k]; }), planNotes: Object.keys(pnotes).map(function (k) { return pnotes[k]; }), chapters: list });
+    var data = JSON.stringify({ app: 'names-restored-bible', format: 1, exported: d.toISOString(), note: 'Restored Names Bible (RNB) with the Names restored.', settings: S, plan: plans.bible, study: plans.study, words: savedWords(), memory: memAll(), teach: teachAll(), pictures: await picsAll(), recordings: await recExport(), verseNotes: Object.keys(vnotes).map(function (k) { return vnotes[k]; }), planNotes: Object.keys(pnotes).map(function (k) { return pnotes[k]; }), chapters: list });
     ex.disabled = true; exStat.style.color = ''; exStat.textContent = 'Preparing the file…';
     try {
       await downloads.save({ filename: 'Names Restored Bible backup ' + stamp + '.json', data: new Blob([data]) });
@@ -3997,6 +4052,9 @@ function openBackup() {
   } };
   try { await loadAll(); } catch (e) { toast('Couldn’t load your Bible. Check your connection.'); }
   if (S.name === 'Yahweh') { S.name = 'Yahowah'; saveSettings(); }
+  if (Array.isArray(S.cmp) && S.cmp.indexOf('kjv') >= 0) { S.cmp = ['esv', 'web', 'asv']; saveSettings(); }
+  if (!S.fixRuach1) { var fixedR = fixRuachArticles(); S.fixRuach1 = true; saveSettings(); if (fixedR) setTimeout(function () { toast('Tidied “the Ruach ha-Qodesh” in ' + fixedR.toLocaleString() + ' verses'); }, 4200); }
+  if (!S.fixAdonai1) { var fixedN = fixAdonaiArticles(); S.fixAdonai1 = true; saveSettings(); if (fixedN) setTimeout(function () { toast('Tidied the wording around Adonai in ' + fixedN.toLocaleString() + ' verses'); }, 1800); }
   if (S.bibleName) MEM_MODES[0][1] = bibleShort();
   try { await loadPlan(); } catch (e) {}
   try { await loadNotes(); } catch (e) {}
