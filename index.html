@@ -514,6 +514,59 @@ body.home #tabs button.on { color: #fff; }
 #selah .sr { font-size: 1.05rem; opacity: .9; }
 #selah .sh { font-family: 'Frank Ruhl Libre', 'Times New Roman', serif; font-size: 2.4rem; margin-top: 1.8rem; opacity: .95; }
 #selah .stap { position: absolute; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom, 0px) + 2rem); text-align: center; font-size: .85rem; opacity: .7; }
+/* ---- RNB look: one colour per area, rounded cards, Lora for Scripture ---- */
+:root { --c-clay: #E5946A; --c-gold: #D9B84E; --c-blue: #6FB0C2; --c-pom: #E68A8A; --c-purple: #B39AD3; --c-olive: #A3C184; --c-stone: #BDAAB1;
+  --ui: -apple-system, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif; --panel2: #F1F1EC; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #0B0C0A; --panel: #161816; --panel2: #1F221F; --rule: rgba(255,255,255,.08); --soft: #A9AAA2; --ink: #F3F1EA; --accent: #D9B84E; --accent-ink: #0B0C0A; } }
+:root[data-theme="dark"] { --bg: #0B0C0A; --panel: #161816; --panel2: #1F221F; --rule: rgba(255,255,255,.08); --soft: #A9AAA2; --ink: #F3F1EA; --accent: #D9B84E; --accent-ink: #0B0C0A; }
+:root[data-theme="light"] { --c-clay: #A9532A; --c-gold: #8A6A10; --c-blue: #2C6B7C; --c-pom: #AE3A3A; --c-purple: #6B4C9A; --c-olive: #4C6B2F; --c-stone: #6B5860; }
+body { font-family: var(--ui); }
+.text, .ch-title, .memtext:not(.he), .quote, .cmpr .txt, .hit .t, .votd-t, .cmbody, .prompter:not(.he), .tn, .wp-vs, .hvs { font-family: var(--serif); }
+.ch-title { font-size: 2.35rem; }
+.ch-sub { color: var(--c-clay); text-transform: uppercase; letter-spacing: .12em; font-size: .74rem; font-weight: 600; }
+.shead { color: var(--c-clay); }
+.c-clay { --c: var(--c-clay); } .c-gold { --c: var(--c-gold); } .c-blue { --c: var(--c-blue); } .c-pom { --c: var(--c-pom); } .c-purple { --c: var(--c-purple); } .c-olive { --c: var(--c-olive); } .c-stone { --c: var(--c-stone); }
+.dsc { flex: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--c); background: color-mix(in srgb, var(--c) 16%, transparent); border: 1px solid color-mix(in srgb, var(--c) 34%, transparent); }
+.dsc-he { font-family: var(--heb); font-size: 22px; line-height: 1; color: var(--c); }
+.sheet { border-radius: 22px 22px 0 0; }
+.sheet-head h2 { font-size: 1.45rem; font-weight: 700; letter-spacing: -.01em; }
+.card { border-radius: 22px; }
+.sheet .card { background: var(--panel2); }
+.primary, .quiet { border-radius: 14px; min-height: 44px; }
+.mhero { border-radius: 22px; background: var(--panel2); border: 1px solid var(--rule); padding: 20px 18px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+.mchips { display: flex; align-items: center; }
+.mchip { border-radius: 50%; box-shadow: 0 0 0 3px var(--panel2); display: flex; }
+.mhero-h { font-size: 1.15rem; font-weight: 600; }
+.mhero-s { font-size: .9rem; color: var(--soft); line-height: 1.4; }
+.mhero-b { width: 100%; min-height: 48px; border-radius: 14px; background: var(--panel); border: 1px solid var(--rule); color: var(--ink); font-weight: 600; }
+.mlab { font-size: .74rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--soft); margin: 1.4rem .3rem .5rem; }
+.mgrp { border-radius: 20px; background: var(--panel2); border: 1px solid var(--rule); overflow: hidden; }
+.mrow { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 64px; padding: 10px 16px; background: none; border: 0; border-top: 1px solid var(--rule); color: var(--ink); text-align: left; }
+.mgrp .mrow:first-child { border-top: 0; }
+.mrow:active { background: var(--sel); }
+.mrow-t { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.mrow-h { font-size: 1.02rem; font-weight: 600; }
+.mrow-s { font-size: .82rem; color: var(--soft); }
+.mrow-c { color: var(--soft); display: flex; }
+.sgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.stile { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; min-height: 136px; padding: 16px; border-radius: 22px; background: color-mix(in srgb, var(--c) 7%, var(--panel2)); border: 1px solid color-mix(in srgb, var(--c) 28%, transparent); color: var(--ink); text-align: left; }
+.stile b { font-size: 1.02rem; margin-top: auto; }
+.stile .s { font-size: .82rem; color: var(--soft); line-height: 1.35; }
+.hebbtn { --c: var(--c-stone); border-radius: 999px; min-height: 40px; padding: 0 14px; font-weight: 600; color: var(--ink); background: color-mix(in srgb, var(--c) 12%, transparent); border: 1px solid color-mix(in srgb, var(--c) 30%, transparent); }
+#toHeb { --c: var(--c-blue); } #toCmp { --c: var(--c-olive); } #toVoice { --c: var(--c-clay); }
+.selbar { border-radius: 20px; }
+.selbar button:not(.q) { --c: var(--c-stone); background: color-mix(in srgb, var(--c) 20%, transparent); color: var(--c); font-weight: 600; }
+#selNote { --c: var(--c-purple); } #selMem { --c: var(--c-pom); } #selRec { --c: var(--c-clay); }
+.cmpv { background: var(--panel); border: 1px solid var(--rule); border-radius: 22px; padding: 14px 16px; margin-bottom: 12px; }
+.cmpr { grid-template-columns: 3.6rem minmax(0, 1fr); }
+.cmpr .lbl { --c: var(--c-stone); justify-self: start; padding: 4px 8px; border-radius: 6px; font-size: .7rem; letter-spacing: .06em; font-weight: 700; color: var(--c); background: color-mix(in srgb, var(--c) 16%, transparent); }
+.cmpr .lbl[data-v="esv"] { --c: var(--c-gold); } .cmpr .lbl[data-v="web"] { --c: var(--c-blue); } .cmpr .lbl[data-v="asv"] { --c: var(--c-purple); }
+.ilbar button[data-ver] { --c: var(--c-stone); min-height: 38px; }
+.ilbar button[data-ver="esv"] { --c: var(--c-gold); } .ilbar button[data-ver="web"] { --c: var(--c-blue); } .ilbar button[data-ver="asv"] { --c: var(--c-purple); } .ilbar button[data-ver="heb"] { --c: var(--c-olive); }
+.ilbar button[data-ver].on { background: var(--c); border-color: var(--c); color: var(--accent-ink); }
+.cmph { background: var(--panel2); border-radius: 14px; }
+.book, .chap { border-radius: 12px; }
+:root:not([data-theme="light"]) #tabs { background: rgba(28,31,28,.92); }
 </style>
 </head>
 <body>
@@ -1232,7 +1285,7 @@ function openPicker(bookSel) {
 }
 document.getElementById('refBtn').onclick = function () { openPicker(); };
 
-function menu() {
+function menuOld() {
   openSheet('Menu');
   var cat = function (id, ic, name, desc, items) {
     return '<div class="mcat" data-cat="' + id + '"><button class="mhead"><span class="ic">' + ic + '</span><span class="tx"><span class="nm2">' + name + '</span><span class="ds">' + desc + '</span></span><span class="cv">›</span></button>' +
@@ -2427,7 +2480,7 @@ async function showCompare(b, c, flashV) {
     html += '<div class="cmpv" id="cv' + v + '"><div class="cvhead"><div class="vno">Verse ' + v + '</div><button data-cmv="' + v + '">Commentary</button></div>';
     sel.forEach(function (id) {
       var ver = VERSIONS.filter(function (x) { return x.id === id; })[0], t = texts[id] && texts[id][v];
-      html += '<div class="cmpr"><span class="lbl">' + ver.label + '</span><span class="txt' + (t ? '' : ' miss') + '">' +
+      html += '<div class="cmpr"><span class="lbl" data-v="' + id + '">' + ver.label + '</span><span class="txt' + (t ? '' : ' miss') + '">' +
         (t ? (id === 'esv' ? fmtVerse(t) : esc(t)) : (texts[id] ? 'Not in this version here' : id === 'esv' ? 'Not imported yet' : 'Not downloaded yet')) + '</span></div>';
     });
     if (heb) {
@@ -2911,7 +2964,7 @@ function showHome() {
     plan: function () { usePlan('bible'); if (!plan) { openPlanSetup(); return; } var d = firstOpen(); if (d) openPlanDay(d); else openTracker(); },
     cont: function () { if (last) { leaveHome(); showChapter(last.b, last.c); } else openImport(pos.b, nextMissing(pos.b)); },
     mem: function () { if (m0) practiseMem(m0.id); else openMemList(); },
-    deep: function () { menu(); var c = sheetBody.querySelector('[data-cat=study] .mhead'); if (c) c.click(); },
+    deep: function () { openStudyHub(); },
     study: function () { usePlan('study'); var d = firstOpen(); if (d) openPlanDay(d); else openTracker(); }
   };
   el.querySelectorAll('[data-card]').forEach(function (c) {
@@ -3909,6 +3962,99 @@ async function downloadVer(id, stat) {
 }
 function mvRow(meta, id) {
   return '<div class="wrow"><span>' + verLabel(id) + '</span><span>' + (meta[id] ? 'Whole Bible, downloaded' : window.claude ? 'Downloads in your installed app' : '<button class="backlink" data-mvdl="' + id + '" style="margin:0">Download (about 5 MB)</button>') + '</span></div>';
+}
+// ---- RNB look: the More menu and the Study hub ----
+var APP_VER = 'App version 29 · new look';
+var RNB_IC = {
+  book: '<path d="M12 6.5C10 5 7 4.5 3.5 5v13.5c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5V20"/>',
+  route: '<circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h8.5a3.5 3.5 0 0 0 0-7h-9a3.5 3.5 0 0 1 0-7H16"/>',
+  mic: '<path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/>',
+  expand: '<path d="M4 9V4h5"/><path d="M20 9V4h-5"/><path d="M4 15v5h5"/><path d="M20 15v5h-5"/>',
+  compare: '<rect x="3.5" y="5" width="7" height="14" rx="1.5"/><rect x="13.5" y="5" width="7" height="14" rx="1.5"/>',
+  teach: '<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/><path d="M10 13h6"/><path d="M10 17h6"/>',
+  cards: '<rect x="4" y="7" width="12" height="13" rx="2"/><path d="M8 4h10a2 2 0 0 1 2 2v11"/>',
+  heart: '<path d="M12 20s-7.5-4.6-7.5-10.2A4.2 4.2 0 0 1 12 7.2a4.2 4.2 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20z"/>',
+  comment: '<path d="M4 5h16v11H9l-5 4z"/>',
+  pen: '<path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 7l3 3"/>',
+  import: '<path d="M12 4v11"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/>',
+  layers: '<path d="m12 3.5 8.5 4.7L12 13 3.5 8.2z"/><path d="m3.5 12.5 8.5 4.8 8.5-4.8"/>',
+  box: '<rect x="4" y="8" width="16" height="12" rx="1.5"/><path d="M3 4h18v4H3z"/><path d="M10 12h4"/>',
+  gear: '<circle cx="12" cy="12" r="3"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M5.6 18.4l1.8-1.8M16.6 7.4l1.8-1.8"/>',
+  chev: '<path d="M9 6l6 6-6 6"/>'
+};
+function rnbIcon(n, size) { return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + RNB_IC[n] + '</svg>'; }
+function rnbDisc(c, n, size) {
+  size = size || 40;
+  var inner = n === 'aleph' ? '<span class="dsc-he">א</span>' : rnbIcon(n, Math.round(size * 0.5));
+  return '<span class="dsc c-' + c + '" style="width:' + size + 'px;height:' + size + 'px">' + inner + '</span>';
+}
+function rnbMenuRow(id, c, ic, title, sub) {
+  return '<button type="button" class="mrow" id="' + id + '">' + rnbDisc(c, ic) + '<span class="mrow-t"><span class="mrow-h">' + title + '</span><span class="mrow-s">' + sub + '</span></span><span class="mrow-c">' + rnbIcon('chev', 18) + '</span></button>';
+}
+function rnbGroup(label, rows) { return '<div class="mlab">' + label + '</div><div class="mgrp">' + rows.join('') + '</div>'; }
+function menu() {
+  openSheet('More');
+  var last = S.last && has(S.last.b, S.last.c) ? S.last : firstLoaded();
+  usePlan('bible'); var pd = plan ? firstOpen() : 0;
+  var mem = memAll(), due = Object.keys(mem).filter(function (k) { return memDaysTo(mem[k]) <= 0; }).length;
+  var bits = [];
+  if (last) bits.push(bn(last.b) + ' ' + last.c);
+  if (pd) bits.push('Day ' + pd + ' of your plan');
+  if (due) bits.push(due + (due === 1 ? ' memory verse due' : ' memory verses due'));
+  var chips = [['clay', 'book'], ['gold', 'route'], ['blue', 'aleph'], ['olive', 'compare'], ['purple', 'teach'], ['pom', 'heart'], ['stone', 'gear']].map(function (x, i) {
+    return '<span class="mchip" style="margin-left:' + (i ? -8 : 0) + 'px">' + rnbDisc(x[0], x[1], 44) + '</span>';
+  }).join('');
+  sheetBody.innerHTML =
+    '<div class="mhero"><div class="mchips">' + chips + '</div><div class="mhero-h">' + (last ? 'Pick up where you left off' : 'Welcome to your RNB') + '</div>' +
+    '<div class="mhero-s">' + esc(bits.join(' · ') || 'Import your Bible to begin') + '</div><button type="button" class="mhero-b" id="mCont">' + (last ? 'Continue reading' : 'Import my Bible') + '</button></div>' +
+    rnbGroup('Read', [rnbMenuRow('mToday', 'clay', 'book', 'Today', 'Plan, verse of the day, memory'), rnbMenuRow('mPlan', 'gold', 'route', 'Reading plans', 'Whole Bible and book studies'),
+      rnbMenuRow('mRecs', 'clay', 'mic', 'My recordings', 'Passages in your own voice'), rnbMenuRow('mFull', 'stone', 'expand', 'Full screen', 'Hide the bars while reading')]) +
+    rnbGroup('Study', [rnbMenuRow('mStudy', 'blue', 'aleph', 'Hebrew study', 'Interlinear and word study'), rnbMenuRow('mCmp', 'olive', 'compare', 'Compare versions', esc(bibleShort()) + ', WEB, ASV and the Hebrew'),
+      rnbMenuRow('mTeach', 'purple', 'teach', 'Teaching notes', 'Your series and reference sheets'), rnbMenuRow('mAlef', 'gold', 'cards', 'Alphabet cards', 'Aleph to Tav, flip and learn'),
+      rnbMenuRow('mMem', 'pom', 'heart', 'Memory verses', 'Hide the Word in your heart'), rnbMenuRow('mCom', 'stone', 'comment', 'Commentary', 'Tyndale, Keil &amp; Delitzsch, Gill'),
+      rnbMenuRow('mNotes', 'purple', 'pen', 'My notes', 'Verse notes and day notes')]) +
+    rnbGroup('My Bible', [rnbMenuRow('mWhole', 'olive', 'import', 'Import a whole Bible', 'From a text file such as bsb.txt'), rnbMenuRow('mImp', 'olive', 'pen', 'Import chapters', 'Paste a few chapters at a time'),
+      rnbMenuRow('mVer', 'blue', 'layers', 'My versions', 'Downloads and links'), rnbMenuRow('mBak', 'stone', 'box', 'Back up and restore', 'Keep everything safe')]) +
+    rnbGroup('Settings', [rnbMenuRow('mSet', 'stone', 'gear', 'Settings', 'Names, text size, voices, pictures')]) +
+    '<p class="status" style="margin-top:1.2rem">' + esc(storageNote()) + ' ' + Object.keys(chapters).length.toLocaleString() + ' chapters.</p><p class="status">' + APP_VER + '</p>';
+  var on = function (id, fn) { var el = document.getElementById(id); if (el) el.onclick = fn; };
+  on('mCont', function () { if (last) { closeSheet(); leaveHome(); showChapter(last.b, last.c); } else openWholeImport(); });
+  on('mToday', function () { openToday(); });
+  on('mPlan', function () { usePlan('bible'); if (plan) openTracker(); else openPlanSetup(); });
+  on('mRecs', openRecordings);
+  on('mFull', function () { closeSheet(); toggleFull(); });
+  on('mStudy', openStudySection);
+  on('mCmp', function () { closeSheet(); closeSearch(); showCompare(pos.b, pos.c); });
+  on('mTeach', openTeachList);
+  on('mAlef', openAlefCards);
+  on('mMem', openMemList);
+  on('mCom', function () { openCommentary(pos.b, pos.c, 1); });
+  on('mNotes', openNotesList);
+  on('mWhole', openWholeImport);
+  on('mImp', function () { openImport(pos.b, nextMissing(pos.b)); });
+  on('mVer', openMyVersions);
+  on('mBak', openBackup);
+  on('mSet', openSettings);
+}
+function openStudyHub() {
+  openSheet('Study');
+  var tiles = [
+    ['blue', 'aleph', 'Hebrew study', 'Interlinear, word study and saved words', openStudySection],
+    ['olive', 'compare', 'Compare', esc(bibleShort()) + ', WEB, ASV and the Hebrew', function () { closeSheet(); closeSearch(); showCompare(pos.b, pos.c); }],
+    ['purple', 'teach', 'Teaching notes', 'Your series and reference sheets', openTeachList],
+    ['pom', 'heart', 'Memory verses', 'Listen, fade, letters, recite', openMemList],
+    ['gold', 'cards', 'Alphabet cards', 'Aleph to Tav, pictograph to block', openAlefCards],
+    ['stone', 'comment', 'Commentary', 'Tyndale, Keil &amp; Delitzsch, Gill', function () { openCommentary(pos.b, pos.c, 1); }]
+  ];
+  var w = savedWords(), wk = Object.keys(w).sort(function (a, z) { return (w[z].added || 0) - (w[a].added || 0); }).slice(0, 3);
+  sheetBody.innerHTML = '<p class="hint" style="margin-top:0">Dig into the Hebrew, compare and remember.</p><div class="sgrid">' +
+    tiles.map(function (t, i) { return '<button type="button" class="stile c-' + t[0] + '" data-st="' + i + '">' + rnbDisc(t[0], t[1], 44) + '<b>' + t[2] + '</b><span class="s">' + t[3] + '</span></button>'; }).join('') + '</div>' +
+    (wk.length ? '<div class="mlab">Recent word studies</div><div class="mgrp">' + wk.map(function (k) {
+      var s = w[k];
+      return '<button type="button" class="mrow" data-sw="1"><span class="dsc-he c-blue" style="font-size:1.6rem;min-width:3.6rem;text-align:center">' + esc(s.heb || '') + '</span><span class="mrow-t"><span class="mrow-h">' + esc((s.tr || '') + (s.gloss ? ' · ' + s.gloss : '')) + '</span><span class="mrow-s">' + (s.ref ? esc(bn(s.ref.b) + ' ' + s.ref.c + ':' + s.ref.v) : 'Saved word') + '</span></span><span class="mrow-c">' + rnbIcon('chev', 18) + '</span></button>';
+    }).join('') + '</div>' : '');
+  sheetBody.querySelectorAll('[data-st]').forEach(function (el) { el.onclick = tiles[+el.dataset.st][4]; });
+  sheetBody.querySelectorAll('[data-sw]').forEach(function (el) { el.onclick = openStudySection; });
 }
 var downloads = null;
 function summarise(list) {
