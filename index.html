@@ -2123,7 +2123,10 @@ function openStudySetup() {
 // Hebrew study: interlinear and word study (STEP Bible data, CC BY 4.0)
 // ======================================================================
 function dbTimeout(pr) { return Promise.race([pr, new Promise(function (res) { setTimeout(function () { res(null); }, 1500); })]); }
-var HEB_SETS = [{ name: 'TAHOT Gen-Deu', books: [0, 1, 2, 3, 4], label: 'Genesis to Deuteronomy', size: 'about 25 to 30 MB' }];
+var HEB_SETS = [{ name: 'TAHOT Gen-Deu', books: [0, 1, 2, 3, 4], label: 'Genesis to Deuteronomy', size: 'about 25 to 30 MB' },
+  { name: 'TAHOT Jos-Est', books: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16], label: 'Joshua to Esther', size: 'about 30 MB' },
+  { name: 'TAHOT Job-Sng', books: [17, 18, 19, 20, 21], label: 'Job to the Song of Songs', size: 'about 15 MB' },
+  { name: 'TAHOT Isa-Mal', books: [22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38], label: 'Isaiah to Malachi', size: 'about 30 MB' }];
 var STEP_API = 'https://api.github.com/repos/STEPBible/STEPBible-Data/contents/';
 var STEP_RAW = 'https://raw.githubusercontent.com/STEPBible/STEPBible-Data/master/';
 var STEP_ABBR = ['Gen','Exo','Lev','Num','Deu','Jos','Jdg','Rut','1Sa','2Sa','1Ki','2Ki','1Ch','2Ch','Ezr','Neh','Est','Job','Psa','Pro','Ecc','Sng','Isa','Jer','Lam','Ezk','Dan','Hos','Jol','Amo','Oba','Jon','Mic','Nam','Hab','Zep','Hag','Zec','Mal'];
@@ -4014,7 +4017,7 @@ function mvRow(meta, id) {
   return '<div class="wrow"><span>' + verLabel(id) + '</span><span>' + (meta[id] ? 'Whole Bible, downloaded' : window.claude ? 'Downloads in your installed app' : '<button class="backlink" data-mvdl="' + id + '" style="margin:0">Download (about 5 MB)</button>') + '</span></div>';
 }
 // ---- RNB look: the More menu and the Study hub ----
-var APP_VER = 'Noble Vine Study &amp; Discipleship · version 38';
+var APP_VER = 'Noble Vine Study &amp; Discipleship · version 39';
 var RNB_IC = {
   book: '<path d="M12 6.5C10 5 7 4.5 3.5 5v13.5c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5V20"/>',
   route: '<circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h8.5a3.5 3.5 0 0 0 0-7h-9a3.5 3.5 0 0 1 0-7H16"/>',
