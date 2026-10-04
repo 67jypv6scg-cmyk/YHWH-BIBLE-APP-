@@ -1,13 +1,28 @@
 {
-  "name": "The Scriptures, Names Restored",
-  "short_name": "Scriptures",
+  "name": "Noble Vine Study & Discipleship",
+  "short_name": "Noble Vine",
+  "description": "Restored Names Bible & Journal \u00b7 from Noble Vine Restoration Ministries",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#0B0D0B",
-  "theme_color": "#0B0D0B",
+  "background_color": "#0B0C0A",
+  "theme_color": "#0B0C0A",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    {
+      "src": "icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
   ]
 }
