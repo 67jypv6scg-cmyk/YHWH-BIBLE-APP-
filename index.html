@@ -598,6 +598,19 @@ body { font-family: var(--ui); }
 #nvSplash .nvtag { font-weight: 400; font-size: 14px; color: #A9AAA2; }
 .nvwhy { border-radius: 20px; background: var(--panel2); border: 1px solid var(--rule); padding: .4rem 1.1rem .6rem; line-height: 1.6; }
 .nvwhy p { margin: .7rem 0; }
+/* ---- More menu: folding sections ---- */
+.mfold { margin-top: .7rem; border-radius: 20px; background: var(--panel2); border: 1px solid var(--rule); overflow: hidden; }
+.mfold .mgrp { border: 0; border-radius: 0; background: none; border-top: 1px solid var(--rule); }
+.mgrp-solo { margin-top: .7rem; }
+.mgh { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 66px; padding: 12px 16px; background: none; border: 0; color: var(--ink); text-align: left; }
+.mgh:active { background: var(--sel); }
+.mgh-t { font-size: 1.08rem; font-weight: 700; }
+.mgh .mrow-s { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mgdots { width: 40px; height: 40px; flex: none; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 7px; box-sizing: border-box; border-radius: 12px; background: color-mix(in srgb, var(--ink) 7%, transparent); }
+.mgdots i { border-radius: 50%; background: var(--c); }
+.mgch { color: var(--soft); display: flex; transition: transform .2s ease; }
+.mfold.open .mgch { transform: rotate(90deg); }
+@media (prefers-reduced-motion: reduce) { .mgch { transition: none; } }
 </style>
 </head>
 <body>
@@ -3998,7 +4011,7 @@ function mvRow(meta, id) {
   return '<div class="wrow"><span>' + verLabel(id) + '</span><span>' + (meta[id] ? 'Whole Bible, downloaded' : window.claude ? 'Downloads in your installed app' : '<button class="backlink" data-mvdl="' + id + '" style="margin:0">Download (about 5 MB)</button>') + '</span></div>';
 }
 // ---- RNB look: the More menu and the Study hub ----
-var APP_VER = 'Noble Vine Study &amp; Discipleship · version 35';
+var APP_VER = 'Noble Vine Study &amp; Discipleship · version 37';
 var RNB_IC = {
   book: '<path d="M12 6.5C10 5 7 4.5 3.5 5v13.5c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5V20"/>',
   route: '<circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h8.5a3.5 3.5 0 0 0 0-7h-9a3.5 3.5 0 0 1 0-7H16"/>',
@@ -4026,7 +4039,15 @@ function rnbDisc(c, n, size) {
 function rnbMenuRow(id, c, ic, title, sub) {
   return '<button type="button" class="mrow" id="' + id + '">' + rnbDisc(c, ic) + '<span class="mrow-t"><span class="mrow-h">' + title + '</span><span class="mrow-s">' + sub + '</span></span><span class="mrow-c">' + rnbIcon('chev', 18) + '</span></button>';
 }
-function rnbGroup(label, rows) { return '<div class="mlab">' + label + '</div><div class="mgrp">' + rows.join('') + '</div>'; }
+function rnbGroup(label, rows) {
+  if (rows.length === 1) return '<div class="mgrp mgrp-solo">' + rows[0] + '</div>';
+  var id = 'g' + label.replace(/\W/g, ''), open = (S.menuOpen || '') === id;
+  var names = rows.map(function (r) { var m = r.match(/class="mrow-h">([^<]*)</); return m ? m[1] : ''; }).filter(Boolean);
+  var dots = rows.slice(0, 4).map(function (r) { var m = r.match(/class="dsc c-(\w+)"/); return '<i class="c-' + (m ? m[1] : 'stone') + '"></i>'; }).join('');
+  return '<div class="mfold' + (open ? ' open' : '') + '" data-fold="' + id + '"><button type="button" class="mgh" aria-expanded="' + open + '"><span class="mgdots">' + dots + '</span>' +
+    '<span class="mrow-t"><span class="mgh-t">' + label + '</span><span class="mrow-s">' + names.join(' · ') + '</span></span><span class="mgch">' + rnbIcon('chev', 18) + '</span></button>' +
+    '<div class="mgrp"' + (open ? '' : ' hidden') + '>' + rows.join('') + '</div></div>';
+}
 function menu() {
   openSheet('More');
   var last = S.last && has(S.last.b, S.last.c) ? S.last : firstLoaded();
@@ -4043,17 +4064,26 @@ function menu() {
     '<div class="mhero"><div class="mchips">' + chips + '</div><div class="mhero-h">' + (last ? 'Pick up where you left off' : 'Welcome to your RNB') + '</div>' +
     '<div class="mhero-s">' + esc(bits.join(' · ') || 'Import your Bible to begin') + '</div><button type="button" class="mhero-b" id="mCont">' + (last ? 'Continue reading' : 'Import my Bible') + '</button></div>' +
     rnbGroup('Read', [rnbMenuRow('mToday', 'clay', 'book', 'Today', 'Plan, verse of the day, memory'), rnbMenuRow('mPlan', 'gold', 'route', 'Reading plans', 'Whole Bible and book studies'),
-      rnbMenuRow('mRecs', 'clay', 'mic', 'My recordings', 'Passages in your own voice'), rnbMenuRow('mFull', 'stone', 'expand', 'Full screen', 'Hide the bars while reading')]) +
+      rnbMenuRow('mFull', 'stone', 'expand', 'Full screen', 'Hide the bars while reading')]) +
+    rnbGroup('My Walk', [rnbMenuRow('mJourney', 'olive', 'layers', 'My journey', 'Everything you have kept, by date'), rnbMenuRow('mProph', 'gold', 'spark', 'Prophetic words', 'Words spoken over you, typed or recorded'),
+      rnbMenuRow('mNotes', 'purple', 'pen', 'My notes', 'Verse notes and day notes'), rnbMenuRow('mMem', 'pom', 'heart', 'Memory verses', 'Hide the Word in your heart'),
+      rnbMenuRow('mRecs', 'clay', 'mic', 'My recordings', 'Passages in your own voice')]) +
     rnbGroup('Study', [rnbMenuRow('mStudy', 'blue', 'aleph', 'Hebrew study', 'Interlinear and word study'), rnbMenuRow('mCmp', 'olive', 'compare', 'Compare versions', esc(bibleShort()) + ', WEB, ASV and the Hebrew'),
       rnbMenuRow('mTeach', 'purple', 'teach', 'Teaching notes', 'Your series and reference sheets'), rnbMenuRow('mAlef', 'gold', 'cards', 'Alphabet cards', 'Aleph to Tav, flip and learn'),
-      rnbMenuRow('mMem', 'pom', 'heart', 'Memory verses', 'Hide the Word in your heart'), rnbMenuRow('mCom', 'stone', 'comment', 'Commentary', 'Tyndale, Keil &amp; Delitzsch, Gill'),
-      rnbMenuRow('mNotes', 'purple', 'pen', 'My notes', 'Verse notes and day notes')]) +
-    rnbGroup('Journal', [rnbMenuRow('mProph', 'gold', 'spark', 'Prophetic words', 'Encouraging words, typed or recorded')]) +
+      rnbMenuRow('mCom', 'stone', 'comment', 'Commentary', 'Tyndale, Keil &amp; Delitzsch, Gill')]) +
     rnbGroup('My Bible', [rnbMenuRow('mWhole', 'olive', 'import', 'Import a whole Bible', 'From a text file such as bsb.txt'), rnbMenuRow('mImp', 'olive', 'pen', 'Import chapters', 'Paste a few chapters at a time'),
       rnbMenuRow('mVer', 'blue', 'layers', 'My versions', 'Downloads and links'), rnbMenuRow('mBak', 'stone', 'box', 'Back up and restore', 'Keep everything safe')]) +
     rnbGroup('Settings', [rnbMenuRow('mSet', 'stone', 'gear', 'Settings', 'Names, text size, voices, pictures')]) +
     '<div class="nvcard">' + nvAppMark(230) + '<div class="nvfrom">' + NV_FROM + '</div><button type="button" class="mhero-b" id="mAbout" style="margin-top:1rem">About Noble Vine</button></div>' +
     '<p class="status" style="margin-top:1.2rem;text-align:center">' + esc(storageNote()) + ' ' + Object.keys(chapters).length.toLocaleString() + ' chapters.<br>' + APP_VER + '</p>';
+  sheetBody.querySelectorAll('.mfold').forEach(function (f) {
+    f.querySelector('.mgh').onclick = function () {
+      var willOpen = !f.classList.contains('open');
+      sheetBody.querySelectorAll('.mfold').forEach(function (o) { o.classList.remove('open'); o.querySelector('.mgrp').hidden = true; o.querySelector('.mgh').setAttribute('aria-expanded', 'false'); });
+      if (willOpen) { f.classList.add('open'); f.querySelector('.mgrp').hidden = false; f.querySelector('.mgh').setAttribute('aria-expanded', 'true'); setTimeout(function () { try { f.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (e) {} }, 40); }
+      S.menuOpen = willOpen ? f.dataset.fold : ''; saveSettings();
+    };
+  });
   var on = function (id, fn) { var el = document.getElementById(id); if (el) el.onclick = fn; };
   on('mCont', function () { if (last) { closeSheet(); leaveHome(); showChapter(last.b, last.c); } else openWholeImport(); });
   on('mToday', function () { openToday(); });
@@ -4073,6 +4103,7 @@ function menu() {
   on('mBak', openBackup);
   on('mSet', openSettings);
   on('mProph', openProphList);
+  on('mJourney', openJourney);
   on('mAbout', openAbout);
 }
 function openStudyHub() {
