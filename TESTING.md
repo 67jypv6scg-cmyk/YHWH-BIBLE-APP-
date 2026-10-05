@@ -1,4 +1,4 @@
-# Noble Vine 2.0 beta: quick test checklist
+# Noble Vine 2.1 beta: quick test checklist
 Tick each one, and note anything odd (a screenshot helps). More → Report a problem shows any errors to send to Brad.
 
 1. **Install**: add the app to your Home Screen and open it from the icon. The opening screen shows the Noble Vine logo.
@@ -12,5 +12,7 @@ Tick each one, and note anything odd (a screenshot helps). More → Report a pro
 9. **My Walk**: add a prophetic word, typed or as a voice note.
 10. **My music**: More → Read → My music → Add from Files → play while reading.
 11. **Backup**: More → My Bible → Back up and restore → Export. Is the file saved?
+12. **Study panel**: open a chapter → ▥ Study panel. Tap different verses: does the panel follow? Try Hebrew, Commentary, Compare and Notes. On an iPad, or a phone turned sideways, it sits beside the text.
+13. **Back**: open a note from My notes, then tap ‹ Back. Open a favourite's verse, then use ‹ Back in the top bar.
 
 **What would you most like added next?**

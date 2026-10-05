@@ -1,4 +1,4 @@
-// Noble Vine Study & Discipleship · 2.0.0 · Start-up
+// Noble Vine Study & Discipleship · 2.1.0 · Start-up
 'use strict';
 // ======================================================================
 // Start
@@ -49,6 +49,7 @@
   }
   markActive();
   nvHideSplash();
+  nvAppReady();
 })();
 
 window.__nb = { parseImport: parseImport, parseRef: parseRef, runSearch: runSearch, chapters: function () { return chapters; } };

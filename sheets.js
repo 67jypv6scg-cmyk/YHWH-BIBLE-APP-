@@ -1,15 +1,15 @@
-// Noble Vine Study & Discipleship · 2.0.0 · Sheets, book picker, chapter import, Settings
+// Noble Vine Study & Discipleship · 2.0.1 · Sheets, book picker, chapter import, Settings
 'use strict';
 // ======================================================================
 // Sheets: picker, import, settings
 // ======================================================================
 var sheet = document.getElementById('sheet'), scrim = document.getElementById('scrim'), sheetBody = document.getElementById('sheetBody');
 var sheetSeq = 0;   // changes every time a sheet opens, so slow loads never draw onto the wrong sheet
-function openSheet(title) { sheetSeq++; document.getElementById('sheetTitle').textContent = title; sheet.classList.remove('hidden'); scrim.classList.remove('hidden'); sheet.scrollTop = 0; }
-function closeSheet() { setResume(null); sheet.classList.add('hidden'); scrim.classList.add('hidden'); sheetBody.innerHTML = ''; if (typeof afterSheetClosed === 'function') afterSheetClosed(); }
-scrim.onclick = closeSheet;
-document.getElementById('sheetClose').onclick = closeSheet;
-document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !sheet.classList.contains('hidden')) closeSheet(); });
+function openSheet(title) { sheetSeq++; nvNavOpened(title); document.getElementById('sheetTitle').textContent = title; sheet.classList.remove('hidden'); scrim.classList.remove('hidden'); sheet.scrollTop = 0; }
+function closeSheet() { setResume(null); if (!sheet.classList.contains('hidden')) nvNavClosed(); sheet.classList.add('hidden'); scrim.classList.add('hidden'); sheetBody.innerHTML = ''; if (typeof afterSheetClosed === 'function') afterSheetClosed(); }
+scrim.onclick = function () { nvUserCloseSheet(); };
+document.getElementById('sheetClose').onclick = function () { nvUserCloseSheet(); };
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !sheet.classList.contains('hidden')) nvUserCloseSheet(); });
 
 function openPicker(bookSel) {
   openSheet('Books');

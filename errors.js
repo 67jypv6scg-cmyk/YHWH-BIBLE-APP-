@@ -1,9 +1,9 @@
-// Noble Vine Study & Discipleship · 2.0.0 · Problem log
+// Noble Vine Study & Discipleship · 2.1.0 · Problem log
 'use strict';
 // ======================================================================
 // Problem log: keeps the last few errors on this device, so you can send them to Claude
 // ======================================================================
-var APP_VERSION = '2.0 beta';
+var APP_VERSION = '2.1 beta';
 function nvLogError(msg, where) {
   try {
     var list = JSON.parse(localStorage.getItem('nv-errors') || '[]');
@@ -32,3 +32,27 @@ function openErrorLog() {
   var c = document.getElementById('elCopy'); if (c) c.onclick = function () { copyText(text); };
   var x = document.getElementById('elClear'); if (x) x.onclick = function () { try { localStorage.removeItem('nv-errors'); } catch (e) {} openErrorLog(); };
 }
+// ---- Start-up watchdog (2.1): a clear message if the app stalls or part of it fails to download ----
+var nvReady = false, nvLoadFail = false;
+function nvAppReady() { nvReady = true; var n = document.getElementById('nvStartNote'); if (n && !nvLoadFail) n.remove(); }
+function nvStartupNote(msg, force) {
+  if (nvReady && !force) return;
+  var n = document.getElementById('nvStartNote');
+  if (!n) { n = document.createElement('div'); n.id = 'nvStartNote'; n.className = 'nvstart'; n.setAttribute('role', 'alert'); document.body.appendChild(n); }
+  n.innerHTML = '<p>' + msg + '</p><div class="nvstart-a"><button type="button" id="nvStartRefresh">Refresh</button><button type="button" id="nvStartReport">Report a problem</button></div>';
+  document.getElementById('nvStartRefresh').onclick = function () { location.reload(); };
+  document.getElementById('nvStartReport').onclick = function () { try { var sp = document.getElementById('nvSplash'); if (sp) sp.remove(); openErrorLog(); } catch (e) { alert(JSON.stringify(JSON.parse(localStorage.getItem('nv-errors') || '[]').slice(-5))); } };
+}
+// A script or stylesheet that fails to download is not reported as a normal error, so watch for it here
+window.addEventListener('error', function (e) {
+  var t = e && e.target;
+  if (!t || (t.tagName !== 'SCRIPT' && t.tagName !== 'LINK')) return;
+  var src = String(t.src || t.href || '');
+  if (src.indexOf(location.origin) !== 0) return;   // outside files such as Google Fonts: the app works without them
+  var file = String(t.src || t.href || '').split('/').pop().split('?')[0];
+  nvLogError('Could not load ' + file, 'download');
+  nvLoadFail = true;
+  nvStartupNote('Part of the app (' + file + ') didn’t download, so some things may not work. Check your connection and tap Refresh.', true);
+}, true);
+window.addEventListener('error', function (e) { if (e && e.message && !nvReady) nvStartupNote('Something went wrong while opening the app. Tap Refresh to try again.'); });
+setTimeout(function () { if (!nvReady) nvStartupNote('The app is taking longer than usual to open. You can wait a moment, or tap Refresh.'); }, 8000);

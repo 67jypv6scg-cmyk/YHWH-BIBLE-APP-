@@ -1,4 +1,4 @@
-// Noble Vine Study & Discipleship · 2.0.0 · Search for references, words and #themes
+// Noble Vine Study & Discipleship · 2.0.1 · Search for references, words and #themes
 'use strict';
 // ======================================================================
 // Search: references and words
@@ -93,7 +93,7 @@ function renderSearch() {
   bindGoto(ref);
   main.querySelectorAll('.chip').forEach(function (b) { b.onclick = function () { scope = b.dataset.scope; shown = 150; renderSearch(); }; });
   main.querySelectorAll('.hit[data-i]').forEach(function (b) {
-    b.onclick = function () { var x = r.list[+b.dataset.i]; closeSearch(); showChapter(x.b, x.c, [x.v]); };
+    b.onclick = function () { var x = r.list[+b.dataset.i], q0 = qEl.value; closeSearch(); showChapter(x.b, x.c, [x.v]); nvReturnTo('Search results', function () { qEl.value = q0; renderSearch(); }); };
   });
   main.querySelectorAll('.hit[data-nh]').forEach(function (b) {
     b.onclick = function () { var x = nh[+b.dataset.nh]; if (x.kind === 'v') openNoteEditor(x.n.book, x.n.ch, x.n.v1, x.n.v2, 'search'); else if (x.kind === 't') openTeach(x.id); else openPlanNote(x.n); };

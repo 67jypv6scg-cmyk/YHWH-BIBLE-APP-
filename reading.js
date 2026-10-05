@@ -1,4 +1,4 @@
-// Noble Vine Study & Discipleship · 2.0.0 · Reading a chapter, selecting verses
+// Noble Vine Study & Discipleship · 2.1.0 · Reading a chapter, selecting verses
 'use strict';
 // ======================================================================
 // Rendering helpers
@@ -56,7 +56,7 @@ function showChapter(b, c, verses) {
   var favV = favsInChapter(b, c);
   var headAt = {};
   (doc.heads || []).forEach(function (h) { (headAt[h.v] = headAt[h.v] || []).push(h.t); });
-  var html = planBanner() + '<h1 class="ch-title">' + esc(bn(b) + ' ' + c) + '</h1><p class="ch-sub">' + esc(S.bibleName ? S.bibleName : 'Restored Names Bible') + '</p>' + '<div style="display:flex;gap:.5rem;flex-wrap:wrap">' + (b < NT_START ? '<button class="hebbtn" id="toHeb">א Hebrew</button>' : '') + '<button class="hebbtn" id="toCmp">Compare</button><button class="hebbtn" id="toVoice">🎙 Record</button></div>' + '<div class="text"><p>';
+  var html = planBanner() + '<h1 class="ch-title">' + esc(bn(b) + ' ' + c) + '</h1><p class="ch-sub">' + esc(S.bibleName ? S.bibleName : 'Restored Names Bible') + '</p>' + '<div style="display:flex;gap:.5rem;flex-wrap:wrap">' + (b < NT_START ? '<button class="hebbtn" id="toHeb">א Hebrew</button>' : '') + '<button class="hebbtn" id="toCmp">Compare</button><button class="hebbtn" id="toVoice">🎙 Record</button><button type="button" class="hebbtn" id="toPanel" aria-pressed="false">▥ Study panel</button></div>' + '<div class="text"><p>';
   doc.verses.forEach(function (x, i) {
     if (headAt[x.v]) {
       html += '</p>';
@@ -75,6 +75,7 @@ function showChapter(b, c, verses) {
   cmpView = null;
   var th = document.getElementById('toHeb'); if (th) th.onclick = function () { showHebrew(b, c); };
   var tc = document.getElementById('toCmp'); if (tc) tc.onclick = function () { showCompare(b, c); };
+  var tpn = document.getElementById('toPanel'); if (tpn) tpn.onclick = nvPanelToggle;
   var tvo = document.getElementById('toVoice');
   if (tvo) { tvo.onclick = async function () { var own = await recGet(recKey('en', b, c, null)); if (own && !memSpeaking) { playOwn(own); toast('Playing your recording · tap again for options'); tvo.onclick = function () { stopOwn(); stopMem(); openRecorder({ lang: 'en', b: b, c: c, vs: null, text: versesHtml(b, c, null) }); }; } else { stopOwn(); stopMem(); openRecorder({ lang: 'en', b: b, c: c, vs: null, text: versesHtml(b, c, null) }); } }; refreshVoiceMarks(); }
   bindPlanBits();
@@ -121,6 +122,7 @@ function updateSelbar() {
   if (!selected.size) { bar.classList.add('hidden'); return; }
   document.getElementById('selLbl').textContent = refLabel(pos.b, pos.c, Array.from(selected));
   bar.classList.remove('hidden');
+  nvPanelVerse();
 }
 function copyText(txt) {
   function fallback() {

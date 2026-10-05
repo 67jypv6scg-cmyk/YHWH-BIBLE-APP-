@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Noble Vine Study & Discipleship · 2.0 beta. The app is split into the files listed at the bottom; see CHANGELOG.md -->
+<!-- Noble Vine Study & Discipleship · 2.1.0 beta. The app is split into the files listed at the bottom; see CHANGELOG.md -->
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
@@ -8,97 +8,109 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500&family=Cinzel:wght@500&display=swap" rel="stylesheet">
-<link rel="manifest" href="manifest.json?v=2.0.0">
-<link rel="apple-touch-icon" href="icon-180.png?v=2.0.0">
-<link rel="icon" type="image/png" href="icon-192.png?v=2.0.0">
+<link rel="manifest" href="manifest.json?v=2.1.0">
+<link rel="apple-touch-icon" href="icon-180.png?v=2.1.0">
+<link rel="icon" type="image/png" href="icon-192.png?v=2.1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Noble Vine">
 <meta name="theme-color" content="#0B0D0B">
-<link rel="stylesheet" href="app.css?v=2.0.0">
+<link rel="stylesheet" href="app.css?v=2.1.0">
 
 </head>
 <body>
+<noscript><div style="padding:2rem;font:16px system-ui;color:#f3f1ea;background:#0b0c0a">Noble Vine needs JavaScript switched on to open the Bible and study tools.</div></noscript>
 <div id="nvSplash" aria-hidden="true"><div class="nvtag">from Noble Vine Restoration Ministries</div></div>
 <section id="home" class="hidden" aria-label="Home"></section>
 <nav id="tabs" aria-label="Main">
-  <button data-tab="home" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 3.5l8.5 7V20a1 1 0 0 1-1 1h-4.5v-6h-6v6H4.5a1 1 0 0 1-1-1z"/></svg>Home</button>
-  <button data-tab="read"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10 5 7 4.5 3.5 5v13.5c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5V20"/></svg>Read</button>
-  <button data-tab="plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h8.5a3.5 3.5 0 0 0 0-7h-9a3.5 3.5 0 0 1 0-7H16"/></svg>Plan</button>
-  <button data-tab="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4-4"/></svg>Search</button>
-  <button data-tab="more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.6"/></svg>More</button>
+  <button type="button" data-tab="home" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 3.5l8.5 7V20a1 1 0 0 1-1 1h-4.5v-6h-6v6H4.5a1 1 0 0 1-1-1z"/></svg>Home</button>
+  <button type="button" data-tab="read"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10 5 7 4.5 3.5 5v13.5c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5V20"/></svg>Read</button>
+  <button type="button" data-tab="plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h8.5a3.5 3.5 0 0 0 0-7h-9a3.5 3.5 0 0 1 0-7H16"/></svg>Plan</button>
+  <button type="button" data-tab="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4-4"/></svg>Search</button>
+  <button type="button" data-tab="more"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.6"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.6"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.6"/></svg>More</button>
 </nav>
-<div id="selah" class="hidden" role="dialog" aria-label="Selah"></div>
-<div id="wordpage" class="hidden" role="dialog" aria-label="Today’s Word"></div>
+<div id="selah" class="hidden" role="dialog" aria-modal="true" aria-label="Selah"></div>
+<div id="wordpage" class="hidden" role="dialog" aria-modal="true" aria-label="Today’s Word" tabindex="-1"></div>
 <header class="bar">
   <div class="bar-in">
-    <button class="refbtn" id="refBtn" aria-label="Choose book and chapter">Genesis 1</button>
-    <button class="todaybtn plain" id="todayBtn" aria-label="Reading plan">Plan</button>
+    <button type="button" class="navback" id="navBack" hidden aria-label="Back"><span aria-hidden="true">‹</span><span id="navBackL">Back</span></button>
+    <button type="button" class="refbtn" id="refBtn" aria-label="Choose book and chapter">Genesis 1</button>
+    <button type="button" class="todaybtn plain" id="todayBtn" aria-label="Reading plan">Plan</button>
     <div class="search">
       <input id="q" type="search" placeholder="Gen 3:15, a word or #theme" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" aria-label="Search">
-      <button class="x hidden" id="qx" aria-label="Clear search">×</button>
+      <button type="button" class="x hidden" id="qx" aria-label="Clear search">×</button>
     </div>
-    <button class="iconbtn" id="menuBtn" aria-label="Import and settings">☰</button>
+    <button type="button" class="iconbtn" id="menuBtn" aria-label="Import and settings">☰</button>
   </div>
 </header>
 
-<main id="main"><div class="loading">Opening your Bible…</div></main>
+<main id="main"><div class="loading" id="loadingState" role="status">Opening your Bible…</div></main>
 
 <div class="selbar hidden" id="selbar" role="toolbar" aria-label="Selected verses">
   <span class="lbl" id="selLbl"></span>
-  <button id="selFav">♥ Favourite</button>
-  <button id="selNote">Note</button>
-  <button id="selCopy">Copy</button>
-  <button id="selMem">Memorise</button>
-  <button id="selCom">Commentary</button>
-  <button id="selRec">Record</button>
-  <button class="q" id="selClear" aria-label="Clear selection">✕</button>
+  <button type="button" id="selFav">♥ Favourite</button>
+  <button type="button" id="selNote">Note</button>
+  <button type="button" id="selCopy">Copy</button>
+  <button type="button" id="selMem">Memorise</button>
+  <button type="button" id="selCom">Commentary</button>
+  <button type="button" id="selRec">Record</button>
+  <button type="button" class="q" id="selClear" aria-label="Clear selection">✕</button>
 </div>
 <div class="scrim hidden" id="scrim"></div>
 <section class="sheet hidden" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
-  <div class="sheet-head"><h2 id="sheetTitle"></h2><button id="sheetClose">Done</button></div>
+  <div class="sheet-head"><button type="button" id="sheetBack" class="sheetback" hidden>‹ Back</button><h2 id="sheetTitle"></h2><button type="button" id="sheetClose">Done</button></div>
   <div id="sheetBody"></div>
 </section>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="errors.js?v=2.0.0"></script>
-<script src="books.js?v=2.0.0"></script>
-<script src="storage.js?v=2.0.0"></script>
-<script src="import.js?v=2.0.0"></script>
-<script src="reading.js?v=2.0.0"></script>
-<script src="names.js?v=2.0.0"></script>
-<script src="search.js?v=2.0.0"></script>
-<script src="sheets.js?v=2.0.0"></script>
-<script src="notes.js?v=2.0.0"></script>
-<script src="plans.js?v=2.0.0"></script>
-<script src="hebrew.js?v=2.0.0"></script>
-<script src="compare.js?v=2.0.0"></script>
-<script src="alphabet.js?v=2.0.0"></script>
-<script src="voice.js?v=2.0.0"></script>
-<script src="home.js?v=2.0.0"></script>
-<script src="teach.js?v=2.0.0"></script>
-<script src="commentary.js?v=2.0.0"></script>
-<script src="memory.js?v=2.0.0"></script>
-<script src="votd.js?v=2.0.0"></script>
-<script src="tracker.js?v=2.0.0"></script>
-<script src="bible-import.js?v=2.0.0"></script>
-<script src="tidy.js?v=2.0.0"></script>
-<script src="versions.js?v=2.0.0"></script>
-<script src="menu.js?v=2.0.0"></script>
-<script src="prophecy.js?v=2.0.0"></script>
-<script src="logo.js?v=2.0.0"></script>
-<script src="brand.js?v=2.0.0"></script>
-<script src="oneoff.js?v=2.0.0"></script>
-<script src="backup.js?v=2.0.0"></script>
-<script src="favs.js?v=2.0.0"></script>
-<script src="themes.js?v=2.0.0"></script>
-<script src="music.js?v=2.0.0"></script>
-<script src="update.js?v=2.0.0"></script>
-<script src="start.js?v=2.0.0"></script>
+<script src="errors.js?v=2.1.0"></script>
+<script src="books.js?v=2.1.0"></script>
+<script src="storage.js?v=2.1.0"></script>
+<script src="import.js?v=2.1.0"></script>
+<script src="reading.js?v=2.1.0"></script>
+<script src="names.js?v=2.1.0"></script>
+<script src="search.js?v=2.1.0"></script>
+<script src="sheets.js?v=2.1.0"></script>
+<script src="notes.js?v=2.1.0"></script>
+<script src="plans.js?v=2.1.0"></script>
+<script src="hebrew.js?v=2.1.0"></script>
+<script src="compare.js?v=2.1.0"></script>
+<script src="alphabet.js?v=2.1.0"></script>
+<script src="voice.js?v=2.1.0"></script>
+<script src="home.js?v=2.1.0"></script>
+<script src="teach.js?v=2.1.0"></script>
+<script src="commentary.js?v=2.1.0"></script>
+<script src="memory.js?v=2.1.0"></script>
+<script src="votd.js?v=2.1.0"></script>
+<script src="tracker.js?v=2.1.0"></script>
+<script src="bible-import.js?v=2.1.0"></script>
+<script src="tidy.js?v=2.1.0"></script>
+<script src="versions.js?v=2.1.0"></script>
+<script src="menu.js?v=2.1.0"></script>
+<script src="prophecy.js?v=2.1.0"></script>
+<script src="logo.js?v=2.1.0"></script>
+<script src="brand.js?v=2.1.0"></script>
+<script src="oneoff.js?v=2.1.0"></script>
+<script src="backup.js?v=2.1.0"></script>
+<script src="favs.js?v=2.1.0"></script>
+<script src="themes.js?v=2.1.0"></script>
+<script src="music.js?v=2.1.0"></script>
+<script src="update.js?v=2.1.0"></script>
+<script src="back.js?v=2.1.0"></script>
+<script src="panel.js?v=2.1.0"></script>
+<script src="a11y.js?v=2.1.0"></script>
+<script src="start.js?v=2.1.0"></script>
 <script>
 // The Spotify dock loads only when "Spotify" is chosen in Settings → Music player
-(function () { try { var s = JSON.parse(localStorage.getItem('nb-settings') || '{}'); if (s.musicMode === 'spotify') { var e = document.createElement('script'); e.src = 'spotify-dock.js?v=2.0.0'; document.body.appendChild(e); } } catch (e) {} })();
+(function () {
+  var s = {};
+  try { s = JSON.parse(localStorage.getItem('nb-settings') || '{}') || {}; } catch (e) { s = {}; }
+  if (s.musicMode !== 'spotify') return;
+  var e = document.createElement('script'); e.src = 'spotify-dock.js?v=2.1.0';
+  e.onerror = function () { if (window.nvLogError) nvLogError('Could not load the Spotify dock', 'music'); };
+  document.body.appendChild(e);
+})();
 </script>
 </body>
 </html>

@@ -1,5 +1,21 @@
 # Noble Vine Study & Discipleship: changes
 
+## 2.1 beta (October 2026)
+**New**
+- **Study panel.** Tap **▥ Study panel** on any chapter. On an iPad, or a phone turned sideways, it sits beside the text; on an upright phone it slides up over the lower half (tap the bar at its top to make it taller). Four tabs: **Hebrew** (word by word), **Commentary**, **Compare** (RNB, WEB, ASV) and **Notes** (your notes on the chapter, with a button to write one). It follows the verse you tap, or the verse at the top as you scroll, and remembers whether you like it open.
+- **Credits and licences**, in About: every text, its source and its licence, in one place.
+
+**Steadier**
+- If part of the app fails to download, a message says so, with **Refresh** and **Report a problem**, and the file is recorded in the problem log.
+- If opening takes unusually long, a message offers to refresh.
+- Sheets and full-screen pages are easier to use with a keyboard or screen reader: focus moves into them when they open, stays inside while open, and returns to where you were when they close. Escape closes them.
+- Buttons are marked properly, there is a message if JavaScript is switched off, and Spotify load problems are recorded in the problem log.
+
+## 2.0.1 beta (October 2026)
+- **Back buttons.** Every sheet now has **‹ Back** at the top, returning to the screen you came from (for example from a note back to My notes, then back to the menu).
+- When a sheet takes you into the Bible (opening a note's verse, a favourite or a theme item), a **‹ Back** button appears in the top bar to bring you straight back to where you were. It also returns you to your search results.
+- Tapping **Done** closes the sheet and clears the trail, as before.
+
 ## 2.0 beta (October 2026)
 The second release, for close friends to try.
 

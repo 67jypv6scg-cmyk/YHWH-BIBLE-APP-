@@ -1,4 +1,4 @@
-// Noble Vine Study & Discipleship · 2.0.0 · Opening screen, About, Your journey
+// Noble Vine Study & Discipleship · 2.1.0 · Opening screen, About, Your journey
 'use strict';
 var nvN = 0;
 function nvSprig(w, bold) {
@@ -25,7 +25,8 @@ function openAbout() {
   sheetBody.innerHTML = '<div class="nvcard" style="margin-top:0">' + nvAppMark(260) + '<div class="nvfrom">' + NV_FROM + '</div></div>' +
     (v5 ? '<p class="nvverse">' + fmtVerse(v5.t) + '</p><p class="status" style="text-align:center;margin-top:0">John 15:5</p>' : '') +
     nvWhyNames() + '<div class="mlab">About the app</div><p>Noble Vine Study &amp; Discipleship is a work of Noble Vine Restoration Ministries. It brings together the Restored Names Bible (RNB) and a record of your walk: your notes, prophetic words, reading plans, recordings and the verses you hide in your heart.</p>' +
-    '<p class="status">' + APP_VER + '</p>';
+    '<div class="actions"><button type="button" class="quiet" id="abCredits">Credits and licences</button></div><p class="status">' + APP_VER + '</p>';
+  document.getElementById('abCredits').onclick = openCredits;
 }
 // Your journey: everything you have kept, newest first
 async function nvJourney() {
@@ -84,4 +85,25 @@ function nvWhyNames() {
     '<p>The Messiah’s name is given in its Hebrew form, <bdi class="heb">יהושע</bdi>. Titles such as Elohim and Adonai are kept as titles, so the Name and the titles stay distinct, as they are in the Hebrew.</p>' +
     (v ? '<p class="nvverse" style="margin:.4rem 0 .2rem">' + fmtVerse(v.t) + '</p><p class="status" style="text-align:center;margin:0 0 .8rem">Exodus 3:15</p>' : '') +
     '<p>Nothing else is changed. The RNB is built on a public-domain modern English translation, and every other version in Compare is shown exactly as published, so you can always see what has been restored and why.</p></div>';
+}
+// ---- Credits and licences (2.1) ----
+function openCredits() {
+  openSheet('Credits and licences');
+  var row = function (t, d) { return '<div class="ngrow" style="display:block"><div class="ng-t">' + t + '</div><div class="ng-m">' + d + '</div></div>'; };
+  sheetBody.innerHTML = '<p class="hint" style="margin-top:0">With thanks to everyone whose work makes this app possible.</p>' +
+    '<div class="mlab">Scripture</div><div class="mgrp">' +
+      row('Restored Names Bible (RNB)', 'Based on the Berean Standard Bible, which its publisher has dedicated to the public domain. The divine Names and titles are restored by Noble Vine Restoration Ministries; nothing else in the text is changed. The RNB is not published or endorsed by the BSB’s publishers.') +
+      row('World English Bible (WEB)', 'Public domain. Shown in Compare exactly as published, unaltered. Downloaded via getBible.net.') +
+      row('American Standard Version (ASV, 1901)', 'Public domain. Shown in Compare exactly as published. Downloaded via getBible.net.') +
+      row('ESV, NKJV and KJV', 'Not included in the app. Compare offers links to read them on Bible Gateway; the names are trademarks of their publishers.') +
+    '</div><div class="mlab">Hebrew</div><div class="mgrp">' +
+      row('Hebrew text, word-by-word English and lexicon', 'STEP Bible (stepbible.org), Tyndale House, Cambridge. Licensed under Creative Commons Attribution 4.0 (CC BY 4.0).') +
+    '</div><div class="mlab">Commentaries</div><div class="mgrp">' +
+      row('Tyndale Open Study Notes', 'Tyndale House Publishers. Creative Commons Attribution-ShareAlike 4.0 (CC BY-SA 4.0). Shown unchanged.') +
+      row('Keil &amp; Delitzsch, John Gill, Jamieson-Fausset-Brown, Matthew Henry, Adam Clarke, John Calvin', 'Public domain. Shown exactly as written.') +
+      row('Commentary delivery', 'Via the Free Use Bible API (bible.helloao.org).') +
+    '</div><div class="mlab">Design</div><div class="mgrp">' +
+      row('Fonts', 'Lora, Frank Ruhl Libre and Cinzel, under the SIL Open Font License.') +
+      row('Noble Vine logo', '© Noble Vine Restoration Ministries. All rights reserved.') +
+    '</div><p class="status" style="margin-top:1rem">' + APP_VER + '</p>';
 }
