@@ -1,10 +1,11 @@
-// Offline helper for The Scriptures, Names Restored.
-// Change VERSION whenever you upload a new index.html.
-var VERSION = 'v23';
-var CORE = ['./', 'index.html', 'spotify-dock.js', 'manifest.json', 'lora.ttf', 'lora-italic.ttf', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
-
+// Offline helper for Noble Vine Study & Discipleship.
+// When you upload a new version, change VERSION here and in index.html (the ?v= numbers).
+var VERSION = '2.0.0';
+var FILES = ['errors.js', 'books.js', 'storage.js', 'import.js', 'reading.js', 'names.js', 'search.js', 'sheets.js', 'notes.js', 'plans.js', 'hebrew.js', 'compare.js', 'alphabet.js', 'voice.js', 'home.js', 'teach.js', 'commentary.js', 'memory.js', 'votd.js', 'tracker.js',
+  'bible-import.js', 'tidy.js', 'versions.js', 'menu.js', 'prophecy.js', 'logo.js', 'brand.js', 'oneoff.js', 'backup.js', 'favs.js', 'themes.js', 'music.js', 'update.js', 'start.js', 'app.css'];
+var CORE = ['./', 'index.html', 'manifest.json', 'lora.ttf', 'lora-italic.ttf', 'icon-180.png', 'icon-192.png', 'icon-512.png', 'spotify-dock.js?v=' + VERSION]
+  .concat(FILES.map(function (f) { return f + '?v=' + VERSION; }));
 self.addEventListener('install', function (e) {
-  // cache: 'reload' skips the browser's own short-term cache, so a new upload is always picked up
   e.waitUntil(caches.open('app-' + VERSION).then(function (c) {
     return Promise.all(CORE.map(function (u) { return fetch(new Request(u, { cache: 'reload' })).then(function (r) { if (r.ok) return c.put(u, r); }).catch(function () {}); }));
   }).then(function () { return self.skipWaiting(); }));
@@ -27,7 +28,7 @@ self.addEventListener('fetch', function (e) {
   if (url.origin !== location.origin) return;
   var page = req.mode === 'navigate' || /\/(index\.html)?$/.test(url.pathname);
   if (page) {
-    // The app page: always try the newest version first, fall back to the saved copy when offline
+    // The app page: newest version first, the saved copy when offline
     e.respondWith(caches.open('app-' + VERSION).then(function (c) {
       var net = fetch(new Request(req.url, { cache: 'no-cache' })).then(function (r) { if (r && r.ok) c.put('index.html', r.clone()); return r; });
       var timeout = new Promise(function (res) { setTimeout(res, 4000); });
@@ -36,10 +37,10 @@ self.addEventListener('fetch', function (e) {
     }));
     return;
   }
+  // App files carry their version in the address (?v=2.0.0), so a saved copy always matches the page
   e.respondWith(caches.open('app-' + VERSION).then(function (c) {
-    return c.match(req, { ignoreSearch: true }).then(function (hit) {
-      var net = fetch(req).then(function (r) { if (r && r.ok) c.put(req, r.clone()); return r; }).catch(function () { return hit; });
-      return hit || net;
+    return c.match(req).then(function (hit) {
+      return hit || fetch(req).then(function (r) { if (r && r.ok) c.put(req, r.clone()); return r; });
     });
   }));
 });
