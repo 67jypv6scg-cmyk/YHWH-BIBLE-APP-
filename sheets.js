@@ -1,4 +1,4 @@
-// Noble Vine Study & Discipleship · 2.0.1 · Sheets, book picker, chapter import, Settings
+// Noble Vine Study & Discipleship · 2.2.0 · Sheets, book picker, chapter import, Settings
 'use strict';
 // ======================================================================
 // Sheets: picker, import, settings
@@ -317,7 +317,7 @@ function segBtns(id, opts, val) {
 }
 function openSettings() {
   openSheet('Settings');
-  sheetBody.innerHTML = nvNamesSettingsHtml() + favSettingsHtml() + musSettingsHtml() +
+  sheetBody.innerHTML = nvNamesSettingsHtml() + favSettingsHtml() + nvToolsSettingsHtml() + musSettingsHtml() +
     '<div class="set"><div class="set-t">Page</div>' + segBtns('sTheme', [['dark', 'White on black'], ['light', 'Black on white']], S.theme) + '</div>' +
     '<label class="field"><span>Your name, for the greeting on Today</span><input type="text" id="sGreet" value="' + esc(S.greet || '') + '" placeholder="Brad"></label>' +
     '<div class="set"><div class="set-t">Reading voice (English)</div><select id="sVoiceEn" style="width:100%;padding:.5rem;border-radius:8px;background:var(--panel);color:var(--ink);border:1px solid var(--rule)"></select>' +
@@ -373,7 +373,7 @@ function openSettings() {
   };
   document.getElementById('sMemMes').oninput = function () { S.memMessiah = this.value.trim(); saveSettings(); };
   seg('sTheme', 'theme'); seg('sSize', 'size', true); seg('sName', 'name'); seg('sJesus', 'jesus'); seg('sLord', 'lord');
-  nvBindNamesSettings(); favBindSettings(); musBindSettings();
+  nvBindNamesSettings(); favBindSettings(); nvToolsBindSettings(); musBindSettings();
   [['sShade', 'shade'], ['sHide', 'autohide'], ['sGod', 'god'], ['sChrist', 'christ'], ['sSpirit', 'spirit'], ['sBrackets', 'brackets']].forEach(function (p) {
     document.getElementById(p[0]).onchange = function () { S[p[1]] = this.checked; saveSettings(); if (p[1] === 'shade') refreshView(); };
   });

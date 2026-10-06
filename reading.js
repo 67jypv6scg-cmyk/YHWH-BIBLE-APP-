@@ -1,4 +1,4 @@
-// Noble Vine Study & Discipleship · 2.1.0 · Reading a chapter, selecting verses
+// Noble Vine Study & Discipleship · 2.2.0 · Reading a chapter, selecting verses
 'use strict';
 // ======================================================================
 // Rendering helpers
@@ -119,9 +119,9 @@ function storageNote() {
 }
 function updateSelbar() {
   var bar = document.getElementById('selbar');
-  if (!selected.size) { bar.classList.add('hidden'); return; }
+  if (!selected.size) { bar.classList.add('hidden'); document.body.classList.remove('sel-on'); return; }
   document.getElementById('selLbl').textContent = refLabel(pos.b, pos.c, Array.from(selected));
-  bar.classList.remove('hidden');
+  bar.classList.remove('hidden'); document.body.classList.add('sel-on');
   nvPanelVerse();
 }
 function copyText(txt) {

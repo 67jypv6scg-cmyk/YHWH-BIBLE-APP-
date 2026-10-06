@@ -1,4 +1,4 @@
-// Noble Vine Study & Discipleship · 2.0.0 · My music player
+// Noble Vine Study & Discipleship · 2.2.0 · My music player
 'use strict';
 // ======================================================================
 // My music: songs you have saved in Files or iCloud Drive, playing while you read.
@@ -72,6 +72,7 @@ function musMini() {
   var el = document.getElementById('nvMini');
   var show = musMode() === 'mine' && mus.list.length > 0 && mus.idx >= 0;
   document.body.classList.toggle('nvm-on', !!show);
+  if (typeof nvToolsUpdate === 'function' && nvTools.el) nvToolsUpdate();
   if (!show) { if (el) el.hidden = true; return; }
   if (!el) {
     el = document.createElement('div'); el.id = 'nvMini'; el.className = 'nvmini';

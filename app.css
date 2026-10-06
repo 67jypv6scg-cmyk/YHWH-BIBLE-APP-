@@ -1,4 +1,4 @@
-/* Noble Vine Study & Discipleship · 2.1.0 · all styles */
+/* Noble Vine Study & Discipleship · 2.2.0 · all styles */
 @font-face { font-family: 'Lora'; src: url('lora.ttf') format('truetype'); font-weight: 400 700; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Lora'; src: url('lora-italic.ttf') format('truetype'); font-weight: 400 700; font-style: italic; font-display: swap; }
 :root {
@@ -753,3 +753,38 @@ html[data-theme="light"] .nvp-handle span { background: rgba(0,0,0,.2); }
 .nvstart button + button { background: none; color: #3F5634; border: 1px solid #3F5634; }
 .sheet-head h2:focus { outline: none; }
 .sheet-head h2:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* ===================== 2.2: study tools on the side ===================== */
+.nvtools { --nvt-y: 150px; }
+.nvtools[hidden], body.home .nvtools { display: none !important; }
+.nvt-fab { position: fixed; right: 14px; bottom: calc(var(--nvt-y) + env(safe-area-inset-bottom, 0px)); z-index: 31; width: 54px; height: 54px; border-radius: 50%; padding: 0;
+  background: rgba(31,34,31,.9); border: 1px solid rgba(157,180,154,.45); color: #9DB49A; box-shadow: 0 8px 22px rgba(0,0,0,.45);
+  display: flex; align-items: center; justify-content: center; touch-action: none; transition: transform .25s ease, opacity .25s ease, background .2s ease; }
+html[data-theme="light"] .nvt-fab { background: rgba(255,255,255,.94); border-color: rgba(111,130,112,.5); color: #6F8270; }
+.nvtools.left .nvt-fab { right: auto; left: 14px; }
+.nvt-fab .nvt-x { display: none; }
+.nvtools.open .nvt-fab { background: #9DB49A; color: #0B0C0A; }
+.nvtools.open .nvt-fab .nvt-x { display: flex; }
+.nvtools.open .nvt-fab .nvt-sprig { display: none; }
+/* tucked into the edge while scrolling: only a small sliver shows */
+.nvtools.tucked .nvt-fab { transform: translateX(calc(100% - 4px)); opacity: .55; }
+.nvtools.left.tucked .nvt-fab { transform: translateX(calc(-100% + 4px)); }
+.nvt-scrim { position: fixed; inset: 0; z-index: 30; background: rgba(0,0,0,.35); display: none; }
+.nvtools.open .nvt-scrim { display: block; }
+.nvt-rail { position: fixed; right: 14px; bottom: calc(var(--nvt-y) + 66px + env(safe-area-inset-bottom, 0px)); z-index: 31; display: none; flex-direction: column; align-items: flex-end; gap: 10px; max-height: calc(100vh - var(--nvt-y) - 140px); overflow-y: auto; }
+.nvtools.left .nvt-rail { right: auto; left: 14px; align-items: flex-start; }
+.nvtools.open .nvt-rail { display: flex; }
+.nvt-head { font-size: .72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--c-olive); background: rgba(22,24,22,.96); border: 1px solid color-mix(in srgb, var(--c-olive) 50%, transparent); padding: .35rem .75rem; border-radius: 999px; }
+.nvt-item { display: flex; align-items: center; gap: 10px; background: none; border: 0; padding: 0; color: var(--ink); }
+.nvtools.left .nvt-item { flex-direction: row-reverse; }
+.nvt-lab { padding: .45rem .8rem; border-radius: 999px; background: rgba(22,24,22,.96); border: 1px solid var(--rule); font-size: .88rem; font-weight: 600; white-space: nowrap; box-shadow: 0 4px 14px rgba(0,0,0,.4); color: #f3f1ea; }
+.nvt-disc { width: 50px; height: 50px; border-radius: 50%; background: #1B1E1B; border: 1px solid color-mix(in srgb, var(--c) 50%, transparent); color: var(--c); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(0,0,0,.4); flex: none; }
+.nvt-heb { font-family: var(--heb); font-size: 1.45rem; line-height: 1; }
+.nvt-item:focus-visible .nvt-disc { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .nvt-fab { transition: none; } }
+/* keep clear of the music bar, the selection bar and the study panel */
+body.panel-on:not(.panel-side) .nvt-fab { bottom: calc(52vh + 14px); }
+body.panel-on:not(.panel-side) .nvt-rail { bottom: calc(52vh + 80px); }
+body.panel-side .nvt-fab, body.panel-side .nvt-rail { right: calc(44vw + 14px); }
+/* lift the sprig above the selection bar while verses are selected */
+body.sel-on:not(.panel-on) .nvt-fab { bottom: calc(var(--nvt-y) + 110px + env(safe-area-inset-bottom, 0px)); }
+body.sel-on:not(.panel-on) .nvt-rail { bottom: calc(var(--nvt-y) + 176px + env(safe-area-inset-bottom, 0px)); }

@@ -1,5 +1,8 @@
 # Noble Vine Study & Discipleship: changes
 
+## 2.2 beta (October 2026)
+- **Study tools on the side.** While reading, a small sprig button sits at the edge of the screen, so Hebrew, Compare, the study panel, commentary, notes and recording are within reach anywhere in a chapter, not just at the top. It tucks into the edge while you scroll, and opens only when you tap the sprig. With verses selected, the tools act on those verses (Compare opens at that verse, a note covers those verses). Drag it up or down to move it; Settings → Study tools button chooses the right edge, left edge or off.
+
 ## 2.1.2 beta (October 2026)
 - **Restoring a reading plan from a backup now always works.** Before, if the device already had a different plan (for example, a plan started again after a reset), the backup's plan progress was quietly skipped. Restore now shows each plan in the backup with its days read, and offers to bring it back.
 - Backups now also keep the plan set aside during the one-off 6-month plan, and whether that plan was finished.
