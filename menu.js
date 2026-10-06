@@ -1,7 +1,7 @@
-// Noble Vine Study & Discipleship · 2.1.0 · The More menu and Study hub
+// Noble Vine Study & Discipleship · 2.1.1 · The More menu and Study hub
 'use strict';
 // ---- RNB look: the More menu and the Study hub ----
-var APP_VER = 'Noble Vine · 2.1 beta';
+var APP_VER = 'Noble Vine · 2.1.1 beta';
 var RNB_IC = {
   book: '<path d="M12 6.5C10 5 7 4.5 3.5 5v13.5c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5V20"/>',
   route: '<circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h8.5a3.5 3.5 0 0 0 0-7h-9a3.5 3.5 0 0 1 0-7H16"/>',
@@ -68,7 +68,7 @@ function menu() {
     rnbGroup('My Bible', [rnbMenuRow('mWhole', 'olive', 'import', 'Import a whole Bible', 'From a text file such as bsb.txt'), rnbMenuRow('mImp', 'olive', 'pen', 'Import chapters', 'Paste a few chapters at a time'),
       rnbMenuRow('mVer', 'blue', 'layers', 'My versions', 'Downloads and links'), rnbMenuRow('mBak', 'stone', 'box', 'Back up and restore', 'Keep everything safe')]) +
     rnbGroup('Settings', [rnbMenuRow('mSet', 'stone', 'gear', 'Settings', 'Names, text size, voices, pictures')]) +
-    '<div class="nvcard">' + nvAppMark(230) + '<div class="nvfrom">' + NV_FROM + '</div><button type="button" class="mhero-b" id="mAbout" style="margin-top:1rem">About Noble Vine</button><button type="button" class="backlink" id="mBug" style="margin:.9rem 0 0">Report a problem</button></div>' +
+    '<div class="nvcard">' + nvAppMark(230) + '<div class="nvfrom">' + NV_FROM + '</div><button type="button" class="mhero-b" id="mAbout" style="margin-top:1rem">About Noble Vine</button><button type="button" class="backlink" id="mUpd" style="margin:.9rem 0 0">Check for updates</button><button type="button" class="backlink" id="mBug" style="margin:.7rem 0 0">Report a problem</button></div>' +
     '<p class="status" style="margin-top:1.2rem;text-align:center">' + esc(storageNote()) + ' ' + Object.keys(chapters).length.toLocaleString() + ' chapters.<br>' + APP_VER + '</p>';
   sheetBody.querySelectorAll('.mfold').forEach(function (f) {
     f.querySelector('.mgh').onclick = function () {
@@ -100,6 +100,7 @@ function menu() {
   on('mJourney', openJourney);
   on('mAbout', openAbout);
   on('mBug', openErrorLog);
+  on('mUpd', nvCheckForUpdates);
   on('mMusic', function () { openPlayer(); });
   on('mFavs', function () { openFavs(); });
   on('mThemes', function () { openThemes(); });

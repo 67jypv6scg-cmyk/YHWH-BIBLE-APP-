@@ -1,5 +1,8 @@
 # Noble Vine Study & Discipleship: changes
 
+## 2.1.1 beta (October 2026)
+- **Check for updates**, at the foot of the More menu. It asks GitHub for the newest version and, if there is one, updates the app straight away, with no need to close and reopen it.
+
 ## 2.1 beta (October 2026)
 **New**
 - **Study panel.** Tap **▥ Study panel** on any chapter. On an iPad, or a phone turned sideways, it sits beside the text; on an upright phone it slides up over the lower half (tap the bar at its top to make it taller). Four tabs: **Hebrew** (word by word), **Commentary**, **Compare** (RNB, WEB, ASV) and **Notes** (your notes on the chapter, with a button to write one). It follows the verse you tap, or the verse at the top as you scroll, and remembers whether you like it open.

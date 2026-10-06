@@ -3,7 +3,7 @@
 // ======================================================================
 // Problem log: keeps the last few errors on this device, so you can send them to Claude
 // ======================================================================
-var APP_VERSION = '2.1 beta';
+var APP_VERSION = '2.1.1 beta';
 function nvLogError(msg, where) {
   try {
     var list = JSON.parse(localStorage.getItem('nv-errors') || '[]');
