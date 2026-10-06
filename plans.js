@@ -1,4 +1,4 @@
-// Noble Vine Study & Discipleship · 2.0.0 · Reading plans
+// Noble Vine Study & Discipleship · 2.1.2 · Reading plans
 'use strict';
 // ======================================================================
 // Reading plan
@@ -115,7 +115,7 @@ todayBtn.onclick = function () { openToday(); };
 function openToday() {
   openSheet('Today');
   nvCheckOneOff();
-  var h = greeting() + nvOneOffOffer() + votdHtml() + memCardHtml();
+  var h = greeting() + nvOneOffOffer() + nvBackupNudge() + votdHtml() + memCardHtml();
   ['bible', 'study'].forEach(function (sl) {
     usePlan(sl);
     if (!plan) {
@@ -141,6 +141,7 @@ function openToday() {
   sheetBody.querySelectorAll('[data-track]').forEach(function (el) { el.onclick = function () { usePlan(el.dataset.track); openTracker(); }; });
   sheetBody.querySelectorAll('[data-change]').forEach(function (el) { el.onclick = function () { if (el.dataset.change === 'study') openStudySetup(); else openPlanSetup(); }; });
   bindVotd(); bindMemCard(); nvBindOneOff();
+  var bk = document.getElementById('nvBkGo'); if (bk) bk.onclick = openBackup;
   var x = document.getElementById('tdBible'); if (x) x.onclick = openPlanSetup;
   x = document.getElementById('tdStudy'); if (x) x.onclick = openStudySetup;
   x = document.getElementById('tdNext'); if (x) x.onclick = openStudySetup;

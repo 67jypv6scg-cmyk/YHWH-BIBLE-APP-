@@ -1,4 +1,4 @@
-// Noble Vine Study & Discipleship · 2.0.0 · Back up and restore
+// Noble Vine Study & Discipleship · 2.1.2 · Back up and restore
 'use strict';
 // ======================================================================
 // Back up and restore
@@ -22,7 +22,7 @@ function openBackup() {
   var list = Object.keys(chapters).sort().map(function (k) { return chapters[k]; });
   var verses = list.reduce(function (a, c) { return a + c.verses.length; }, 0);
   sheetBody.innerHTML =
-    '<div class="set"><div class="set-t">Export my Bible</div>' +
+    '<div class="set"><div class="set-t">Export my Bible</div>' + nvLastBackupHtml() +
     '<p class="hint" style="margin-top:0">Saves everything in one backup file: your Bible, notes, prophetic words and voice notes, favourites, themes, plans and recordings' + (list.length ? ': ' + esc(summarise(list)) + ' (' + verses + ' verses)' : '') + ', with your ' + (Object.keys(vnotes).length + Object.keys(pnotes).length) + ' notes and your reading plans. Keep it in Files or iCloud Drive. The installable version of this app will load your Bible from this file.</p>' +
     '<div class="actions"><button class="primary" id="bExport"' + (list.length ? '' : ' disabled') + '>Export my Bible</button></div><p class="status" id="bExStat"></p></div>' +
     '<div class="set"><div class="set-t">Restore from a backup file</div>' +
@@ -32,8 +32,9 @@ function openBackup() {
   var ex = document.getElementById('bExport'), exStat = document.getElementById('bExStat');
   if (!downloads) { ex.disabled = true; exStat.textContent = 'Saving files isn’t available in this view.'; }
   ex.onclick = async function () {
+    S.lastBackup = Date.now(); saveSettings();
     var d = new Date(), stamp = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-    var data = JSON.stringify({ app: 'names-restored-bible', format: 1, exported: d.toISOString(), note: 'Restored Names Bible (RNB) with the Names restored.', settings: S, plan: plans.bible, study: plans.study, words: savedWords(), memory: memAll(), teach: teachAll(), pictures: await picsAll(), recordings: await recExport(), prophecies: await prophExport(), favourites: favAll(), themes: nvTagData(), verseNotes: Object.keys(vnotes).map(function (k) { return vnotes[k]; }), planNotes: Object.keys(pnotes).map(function (k) { return pnotes[k]; }), chapters: list });
+    var data = JSON.stringify({ app: 'names-restored-bible', format: 1, exported: d.toISOString(), note: 'Restored Names Bible (RNB) with the Names restored.', settings: S, plan: plans.bible, study: plans.study, planPrev: (function () { try { return JSON.parse(localStorage.getItem('nb-plan-prev') || 'null'); } catch (e) { return null; } })(), oneOffDone: !!S.oneOffDone, words: savedWords(), memory: memAll(), teach: teachAll(), pictures: await picsAll(), recordings: await recExport(), prophecies: await prophExport(), favourites: favAll(), themes: nvTagData(), verseNotes: Object.keys(vnotes).map(function (k) { return vnotes[k]; }), planNotes: Object.keys(pnotes).map(function (k) { return pnotes[k]; }), chapters: list });
     ex.disabled = true; exStat.style.color = ''; exStat.textContent = 'Preparing the file…';
     try {
       await downloads.save({ filename: 'Noble Vine backup ' + stamp + '.json', data: new Blob([data]) });
@@ -78,10 +79,11 @@ function openBackup() {
       var bPlans = obj ? [['bible', obj.plan], ['study', obj.study]].filter(function (x) { return x[1] && Array.isArray(x[1].schedule) && x[1].created; }) : [];
       if (!items.length && !vn.length && !pn.length && !bPlans.length && !bPics.length && !bRecs.length && !Object.keys(bTeach).length && !Object.keys(bFavs).length && !(obj.prophecies || []).length) { res.innerHTML = '<p class="hint" style="color:var(--name)">This isn’t a backup from this app, or it has nothing in it.</p>'; return; }
       var replaces = items.filter(function (c) { return has(c.book, c.ch); }).length;
-      res.innerHTML = '<p class="hint">This backup has ' + items.length + ' chapters' + (items.length ? ': ' + esc(summarise(items)) : '') + (vn.length + pn.length ? ', and ' + (vn.length + pn.length) + ' notes' : '') + '.' + (bPlans.length ? ' It includes your reading plan progress.' : '') + (bPics.length ? ' It has ' + bPics.length + (bPics.length === 1 ? ' picture.' : ' pictures.') : '') + (bRecs.length ? ' Recordings in your voice: ' + bRecs.length + '.' : '') + (Object.keys(bTeach).length ? ' Teaching notes: ' + Object.keys(bTeach).map(function (k) { return '“' + (bTeach[k].title || 'Untitled') + '”'; }).join(', ') + '.' : '') + (replaces ? ' ' + replaces + ' of them will replace chapters you already have.' : '') + '</p>' +
+      res.innerHTML = '<p class="hint">This backup has ' + items.length + ' chapters' + (items.length ? ': ' + esc(summarise(items)) : '') + (vn.length + pn.length ? ', and ' + (vn.length + pn.length) + ' notes' : '') + '.' + (bPlans.length ? ' It includes your reading plan progress' + bPlans.map(function (x) { return ' (' + esc(x[1].name || 'plan') + ': ' + Object.keys(x[1].done || {}).length + ' days read)'; }).join('') + '.' : '') + (bPics.length ? ' It has ' + bPics.length + (bPics.length === 1 ? ' picture.' : ' pictures.') : '') + (bRecs.length ? ' Recordings in your voice: ' + bRecs.length + '.' : '') + (Object.keys(bTeach).length ? ' Teaching notes: ' + Object.keys(bTeach).map(function (k) { return '“' + (bTeach[k].title || 'Untitled') + '”'; }).join(', ') + '.' : '') + (replaces ? ' ' + replaces + ' of them will replace chapters you already have.' : '') + '</p>' +
         (damaged ? '<p class="hint" style="color:var(--name)">' + damaged + (damaged === 1 ? ' chapter looks' : ' chapters look') + ' damaged in this file and will be skipped.</p>' : '') +
         (Object.keys(bFavs).length ? '<p class="hint">Favourite verses: ' + Object.keys(bFavs).length + '.</p>' : '') +
         '<p class="status">Nothing is removed: the backup adds to what is on this device, and replaces chapters with the same number.</p>' +
+        nvPlanChoiceHtml(bPlans) +
         '<div class="actions"><button class="primary" id="bRestore">Restore</button></div><p class="status" id="bStat"></p>';
       document.getElementById('bRestore').onclick = async function () {
         var btn = this, st = document.getElementById('bStat'); btn.disabled = true;
@@ -104,7 +106,11 @@ function openBackup() {
           bPlans.forEach(function (x) {
             var sl = x[0], bp = JSON.parse(JSON.stringify(x[1])), cur = plans[sl];
             usePlan(sl);
-            if (!cur) { plan = bp; savePlan(true); }
+            var swap = document.getElementById('bPlanSwap-' + sl);
+            if (!cur || (swap && swap.checked)) {
+              if (cur && cur.created !== bp.created && !cur.oneOff) { try { localStorage.setItem('nb-plan-prev', JSON.stringify(cur)); } catch (e) {} }
+              plan = bp; savePlan(true);
+            }
             else if (cur.created === bp.created) {
               plan.done = Object.assign({}, bp.done || {}, plan.done || {});
               plan.ticks = Object.assign({}, bp.ticks || {}, plan.ticks || {});
@@ -112,6 +118,8 @@ function openBackup() {
             }
           });
           usePlan('bible');
+          if (obj.planPrev && obj.planPrev.schedule && !localStorage.getItem('nb-plan-prev') && plans.bible && plans.bible.oneOff) { try { localStorage.setItem('nb-plan-prev', JSON.stringify(obj.planPrev)); } catch (e) {} }
+          if (obj.oneOffDone) { S.oneOffDone = true; saveSettings(); }
           if (Object.keys(bTeach).length) { var tt = teachAll(); Object.keys(bTeach).forEach(function (k) { var x = bTeach[k]; if (x && typeof x.html === 'string' && (!tt[k] || (x.updated || 0) >= (tt[k].updated || 0))) tt[k] = { id: k, title: String(x.title || 'Untitled'), html: cleanTeachHtml(x.html), created: x.created || Date.now(), updated: x.updated || Date.now() }; }); teachSave(tt); }
           if (Object.keys(bMem).length) { var mm = memAll(); Object.keys(bMem).forEach(function (k) { var x = bMem[k]; if (x && x.id && Array.isArray(x.vs) && (!mm[k] || (x.updated || 0) > (mm[k].updated || 0))) mm[k] = x; }); memSave(mm); }
           if (Object.keys(bWords).length) { var mw = savedWords(); Object.keys(bWords).forEach(function (k) { if (!mw[k] || (bWords[k].updated || 0) > (mw[k].updated || 0)) mw[k] = bWords[k]; }); saveWords(mw); }
@@ -136,4 +144,26 @@ function openBackup() {
     };
     r.readAsText(f);
   };
+}
+
+// ---- Plans in a backup (2.1.2): if this device has a different plan, offer to bring back the backup's one ----
+function nvPlanChoiceHtml(bPlans) {
+  return bPlans.map(function (x) {
+    var sl = x[0], bp = x[1], cur = plans[sl];
+    if (!cur || cur.created === bp.created) return '';
+    var nb = Object.keys(bp.done || {}).length, nc = Object.keys(cur.done || {}).length;
+    return '<label class="check" style="margin:.6rem 0"><input type="checkbox" id="bPlanSwap-' + sl + '"' + (nb >= nc ? ' checked' : '') + '> <span>Bring back <b>' + esc(bp.name || 'the plan') + '</b> from the backup (' + nb + ' days read), in place of <b>' + esc(cur.name || 'the current plan') + '</b> on this device (' + nc + ' days read).</span></label>';
+  }).join('');
+}
+
+// ---- Backup reminder (2.1.2) ----
+function nvBackupAge() { return S.lastBackup ? Math.floor((Date.now() - S.lastBackup) / 86400000) : null; }
+function nvLastBackupHtml() {
+  var a = nvBackupAge();
+  return '<p class="status" style="margin-top:0">' + (a === null ? 'No backup made from this device yet.' : a === 0 ? 'Last backup: today.' : 'Last backup: ' + a + (a === 1 ? ' day' : ' days') + ' ago.') + '</p>';
+}
+function nvBackupNudge() {
+  var a = nvBackupAge(), n = Object.keys(chapters).length;
+  if (!n || (a !== null && a < 7)) return '';
+  return '<div class="card"><div class="tc-l"><span>Keep it safe</span></div><p style="margin:.2rem 0 .6rem">' + (a === null ? 'You haven’t made a backup on this device yet.' : 'Your last backup was ' + a + ' days ago.') + ' A backup keeps your notes, plan progress and prophetic words safe if the phone is lost or reset.</p><div class="actions" style="margin-top:0"><button type="button" class="primary" id="nvBkGo">Back up now</button></div></div>';
 }

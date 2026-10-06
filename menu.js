@@ -1,7 +1,7 @@
-// Noble Vine Study & Discipleship · 2.1.1 · The More menu and Study hub
+// Noble Vine Study & Discipleship · 2.1.2 · The More menu and Study hub
 'use strict';
 // ---- RNB look: the More menu and the Study hub ----
-var APP_VER = 'Noble Vine · 2.1.1 beta';
+var APP_VER = 'Noble Vine · 2.1.2 beta';
 var RNB_IC = {
   book: '<path d="M12 6.5C10 5 7 4.5 3.5 5v13.5c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5V20"/>',
   route: '<circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h8.5a3.5 3.5 0 0 0 0-7h-9a3.5 3.5 0 0 1 0-7H16"/>',

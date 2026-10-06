@@ -1,5 +1,10 @@
 # Noble Vine Study & Discipleship: changes
 
+## 2.1.2 beta (October 2026)
+- **Restoring a reading plan from a backup now always works.** Before, if the device already had a different plan (for example, a plan started again after a reset), the backup's plan progress was quietly skipped. Restore now shows each plan in the backup with its days read, and offers to bring it back.
+- Backups now also keep the plan set aside during the one-off 6-month plan, and whether that plan was finished.
+- **Backup reminder:** the Backup screen shows when you last backed up, and Today gently reminds you after 7 days.
+
 ## 2.1.1 beta (October 2026)
 - **Check for updates**, at the foot of the More menu. It asks GitHub for the newest version and, if there is one, updates the app straight away, with no need to close and reopen it.
 
