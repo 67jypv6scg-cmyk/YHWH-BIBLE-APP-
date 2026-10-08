@@ -1,5 +1,8 @@
 # Noble Vine Study & Discipleship: changes
 
+## 2.6 beta (October 2026)
+- **Opening animation.** The first time you open the app each day, “Noble vine” is already there, the vine grows above it as “Study & Discipleship” comes in, a soft light sweeps across, and the logo dissolves into Selah. Tap to skip. It stays out of the way if you only stepped away for a few minutes, uses a plain fade if your phone is set to Reduce Motion, and Settings → Opening animation turns it off or plays it now.
+
 ## 2.5 beta (October 2026)
 - **Remembers where you were.** If your phone closes the app while you are in WhatsApp or another app, Noble Vine now puts you back in the same chapter at the same verse (also in a reading plan, Hebrew or Compare), for up to 12 hours. If you were writing a note, dream or word, it offers to bring the text back. A voice recording in progress can't be kept. Settings → Remember where I was turns it off.
 
