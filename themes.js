@@ -55,8 +55,9 @@ function nvAddTheme(name) {
 }
 // Everything tagged with a theme, ready to list
 async function nvTaggedItems(id) {
-  var d = nvTagData(), out = [], teach = teachAll(), favs = favAll(), proph = {};
+  var d = nvTagData(), out = [], teach = teachAll(), favs = favAll(), proph = {}, dreams = {};
   try { (await prophAll()).forEach(function (x) { proph[x.id] = x; }); } catch (e) {}
+  try { (await dreamAll()).forEach(function (x) { dreams[x.id] = x; }); } catch (e) {}
   Object.keys(d.map).forEach(function (k) {
     if ((d.map[k] || []).indexOf(id) < 0) return;
     var kind = k.charAt(0), ref = k.slice(2), x;
@@ -64,6 +65,7 @@ async function nvTaggedItems(id) {
     else if (kind === 'p' && (x = pnotes[ref])) out.push({ kind: 'Day note', title: x.dayLabel || 'Reading plan', sub: noteSnippet(x.text || '', 90), c: 'purple', ic: 'pen', open: function () { openPlanNote(x); } });
     else if (kind === 't' && (x = teach[ref])) out.push({ kind: 'Teaching note', title: x.title || 'Untitled', sub: '', c: 'purple', ic: 'teach', open: function () { openTeach(ref); } });
     else if (kind === 'w' && (x = proph[ref])) out.push({ kind: 'Prophetic word', title: x.title || 'Untitled word', sub: x.from || '', c: 'gold', ic: 'spark', open: function () { openProph(ref); } });
+    else if (kind === 'd' && (x = dreams[ref])) out.push({ kind: 'Dream', title: x.title || 'Untitled dream', sub: x.place || '', c: 'indigo', ic: 'moon', open: function () { openDream(ref); } });
     else if (kind === 'f' && (x = favs[ref])) out.push({ kind: 'Favourite', title: favRef(x), sub: noteSnippet(nameText(favText(x)), 90), c: x.color || favColour(), ic: 'star', open: function () { closeSheet(); closeSearch(); showChapter(x.b, x.c, [x.v]); } });
   });
   return out;
@@ -75,7 +77,7 @@ async function openThemes(editing) {
   openSheet('Themes'); var tok = sheetSeq;
   var d = nvTagData(), counts = {};
   Object.keys(d.map).forEach(function (k) { (d.map[k] || []).forEach(function (id) { counts[id] = (counts[id] || 0) + 1; }); });
-  var h = '<p class="hint" style="margin-top:0">Tag your notes, prophetic words, teaching notes and favourite verses with themes, then find them all here. You can also search <b>#covenant</b>, for example.</p>';
+  var h = '<p class="hint" style="margin-top:0">Tag your notes, words, dreams, teaching notes and favourite verses with themes, then find them all here. You can also search <b>#covenant</b>, for example.</p>';
   if (!editing) {
     h += '<div class="mgrp">' + d.list.map(function (t) {
       return '<button type="button" class="mrow" data-th="' + t.id + '"><span class="tdot c-' + t.color + '"></span><span class="mrow-t"><span class="mrow-h">' + esc(t.name) + '</span></span><span class="tcount">' + (counts[t.id] || 0) + '</span><span class="mrow-c">' + rnbIcon('chev', 18) + '</span></button>';

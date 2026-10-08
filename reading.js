@@ -73,6 +73,7 @@ function showChapter(b, c, verses) {
   main.innerHTML = html;
   hebView = null;
   cmpView = null;
+  if (typeof nvLinkedStrip === 'function') nvLinkedStrip(b, c);
   var th = document.getElementById('toHeb'); if (th) th.onclick = function () { showHebrew(b, c); };
   var tc = document.getElementById('toCmp'); if (tc) tc.onclick = function () { showCompare(b, c); };
   var tpn = document.getElementById('toPanel'); if (tpn) tpn.onclick = nvPanelToggle;

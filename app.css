@@ -498,17 +498,17 @@ body.home #tabs button.on { color: #fff; }
 #selah .sh { font-family: 'Frank Ruhl Libre', 'Times New Roman', serif; font-size: 2.4rem; margin-top: 1.8rem; opacity: .95; }
 #selah .stap { position: absolute; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom, 0px) + 2rem); text-align: center; font-size: .85rem; opacity: .7; }
 /* ---- RNB look: one colour per area, rounded cards, Lora for Scripture ---- */
-:root { --c-clay: #E5946A; --c-gold: #D9B84E; --c-blue: #6FB0C2; --c-pom: #E68A8A; --c-purple: #B39AD3; --c-olive: #A3C184; --c-stone: #BDAAB1;
+:root { --c-clay: #E5946A; --c-gold: #D9B84E; --c-blue: #6FB0C2; --c-pom: #E68A8A; --c-purple: #B39AD3; --c-olive: #A3C184; --c-stone: #BDAAB1; --c-indigo: #8EA2E6;
   --ui: -apple-system, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif; --panel2: #F1F1EC; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #0B0C0A; --panel: #161816; --panel2: #1F221F; --rule: rgba(255,255,255,.08); --soft: #A9AAA2; --ink: #F3F1EA; --accent: #D9B84E; --accent-ink: #0B0C0A; } }
 :root[data-theme="dark"] { --bg: #0B0C0A; --panel: #161816; --panel2: #1F221F; --rule: rgba(255,255,255,.08); --soft: #A9AAA2; --ink: #F3F1EA; --accent: #D9B84E; --accent-ink: #0B0C0A; }
-:root[data-theme="light"] { --c-clay: #A9532A; --c-gold: #8A6A10; --c-blue: #2C6B7C; --c-pom: #AE3A3A; --c-purple: #6B4C9A; --c-olive: #4C6B2F; --c-stone: #6B5860; }
+:root[data-theme="light"] { --c-clay: #A9532A; --c-gold: #8A6A10; --c-blue: #2C6B7C; --c-pom: #AE3A3A; --c-purple: #6B4C9A; --c-olive: #4C6B2F; --c-stone: #6B5860; --c-indigo: #4B5FA8; }
 body { font-family: var(--ui); }
 .text, .ch-title, .memtext:not(.he), .quote, .cmpr .txt, .hit .t, .votd-t, .cmbody, .prompter:not(.he), .tn, .wp-vs, .hvs { font-family: var(--serif); }
 .ch-title { font-size: 2.35rem; }
 .ch-sub { color: var(--c-clay); text-transform: uppercase; letter-spacing: .12em; font-size: .74rem; font-weight: 600; }
 .shead { color: var(--c-clay); }
-.c-clay { --c: var(--c-clay); } .c-gold { --c: var(--c-gold); } .c-blue { --c: var(--c-blue); } .c-pom { --c: var(--c-pom); } .c-purple { --c: var(--c-purple); } .c-olive { --c: var(--c-olive); } .c-stone { --c: var(--c-stone); }
+.c-clay { --c: var(--c-clay); } .c-gold { --c: var(--c-gold); } .c-blue { --c: var(--c-blue); } .c-pom { --c: var(--c-pom); } .c-purple { --c: var(--c-purple); } .c-olive { --c: var(--c-olive); } .c-stone { --c: var(--c-stone); } .c-indigo { --c: var(--c-indigo); }
 .dsc { flex: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--c); background: color-mix(in srgb, var(--c) 16%, transparent); border: 1px solid color-mix(in srgb, var(--c) 34%, transparent); }
 .dsc-he { font-family: var(--heb); font-size: 22px; line-height: 1; color: var(--c); }
 .sheet { border-radius: 22px 22px 0 0; }
@@ -788,3 +788,11 @@ body.panel-side .nvt-fab, body.panel-side .nvt-rail { right: calc(44vw + 14px); 
 /* lift the sprig above the selection bar while verses are selected */
 body.sel-on:not(.panel-on) .nvt-fab { bottom: calc(var(--nvt-y) + 110px + env(safe-area-inset-bottom, 0px)); }
 body.sel-on:not(.panel-on) .nvt-rail { bottom: calc(var(--nvt-y) + 176px + env(safe-area-inset-bottom, 0px)); }
+
+/* 2.3 · My dreams */
+.drref { background: var(--card, rgba(127,127,127,.08)); border: 1px solid var(--rule); border-radius: 12px; padding: .7rem .85rem; margin: .5rem 0; }
+.drref-h { font-size: .78rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--c-gold); }
+.drref-t { font-size: .95rem; line-height: 1.55; margin-top: .25rem; }
+.drref-a { display: flex; gap: .4rem; margin-top: .4rem; }
+.drref-a .quiet { padding: .3rem .7rem; font-size: .85rem; }
+.nvlink { margin-top: 2rem; }

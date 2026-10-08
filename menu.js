@@ -1,7 +1,7 @@
 // Noble Vine Study & Discipleship · 2.2.0 · The More menu and Study hub
 'use strict';
 // ---- RNB look: the More menu and the Study hub ----
-var APP_VER = 'Noble Vine · 2.2 beta';
+var APP_VER = 'Noble Vine · 2.3 beta';
 var RNB_IC = {
   book: '<path d="M12 6.5C10 5 7 4.5 3.5 5v13.5c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5z"/><path d="M12 6.5V20"/>',
   route: '<circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h8.5a3.5 3.5 0 0 0 0-7h-9a3.5 3.5 0 0 1 0-7H16"/>',
@@ -22,6 +22,7 @@ var RNB_IC = {
   tag: '<path d="M3.5 12.2V4.5a1 1 0 0 1 1-1h7.7l8.3 8.3a1.4 1.4 0 0 1 0 2l-6.6 6.6a1.4 1.4 0 0 1-2 0z"/><circle cx="8" cy="8" r="1.4"/>',
   note: '<path d="M9 18V6l11-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/>',
   bug: '<circle cx="12" cy="13" r="5.5"/><path d="M12 7.5V5M8 6l1.5 2M16 6l-1.5 2M4 13h2.5M17.5 13H20M5.5 18.5l2-1.5M18.5 18.5l-2-1.5"/>',
+  moon: '<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>',
   chev: '<path d="M9 6l6 6-6 6"/>'
 };
 function rnbIcon(n, size) { return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + RNB_IC[n] + '</svg>'; }
@@ -59,7 +60,7 @@ function menu() {
     '<div class="mhero-s">' + esc(bits.join(' · ') || 'Import your Bible to begin') + '</div><button type="button" class="mhero-b" id="mCont">' + (last ? 'Continue reading' : 'Import my Bible') + '</button></div>' +
     rnbGroup('Read', [rnbMenuRow('mToday', 'clay', 'book', 'Today', 'Plan, verse of the day, memory'), rnbMenuRow('mPlan', 'gold', 'route', 'Reading plans', 'Whole Bible and book studies'),
       rnbMenuRow('mMusic', 'purple', 'note', 'My music', 'Songs you have saved, while you read'), rnbMenuRow('mFull', 'stone', 'expand', 'Full screen', 'Hide the bars while reading')]) +
-    rnbGroup('My Walk', [rnbMenuRow('mJourney', 'olive', 'layers', 'My journey', 'Everything you have kept, by date'), rnbMenuRow('mProph', 'gold', 'spark', 'Prophetic words', 'Words spoken over you, typed or recorded'), rnbMenuRow('mFavs', 'gold', 'star', 'Favourite verses', 'Highlighted in your colours'), rnbMenuRow('mThemes', 'purple', 'tag', 'Themes', 'Notes and verses by theme'),
+    rnbGroup('My Walk', [rnbMenuRow('mJourney', 'olive', 'layers', 'My journey', 'Everything you have kept, by date'), rnbMenuRow('mProph', 'gold', 'spark', 'My words', 'Prophetic words spoken over you, typed or recorded'), rnbMenuRow('mDreams', 'indigo', 'moon', 'My dreams', 'Record, write and link scripture'), rnbMenuRow('mFavs', 'gold', 'star', 'Favourite verses', 'Highlighted in your colours'), rnbMenuRow('mThemes', 'purple', 'tag', 'Themes', 'Notes and verses by theme'),
       rnbMenuRow('mNotes', 'purple', 'pen', 'My notes', 'Verse notes and day notes'), rnbMenuRow('mMem', 'pom', 'heart', 'Memory verses', 'Hide the Word in your heart'),
       rnbMenuRow('mRecs', 'clay', 'mic', 'My recordings', 'Passages in your own voice')]) +
     rnbGroup('Study', [rnbMenuRow('mStudy', 'blue', 'aleph', 'Hebrew study', 'Interlinear and word study'), rnbMenuRow('mNames', 'gold', 'aleph', 'Names guide', 'What each Hebrew Name means'), rnbMenuRow('mCmp', 'olive', 'compare', 'Compare versions', esc(bibleShort()) + ', WEB, ASV and the Hebrew'),
@@ -97,6 +98,7 @@ function menu() {
   on('mBak', openBackup);
   on('mSet', openSettings);
   on('mProph', openProphList);
+  on('mDreams', openDreamList);
   on('mJourney', openJourney);
   on('mAbout', openAbout);
   on('mBug', openErrorLog);

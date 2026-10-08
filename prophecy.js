@@ -22,7 +22,7 @@ async function prophImport(x) {
 }
 function prophDate(s) { try { return parseYmd(s).toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }); } catch (e) { return s || ''; } }
 async function openProphList() {
-  openSheet('Prophetic words'); var tok = sheetSeq;
+  openSheet('My words'); var tok = sheetSeq;
   if (tok !== sheetSeq) return; sheetBody.innerHTML = '<p class="hint">Loading…</p>';
   var all = (await prophAll()).sort(function (a, z) { return (z.date || '').localeCompare(a.date || '') || (z.created || 0) - (a.created || 0); });
   if (tok !== sheetSeq) return; sheetBody.innerHTML = '<p class="hint" style="margin-top:0">Encouraging words spoken over you. Type them, paste them from another app, or keep the voice note. They stay on this device only, never on GitHub, and travel only in your own backups.</p>' +
@@ -50,7 +50,7 @@ async function openProph(id) {
   var x = id ? await prophGet(id) : null;
   if (!x) x = { id: 'pw' + Date.now(), title: '', from: '', date: todayYmd(), text: '', created: Date.now(), updated: Date.now() };
   var isNew = !id, url = null, stream = null, rec = null, chunks = [], t0 = 0, tick = null;
-  openSheet(isNew ? 'New prophetic word' : 'Prophetic word'); var tok = sheetSeq;
+  openSheet(isNew ? 'New word' : 'Word'); var tok = sheetSeq;
   function stopAll() { if (stream) { stream.getTracks().forEach(function (t) { t.stop(); }); stream = null; } clearInterval(tick); }
   function refs(text) {
     var out = [], seen = {}, m; REF_RE.lastIndex = 0;
