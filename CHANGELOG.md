@@ -1,5 +1,8 @@
 # Noble Vine Study & Discipleship: changes
 
+## 2.5 beta (October 2026)
+- **Remembers where you were.** If your phone closes the app while you are in WhatsApp or another app, Noble Vine now puts you back in the same chapter at the same verse (also in a reading plan, Hebrew or Compare), for up to 12 hours. If you were writing a note, dream or word, it offers to bring the text back. A voice recording in progress can't be kept. Settings → Remember where I was turns it off.
+
 ## 2.4 beta (October 2026)
 - **Swipe to change chapter.** While reading, swipe left for the next chapter and right for the previous one (in a reading plan it moves through that day's readings). It ignores swipes that start at the screen edges, while verses are selected, and in the Hebrew and Compare views. Settings → Swipe to change chapter turns it off.
 

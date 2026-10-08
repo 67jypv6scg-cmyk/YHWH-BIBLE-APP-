@@ -1,8 +1,8 @@
 // Offline helper for Noble Vine Study & Discipleship.
 // When you upload a new version, change VERSION here and in index.html (the ?v= numbers).
-var VERSION = '2.4.0';
+var VERSION = '2.5.0';
 var FILES = ['errors.js', 'books.js', 'storage.js', 'import.js', 'reading.js', 'names.js', 'search.js', 'sheets.js', 'notes.js', 'plans.js', 'hebrew.js', 'compare.js', 'alphabet.js', 'voice.js', 'home.js', 'teach.js', 'commentary.js', 'memory.js', 'votd.js', 'tracker.js',
-  'bible-import.js', 'tidy.js', 'versions.js', 'menu.js', 'prophecy.js', 'dreams.js', 'logo.js', 'brand.js', 'oneoff.js', 'backup.js', 'favs.js', 'themes.js', 'music.js', 'update.js', 'back.js', 'panel.js', 'a11y.js', 'tools.js', 'swipe.js', 'start.js', 'app.css'];
+  'bible-import.js', 'tidy.js', 'versions.js', 'menu.js', 'prophecy.js', 'dreams.js', 'logo.js', 'brand.js', 'oneoff.js', 'backup.js', 'favs.js', 'themes.js', 'music.js', 'update.js', 'back.js', 'panel.js', 'a11y.js', 'tools.js', 'swipe.js', 'resume.js', 'start.js', 'app.css'];
 var CORE = ['./', 'index.html', 'manifest.json', 'lora.ttf', 'lora-italic.ttf', 'icon-180.png', 'icon-192.png', 'icon-512.png', 'spotify-dock.js?v=' + VERSION]
   .concat(FILES.map(function (f) { return f + '?v=' + VERSION; }));
 self.addEventListener('install', function (e) {
