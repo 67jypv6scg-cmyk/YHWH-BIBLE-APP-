@@ -41,7 +41,8 @@ async function nvJourney() {
     var p = plans[sl]; if (!p || !p.done) return;
     Object.keys(p.done).forEach(function (d) { add(p.done[d], 'clay', 'route', sl === 'study' ? 'Book study' : 'Reading plan', 'Day ' + d + ' complete', p.name || '', function () { usePlan(sl); openTracker(); }); });
   });
-  try { (await prophAll()).forEach(function (x) { var t = x.date ? parseYmd(x.date).getTime() + 43200000 : x.created; add(t, 'gold', x.audio ? 'mic' : 'spark', 'Prophetic word', x.title || 'Untitled word', x.from || '', function () { openProph(x.id); }); }); } catch (e) {}
+  try { (await prophAll()).forEach(function (x) { var t = x.date ? parseYmd(x.date).getTime() + 43200000 : x.created; add(t, 'gold', x.audio ? 'mic' : 'spark', 'My word', x.title || 'Untitled word', x.from || '', function () { openProph(x.id); }); }); } catch (e) {}
+  try { (await dreamAll()).forEach(function (x) { var t = x.date ? parseYmd(x.date).getTime() + 43200000 : x.created; add(t, 'indigo', x.audio ? 'mic' : 'moon', 'Dream', x.title || 'Untitled dream', x.place || '', function () { openDream(x.id); }); }); } catch (e) {}
   try { (await recAll()).forEach(function (r) { add(r.created, 'clay', 'mic', 'Recording', recLabel(r), fmtDur(r.dur), openRecordings); }); } catch (e) {}
   return out.sort(function (a, z) { return z.when - a.when; });
 }

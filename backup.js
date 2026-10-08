@@ -34,7 +34,7 @@ function openBackup() {
   ex.onclick = async function () {
     S.lastBackup = Date.now(); saveSettings();
     var d = new Date(), stamp = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-    var data = JSON.stringify({ app: 'names-restored-bible', format: 1, exported: d.toISOString(), note: 'Restored Names Bible (RNB) with the Names restored.', settings: S, plan: plans.bible, study: plans.study, planPrev: (function () { try { return JSON.parse(localStorage.getItem('nb-plan-prev') || 'null'); } catch (e) { return null; } })(), oneOffDone: !!S.oneOffDone, words: savedWords(), memory: memAll(), teach: teachAll(), pictures: await picsAll(), recordings: await recExport(), prophecies: await prophExport(), favourites: favAll(), themes: nvTagData(), verseNotes: Object.keys(vnotes).map(function (k) { return vnotes[k]; }), planNotes: Object.keys(pnotes).map(function (k) { return pnotes[k]; }), chapters: list });
+    var data = JSON.stringify({ app: 'names-restored-bible', format: 1, exported: d.toISOString(), note: 'Restored Names Bible (RNB) with the Names restored.', settings: S, plan: plans.bible, study: plans.study, planPrev: (function () { try { return JSON.parse(localStorage.getItem('nb-plan-prev') || 'null'); } catch (e) { return null; } })(), oneOffDone: !!S.oneOffDone, words: savedWords(), memory: memAll(), teach: teachAll(), pictures: await picsAll(), recordings: await recExport(), prophecies: await prophExport(), dreams: await dreamExport(), favourites: favAll(), themes: nvTagData(), verseNotes: Object.keys(vnotes).map(function (k) { return vnotes[k]; }), planNotes: Object.keys(pnotes).map(function (k) { return pnotes[k]; }), chapters: list });
     ex.disabled = true; exStat.style.color = ''; exStat.textContent = 'Preparing the file…';
     try {
       await downloads.save({ filename: 'Noble Vine backup ' + stamp + '.json', data: new Blob([data]) });
@@ -129,6 +129,8 @@ function openBackup() {
             Object.keys(bThemes.map || {}).forEach(function (k) { var a = td.map[k] || []; (bThemes.map[k] || []).forEach(function (id) { if (a.indexOf(id) < 0) a.push(id); }); td.map[k] = a; }); nvTagSave(td); }
           var bPro = obj && Array.isArray(obj.prophecies) ? obj.prophecies : [];
           for (var qi = 0; qi < bPro.length; qi++) { try { await prophImport(bPro[qi]); } catch (e) {} }
+          var bDr = obj && Array.isArray(obj.dreams) ? obj.dreams : [];
+          for (var di = 0; di < bDr.length; di++) { try { await dreamImport(bDr[di]); } catch (e) {} }
           if (bPics.length) {
             var have = {}; (await picsAll()).forEach(function (x) { have[x.id] = 1; });
             for (var pi = 0; pi < bPics.length; pi++) if (!have[bPics[pi].id]) { st.textContent = 'Restoring pictures (' + (pi + 1) + ' of ' + bPics.length + ')…'; try { await picPut({ id: bPics[pi].id, data: bPics[pi].data, added: bPics[pi].added || Date.now() + pi }); } catch (e) {} }

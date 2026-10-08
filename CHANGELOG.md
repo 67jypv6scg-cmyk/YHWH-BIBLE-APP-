@@ -1,5 +1,11 @@
 # Noble Vine Study & Discipleship: changes
 
+## 2.3 beta (October 2026)
+- **My dreams.** A new place in More → My Walk, working just like your prophetic words: record a voice note (or add an audio file), type or paste the dream, and tag it with themes. Each dream also has **Scriptures that come to mind**: add a reference (for example John 10:9) and the verse shows on the dream; references typed in the dream itself are picked up too, with one tap to link them. Dreams are searchable by word, place or verse, appear in **My journey**, are included in backups, and stay on your device only.
+- **Linked to this chapter.** At the foot of a chapter, any dream or word that links to a verse in it appears, so a scripture leads you back to what you were given.
+- **My words.** Prophetic words is now named **My words**, to sit with My dreams.
+- Includes 2.1.2 (plan restore fix, backup reminder) and 2.2 (side study tools).
+
 ## 2.2 beta (October 2026)
 - **Study tools on the side.** While reading, a small sprig button sits at the edge of the screen, so Hebrew, Compare, the study panel, commentary, notes and recording are within reach anywhere in a chapter, not just at the top. It tucks into the edge while you scroll, and opens only when you tap the sprig. With verses selected, the tools act on those verses (Compare opens at that verse, a note covers those verses). Drag it up or down to move it; Settings → Study tools button chooses the right edge, left edge or off.
 
