@@ -1,5 +1,8 @@
 # Noble Vine Study & Discipleship: changes
 
+## 2.4 beta (October 2026)
+- **Swipe to change chapter.** While reading, swipe left for the next chapter and right for the previous one (in a reading plan it moves through that day's readings). It ignores swipes that start at the screen edges, while verses are selected, and in the Hebrew and Compare views. Settings → Swipe to change chapter turns it off.
+
 ## 2.3 beta (October 2026)
 - **My dreams.** A new place in More → My Walk, working just like your prophetic words: record a voice note (or add an audio file), type or paste the dream, and tag it with themes. Each dream also has **Scriptures that come to mind**: add a reference (for example John 10:9) and the verse shows on the dream; references typed in the dream itself are picked up too, with one tap to link them. Dreams are searchable by word, place or verse, appear in **My journey**, are included in backups, and stay on your device only.
 - **Linked to this chapter.** At the foot of a chapter, any dream or word that links to a verse in it appears, so a scripture leads you back to what you were given.
