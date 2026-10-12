@@ -4,7 +4,12 @@
 // balanced so each day is about the same length. Offered in Bible reading plan; your current plan is kept
 // safe and comes back when this one is finished.
 var NV_OCT = { id: 'oct49', name: 'Whole Bible · 13 Oct to 30 Nov 2026', start: '2026-10-13', days: 49, prevKey: 'nb-plan-prev-oct', doneKey: 'nv-oct-done' };
-function nvOctDone() { try { return localStorage.getItem(NV_OCT.doneKey) === '1'; } catch (e) { return false; } }
+function nvOctDone() {
+  try { if (localStorage.getItem(NV_OCT.doneKey) === '1') return true; } catch (e) {}
+  if (todayYmd() > '2026-11-30' && !(plans.bible && plans.bible.type === NV_OCT.id)) return true;   // the dates have passed and you never started it
+  if (plans.bible && plans.bible.type === NV_OCT.id) { var sl = planSlot; usePlan('bible'); var fin = !firstOpen(); usePlan(sl); return fin; }   // finished: no longer offered
+  return false;
+}
 function nvOctSchedule() {
   var ot = [], nt = [], ps = [];
   for (var b = 0; b < BOOKS.length; b++) for (var c = 1; c <= BOOKS[b][1]; c++) (b === 18 ? ps : b < NT_START ? ot : nt).push({ b: b, c: c, w: chWeight(b, c) });
@@ -23,7 +28,7 @@ function nvStartOct() {
   toast('Plan started. Day 1 is 13 October.');
   openPlanDay(firstOpen());
 }
-// When it is finished: retire it and bring back the plan you had before
+// When it is finished: retire it for good (day notes stay in My notes) and bring back the plan you had before
 function nvCheckOct() {
   var p = plans.bible; if (!p || p.type !== NV_OCT.id) return;
   var sl = planSlot; usePlan('bible');
@@ -33,6 +38,9 @@ function nvCheckOct() {
   plan = prev && prev.schedule ? prev : null; savePlan(true); usePlan(sl);
   setTimeout(function () { toast('The whole Bible, 13 Oct to 30 Nov: complete. Well done!' + (prev ? ' Your earlier plan is back.' : '')); }, 600);
 }
+// Retire it as soon as you look at Today or the plan list after the last day is ticked
+if (typeof openToday === 'function') { var nvOctToday = openToday; window.openToday = function () { try { nvCheckOct(); } catch (e) {} return nvOctToday.apply(this, arguments); }; }
+if (typeof openPlanSetup === 'function') { var nvOctSetup = openPlanSetup; window.openPlanSetup = function () { try { nvCheckOct(); } catch (e) {} return nvOctSetup.apply(this, arguments); }; }
 var nvOctReadyOrig = window.nvAppReady;
 window.nvAppReady = function () { if (nvOctReadyOrig) nvOctReadyOrig.apply(this, arguments); try { nvCheckOct(); } catch (e) {} };
 
