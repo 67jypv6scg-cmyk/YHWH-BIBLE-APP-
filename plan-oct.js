@@ -6,7 +6,6 @@
 var NV_OCT = { id: 'oct49', name: 'Whole Bible · 13 Oct to 30 Nov 2026', start: '2026-10-13', days: 49, prevKey: 'nb-plan-prev-oct', doneKey: 'nv-oct-done' };
 function nvOctDone() {
   try { if (localStorage.getItem(NV_OCT.doneKey) === '1') return true; } catch (e) {}
-  if (todayYmd() > '2026-11-30' && !(plans.bible && plans.bible.type === NV_OCT.id)) return true;   // the dates have passed and you never started it
   if (plans.bible && plans.bible.type === NV_OCT.id) { var sl = planSlot; usePlan('bible'); var fin = !firstOpen(); usePlan(sl); return fin; }   // finished: no longer offered
   return false;
 }
