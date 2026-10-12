@@ -1,5 +1,8 @@
 # Noble Vine Study & Discipleship: changes
 
+## 2.7 beta (October 2026)
+- **Bespoke plan: the whole Bible, 13 October to 30 November.** In the Bible reading plan you will see a new card at the top. It runs 49 days, and every day has an Old Testament portion, the Psalms (all 150 Psalms across the plan) and a New Testament portion, balanced so each day is about the same length (about 24 chapters). Your current plan is kept safe and comes back when you finish. It is a one-off: when the 49 days are complete it retires itself and is never offered again (your day notes stay in My notes). It is never closed by the calendar: if you are still reading after 30 November it stays open until you finish.
+
 ## 2.6 beta (October 2026)
 - **Opening animation.** The first time you open the app each day, “Noble vine” is already there, the vine grows above it as “Study & Discipleship” comes in, a soft light sweeps across, and the logo dissolves into Selah. Tap to skip. It stays out of the way if you only stepped away for a few minutes, uses a plain fade if your phone is set to Reduce Motion, and Settings → Opening animation turns it off or plays it now.
 
