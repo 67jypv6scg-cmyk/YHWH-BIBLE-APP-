@@ -97,10 +97,11 @@ async function openLibrary(opts) {
     (all.length ? '' : '<p class="hint">Nothing here yet. Tap Refresh to bring in your notes.</p>') +
     '<details class="nvl-help"><summary>Set up the shortcut (once)</summary><ol>' +
     '<li>In Shortcuts, make a new shortcut called <code id="nvlScName">' + esc(sc) + '</code>.</li>' +
-    '<li>Add <b>Find Notes</b> where <b>Folder</b> is the folder you want (for example BIBLE TEACHING).</li>' +
-    '<li>Add <b>Repeat with Each</b> (it will use the notes it found).</li>' +
+    '<li>Add <b>Find Notes</b> where <b>Folder</b> is the folder you want (for example BIBLE TEACHING). If two folders share a name, pick the one that lists only that folder\'s notes.</li>' +
+    '<li>Add <b>Repeat with Each</b> (it uses the notes it found).</li>' +
     '<li>Inside the repeat, add <b>Text</b>. Type <code>---NOTE: BIBLE TEACHING---</code>, press return, then insert the <b>Repeat Item</b> variable.</li>' +
-    '<li>After <b>End Repeat</b>, add <b>Copy to Clipboard</b> and choose <b>Repeat Results</b>.</li></ol>' +
+    '<li>After <b>End Repeat</b>, add <b>Combine Text</b> (Repeat Results, with New Lines), then <b>Copy to Clipboard</b> (Combined Text).</li>' +
+    '<li>If iOS says it cannot share that many notes: Settings, Apps, Shortcuts, Advanced, turn on <b>Allow Sharing Large Amounts of Data</b>.</li></ol>' +
     '<label class="field"><span>Shortcut name</span><input type="text" id="nvlSc" value="' + esc(sc) + '"></label>' +
     '<p class="hint">To add another folder later, add another Find Notes and Repeat block with its own folder name in the first line.</p></details>';
   function draw(q) {
