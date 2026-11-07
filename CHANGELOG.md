@@ -1,5 +1,8 @@
 # Noble Vine Study & Discipleship: changes
 
+## 2.9 beta (November 2026)
+- **My library.** A read-only, searchable copy of your Apple Notes teaching folder (BIBLE TEACHING to begin with), under My Walk in the menu. Apple Notes stays the master: change a note there, then tap **Refresh** and one small Shortcut brings the latest in. Scripture references in the notes become links, and the notes also appear under “Linked to this chapter”. The copy lives on this device only. Nothing is written back to Apple Notes.
+
 ## 2.8 beta (November 2026)
 - **Send.** Select a verse and tap the new gold **Send** button. Choose what goes in (verse and reference, reference only, or with your note), see the exact text, then send it to Apple Notes as a new note, add it to a note you already have (through one small Shortcut you set up once), copy it, or save it as a note in this app. Divine Names follow your Name setting. Notes written in the app have a Send button too. The verse bar now slides sideways, with Send, Copy and Note first.
 
