@@ -1,5 +1,17 @@
 # Noble Vine Study & Discipleship: changes
 
+## 2.10.1 (November 2026) – Friendlier without the Shortcuts
+The first time you use “Add to a note I already have” or “Refresh from Apple Notes”, the app asks whether you have the Shortcut. If not, it shows how to set it up instead of letting iOS show an error.
+
+## 2.10 beta (November 2026)
+- **Quick return.** If you step away for under ten minutes (to copy something into Notes, say) and your phone has to start the app again, the Noble Vine splash now clears in about half a second and puts you straight back where you were, instead of waiting out the full splash. If you had your plan's Today or Tracker screen open, that comes back too, and your place in today's plan reading is found again by chapter even if the plan has moved on. Leave it longer than that and the app opens as before, with the home page and the opening animation.
+
+## 2.9 beta (November 2026)
+- **My library.** A read-only, searchable copy of your Apple Notes teaching folder (BIBLE TEACHING to begin with), under My Walk in the menu. Apple Notes stays the master: change a note there, then tap **Refresh** and one small Shortcut brings the latest in. Scripture references in the notes become links, and the notes also appear under “Linked to this chapter”. The copy lives on this device only. Nothing is written back to Apple Notes.
+
+## 2.8 beta (November 2026)
+- **Send.** Select a verse and tap the new gold **Send** button. Choose what goes in (verse and reference, reference only, or with your note), see the exact text, then send it to Apple Notes as a new note, add it to a note you already have (through one small Shortcut you set up once), copy it, or save it as a note in this app. Divine Names follow your Name setting. Notes written in the app have a Send button too. The verse bar now slides sideways, with Send, Copy and Note first.
+
 ## 2.7 beta (October 2026)
 - **Bespoke plan: the whole Bible, 13 October to 30 November.** In the Bible reading plan you will see a new card at the top. It runs 49 days, and every day has an Old Testament portion, the Psalms (all 150 Psalms across the plan) and a New Testament portion, balanced so each day is about the same length (about 24 chapters). Your current plan is kept safe and comes back when you finish. It is a one-off: when the 49 days are complete it retires itself and is never offered again (your day notes stay in My notes). It is never closed by the calendar: if you are still reading after 30 November it stays open until you finish.
 
