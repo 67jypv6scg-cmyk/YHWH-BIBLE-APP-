@@ -1,5 +1,8 @@
 # Noble Vine Study & Discipleship: changes
 
+## 2.10 beta (November 2026)
+- **Quick return.** If you step away for under ten minutes (to copy something into Notes, say) and your phone has to start the app again, the Noble Vine splash now clears in about half a second and puts you straight back where you were, instead of waiting out the full splash. If you had your plan's Today or Tracker screen open, that comes back too, and your place in today's plan reading is found again by chapter even if the plan has moved on. Leave it longer than that and the app opens as before, with the home page and the opening animation.
+
 ## 2.9 beta (November 2026)
 - **My library.** A read-only, searchable copy of your Apple Notes teaching folder (BIBLE TEACHING to begin with), under My Walk in the menu. Apple Notes stays the master: change a note there, then tap **Refresh** and one small Shortcut brings the latest in. Scripture references in the notes become links, and the notes also appear under “Linked to this chapter”. The copy lives on this device only. Nothing is written back to Apple Notes.
 
