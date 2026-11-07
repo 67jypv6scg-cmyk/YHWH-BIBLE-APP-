@@ -49,10 +49,10 @@ async function nvlStore(notes) {
 }
 
 // ---- reading what the Shortcut copied ----
-// Each note starts with a line like  =====NOTE|BIBLE TEACHING=====  followed by the note's own text.
+// Each note starts with a line like  ---NOTE: BIBLE TEACHING---  (or =====NOTE|BIBLE TEACHING=====) followed by the note's own text.
 function nvlParse(text) {
   var out = [], t = String(text || '').replace(/\r\n?/g, '\n');
-  var re = /^={3,}\s*NOTE\s*(?:\|([^\n=]*?))?\s*={3,}[ \t]*$/gim, marks = [], m;
+  var re = /^[=\-]{3,}\s*NOTE\s*[:|]?\s*([^\n=\-]*?)\s*[=\-]{3,}[ \t]*$/gim, marks = [], m;
   while ((m = re.exec(t))) marks.push({ at: m.index, end: m.index + m[0].length, folder: (m[1] || '').trim() || 'My library' });
   marks.forEach(function (mk, i) {
     var body = t.slice(mk.end, i + 1 < marks.length ? marks[i + 1].at : t.length).replace(/^\n+/, '').replace(/\s+$/, '');
@@ -99,7 +99,7 @@ async function openLibrary(opts) {
     '<li>In Shortcuts, make a new shortcut called <code id="nvlScName">' + esc(sc) + '</code>.</li>' +
     '<li>Add <b>Find Notes</b> where <b>Folder</b> is the folder you want (for example BIBLE TEACHING).</li>' +
     '<li>Add <b>Repeat with Each</b> (it will use the notes it found).</li>' +
-    '<li>Inside the repeat, add <b>Text</b>. Type <code>=====NOTE|BIBLE TEACHING=====</code>, press return, then insert the <b>Repeat Item</b> variable.</li>' +
+    '<li>Inside the repeat, add <b>Text</b>. Type <code>---NOTE: BIBLE TEACHING---</code>, press return, then insert the <b>Repeat Item</b> variable.</li>' +
     '<li>After <b>End Repeat</b>, add <b>Copy to Clipboard</b> and choose <b>Repeat Results</b>.</li></ol>' +
     '<label class="field"><span>Shortcut name</span><input type="text" id="nvlSc" value="' + esc(sc) + '"></label>' +
     '<p class="hint">To add another folder later, add another Find Notes and Repeat block with its own folder name in the first line.</p></details>';
