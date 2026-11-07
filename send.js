@@ -93,11 +93,12 @@ function nvsOpen(s) {
       '<button type="button" id="nvsCopy">Copy</button></div>' +
       '<details class="nvs-help"><summary>Set up “Add to a note I already have” (once)</summary>' +
       '<p class="hint" style="margin-top:0">Apple does not let apps write into Notes, so a small Shortcut does the adding. Make it once on each device (iPhone and iPad).</p>' +
-      '<ol><li>Open the <b>Shortcuts</b> app, tap <b>+</b> and name the shortcut exactly as below.</li>' +
-      '<li>Add <b>Find Notes</b>. Add a filter such as <i>Folder is BIBLE TEACHING</i> so the list is short.</li>' +
+      '<ol><li>Open the <b>Shortcuts</b> app, tap <b>+</b>, and name the shortcut exactly as below.</li>' +
+      '<li>Add <b>Find Notes</b>. Tap <b>Add Filter</b>, choose <b>Folder</b>, leave it on <b>is</b>, then tap the blue word after it and pick your folder (for example BIBLE TEACHING). Folders are chosen here, not in a later action.</li>' +
+      '<li>Tap <b>Add Sort</b>: <b>Last Modified</b>, <b>Latest First</b>, and set the limit to about 30.</li>' +
       '<li>Add <b>Choose from List</b> and set its prompt to “Add to which note?”.</li>' +
-      '<li>Add <b>Text</b>, and type a blank line, then tap the field and insert the <b>Shortcut Input</b> variable.</li>' +
-      '<li>Add <b>Append to Note</b>: append that <b>Text</b> to the <b>Chosen Item</b>.</li>' +
+      '<li>Add <b>Text</b>. Press return once for a blank line, then tap after it and insert the <b>Shortcut Input</b> variable.</li>' +
+      '<li>Add <b>Append to Note</b>. Set the first blue word to that <b>Text</b> and the second to <b>Chosen Item</b>. Do not pick a fixed note.</li>' +
       '<li>Tap <b>Done</b>. The first time, allow it to access Notes.</li></ol>' +
       '<div class="nvs-sc"><label for="nvsSc" class="hint" style="margin:0">Shortcut name</label><input type="text" id="nvsSc" value="' + esc(scName) + '"></div></details>';
     var ta = document.getElementById('nvsText'); ta.value = cur !== null ? cur : nvsBuild(s, fmt);
