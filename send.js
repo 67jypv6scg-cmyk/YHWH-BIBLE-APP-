@@ -73,6 +73,20 @@ function nvsBuild(s, fmt) {
 }
 
 // ---- the Send sheet ----
+// One-time check before a Shortcut is used: people without it get a plain explanation instead of an iOS error.
+function nvsAskSetup(anchor, name, helpEl, go) {
+  var key = 'nv-scok-' + name;
+  if (nvsGet(key, '') === '1') { go(); return; }
+  var old = document.getElementById('nvsAsk'); if (old) old.parentNode.removeChild(old);
+  var d = document.createElement('div'); d.id = 'nvsAsk'; d.className = 'hint';
+  d.style.cssText = 'margin:.6rem 0;padding:.7rem;border:1px solid var(--line,#ccc);border-radius:10px';
+  d.innerHTML = '<p style="margin:0 0 .5rem">This needs a small Shortcut called <b>“' + esc(name) + '”</b> on your phone, made once. Do you already have it?</p>' +
+    '<button type="button" class="main" id="nvsAskYes">Yes, go ahead</button> <button type="button" id="nvsAskNo">No, show me how</button>';
+  anchor.parentNode.insertBefore(d, anchor.nextSibling);
+  document.getElementById('nvsAskYes').onclick = function () { nvsSet(key, '1'); d.parentNode.removeChild(d); go(); };
+  document.getElementById('nvsAskNo').onclick = function () { d.parentNode.removeChild(d); if (helpEl) { helpEl.open = true; helpEl.scrollIntoView({ block: 'center' }); } };
+}
+
 function nvsOpen(s) {
   var opts = s.kind === 'verse'
     ? [['verse', 'Verse and reference', 'The words, then ' + refLabel(s.b, s.c, s.vs)], ['ref', 'Reference only', 'Just the reference, to write your own thoughts'], s.noteText ? ['note', 'Verse, reference and my note', 'Adds the note you wrote on this verse'] : null]
@@ -111,10 +125,13 @@ function nvsOpen(s) {
       else { copyText(txt); toast('Sharing isn’t available here, so it was copied'); }
     };
     document.getElementById('nvsAdd').onclick = function () {
-      var txt = ta.value; scName = document.getElementById('nvsSc').value.trim() || 'Add to Note'; nvsSet('nvs-shortcut', scName);
-      try { if (navigator.clipboard) navigator.clipboard.writeText(txt); } catch (e) {}
-      toast('Opening Shortcuts…');
-      window.location.href = 'shortcuts://run-shortcut?name=' + encodeURIComponent(scName) + '&input=text&text=' + encodeURIComponent(txt);
+      var btn = this;
+      nvsAskSetup(btn, document.getElementById('nvsSc').value.trim() || 'Add to Note', sheetBody.querySelector('.nvs-help'), function () {
+        var txt = ta.value; scName = document.getElementById('nvsSc').value.trim() || 'Add to Note'; nvsSet('nvs-shortcut', scName);
+        try { if (navigator.clipboard) navigator.clipboard.writeText(txt); } catch (e) {}
+        toast('Opening Shortcuts…');
+        window.location.href = 'shortcuts://run-shortcut?name=' + encodeURIComponent(scName) + '&input=text&text=' + encodeURIComponent(txt);
+      });
     };
     var app = document.getElementById('nvsApp');
     if (app) app.onclick = function () { closeSheet(); var n = document.getElementById('selNote'); if (n) n.onclick(); };

@@ -118,9 +118,12 @@ async function openLibrary(opts) {
   var q = document.getElementById('nvlQ'); if (q) q.oninput = function () { draw(q.value); };
   document.getElementById('nvlSc').oninput = function (e) { var v = e.target.value.trim() || 'Send Library'; nvlSet(NVL.sc, v); document.getElementById('nvlScName').textContent = v; };
   document.getElementById('nvlRef').onclick = function () {
-    nvlSet(NVL.wait, String(Date.now()));
-    document.getElementById('nvlPaste').hidden = false;
-    window.location.href = 'shortcuts://run-shortcut?name=' + encodeURIComponent(nvlGet(NVL.sc, 'Send Library'));
+    var btn = this, nm = nvlGet(NVL.sc, 'Send Library');
+    nvsAskSetup(btn, nm, document.querySelector('.nvl-help'), function () {
+      nvlSet(NVL.wait, String(Date.now()));
+      document.getElementById('nvlPaste').hidden = false;
+      window.location.href = 'shortcuts://run-shortcut?name=' + encodeURIComponent(nm);
+    });
   };
   async function done(txt) { if (await nvlImportText(txt)) { nvlSet(NVL.wait, ''); openLibrary(); } }
   document.getElementById('nvlImp').onclick = function () {

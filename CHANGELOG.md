@@ -1,5 +1,8 @@
 # Noble Vine Study & Discipleship: changes
 
+## 2.10.1 (November 2026) – Friendlier without the Shortcuts
+The first time you use “Add to a note I already have” or “Refresh from Apple Notes”, the app asks whether you have the Shortcut. If not, it shows how to set it up instead of letting iOS show an error.
+
 ## 2.10 beta (November 2026)
 - **Quick return.** If you step away for under ten minutes (to copy something into Notes, say) and your phone has to start the app again, the Noble Vine splash now clears in about half a second and puts you straight back where you were, instead of waiting out the full splash. If you had your plan's Today or Tracker screen open, that comes back too, and your place in today's plan reading is found again by chapter even if the plan has moved on. Leave it longer than that and the app opens as before, with the home page and the opening animation.
 
