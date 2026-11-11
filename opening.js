@@ -21,6 +21,8 @@ if (typeof showSelah === 'function') {
 function nvoPlay(opts) {
   opts = opts || {};
   if (document.getElementById('nvOpen') || typeof NV_SPRIG === 'undefined') return;
+  // 2.11: the flip-board opening (flipopening.js). If it is missing or fails, the older opening below plays.
+  if (typeof nvoFlip === 'function') { try { if (nvoFlip(opts)) return; } catch (e) { var bad = document.getElementById('nvOpen'); if (bad && bad.parentNode) bad.parentNode.removeChild(bad); NVO.active = false; } }
   var reduce = false; try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
   var vw = Math.min(window.innerWidth, 520), LW = Math.min(340, Math.round(vw * 0.86)), LH = Math.round(LW * 192 / 368);
   var el = document.createElement('div'); el.id = 'nvOpen'; el.setAttribute('aria-hidden', 'true');
