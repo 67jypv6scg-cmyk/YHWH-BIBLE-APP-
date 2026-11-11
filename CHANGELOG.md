@@ -1,5 +1,8 @@
 # Noble Vine Study & Discipleship: changes
 
+## 2.11 beta (November 2026) – Flip-board opening
+The opening now uses the airport-style flip board from the Noble Vine app: the letters of the name flip into place, the sprig and “Study & Discipleship” fade in, then it melts into Selah. Still once a day, tap to skip, and Settings → Opening animation still turns it off or plays it. The older opening remains as a fallback.
+
 ## 2.10.1 (November 2026) – Friendlier without the Shortcuts
 The first time you use “Add to a note I already have” or “Refresh from Apple Notes”, the app asks whether you have the Shortcut. If not, it shows how to set it up instead of letting iOS show an error.
 
